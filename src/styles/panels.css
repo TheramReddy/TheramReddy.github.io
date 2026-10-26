@@ -151,10 +151,9 @@
 .hero h1 span { white-space: nowrap; }
 .hero p { margin-top: 24px; font-size: 15px; color: var(--muted); }
 .hero p a { color: var(--fg); text-decoration: underline; text-underline-offset: var(--underline-offset); }
-/* price-tag: pointed left edge with a punched hole, tilted slightly */
-.hero h1 .role-chip { position: relative; display: inline-flex; align-items: center; height: 1.3em; padding: 0 .45em 0 1.15em; margin-left: .1em; vertical-align: -.08em; font-size: .4em; text-transform: lowercase; font-family: var(--font-pixel); font-weight: 500; letter-spacing: 0; color: #3d3a2e; transform: rotate(-3deg); transform-origin: 0 50%; filter: drop-shadow(0 0 0 rgba(10,10,10,.1)) drop-shadow(0 1px 2px rgba(10,10,10,.08)); }
-.hero h1 .role-chip::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #e6e2cf; border-radius: 0 .3em .3em 0; clip-path: polygon(.5em 0, 100% 0, 100% 100%, .5em 100%, 0 50%); box-shadow: inset 0 0 0 1px rgba(10,10,10,.1); }
-.hero h1 .role-chip::after { content: ""; position: absolute; left: .42em; top: 50%; width: .24em; height: .24em; margin-top: -.12em; border-radius: 50%; background: var(--bg); box-shadow: inset 0 0 0 1px rgba(10,10,10,.18); }
+.hero p a.work-link { display: inline-flex; align-items: center; white-space: nowrap; }
+.hero p a.work-link svg { flex: none; width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+.hero p a.work-link:hover svg, .hero p a.work-link:focus-visible svg { transform: translate(2px, -2px); }
 .glyph { display: inline-block; width: .78em; height: .78em; vertical-align: -.05em; margin: 0 .12em; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; transform-origin: 50% 50%; overflow: visible; }
 .glyph .fill { fill: currentColor; stroke: none; }
 .glyph .eye { fill: var(--bg); }

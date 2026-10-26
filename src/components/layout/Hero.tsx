@@ -5,7 +5,6 @@ import { NowStatus } from './NowStatus'
 
 type Kind = 'spark' | 'flower' | 'burst' | 'star' | 'plus'
 const order: Kind[] = ['spark', 'flower']
-const [role, ...phrases] = site.disciplines
 
 /** Animated glyphs separating the hero phrases. */
 function Glyph({ kind }: { kind: Kind }) {
@@ -44,16 +43,13 @@ function LiveClock() {
   )
 }
 
-/** Landing intro: name, disciplines separated by animated glyphs, and a contact nudge. */
+/** Landing intro: name, disciplines separated by animated glyphs, and a link to the work. */
 export function Hero() {
   return (
     <header className="hero">
       <h1>
-        <span>
-          {site.name}&nbsp;
-          <span className="role-chip">{role}</span>
-        </span>{' '}
-        {phrases.map((t, i) => (
+        <span>{site.name}</span>{' '}
+        {site.disciplines.map((t, i) => (
           <Fragment key={t}>
             <span>
               {t}&nbsp;
@@ -63,7 +59,7 @@ export function Hero() {
         ))}
       </h1>
       <p>
-        <Link to="/contact">Contact me here</Link> if you want to collaborate or <Link to="/work">check my work</Link>.
+        <Link to="/work" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>
       </p>
       <div className="me">
         <LiveClock />

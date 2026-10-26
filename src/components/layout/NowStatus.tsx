@@ -33,7 +33,7 @@ function thoughtsFor(now: Date) {
   return hour >= 9 && hour < 17 ? workThoughts : eveningThoughts
 }
 
-/** "What I'm doing right now": a pixel-grid spinner, a shimmering line that cycles, and an elapsed timer. */
+/** "What I'm doing right now": a shimmering line that cycles, and an elapsed timer. */
 export function NowStatus({ thoughts: override }: { thoughts?: string[] }) {
   const [i, setI] = useState(0)
   const [secs, setSecs] = useState(0)
@@ -54,11 +54,6 @@ export function NowStatus({ thoughts: override }: { thoughts?: string[] }) {
 
   return (
     <p className="now" role="status" aria-live="off">
-      <span className="now-grid" aria-hidden="true">
-        {Array.from({ length: 9 }, (_, k) => (
-          <i key={k} style={{ animationDelay: `${((k * 5) % 9) * 0.13}s` }} />
-        ))}
-      </span>
       <span className="now-text" key={i}>
         {thoughts[i % thoughts.length]}
       </span>

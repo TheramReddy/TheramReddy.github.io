@@ -24,11 +24,8 @@
 @keyframes clock-tick { from { opacity: 0; transform: translateY(5px); filter: blur(3px); } }
 @media (prefers-reduced-motion: reduce) { .clock-time { animation: none !important; } }
 
-/* "working on now" status: pixel grid, shimmering line, elapsed time */
+/* "working on now" status: shimmering line, elapsed time */
 .hero p.now { display: flex; align-items: center; gap: 12px; margin: 12px 0 0; font-size: 14px; color: var(--muted); }
-.now-grid { flex: none; display: grid; grid-template-columns: repeat(3, 5px); gap: 2px; }
-.now-grid i { width: 5px; height: 5px; background: var(--fg); opacity: .14; animation: now-px 1.17s steps(1, end) infinite; }
-@keyframes now-px { 0% { opacity: 1; } 22% { opacity: .14; } }
 .now-text {
   background: linear-gradient(100deg, rgba(10,10,10,.45) 35%, #0a0a0a 50%, rgba(10,10,10,.45) 65%) 100% 0 / 250% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -38,6 +35,5 @@
 @keyframes now-shine { to { background-position: -50% 0; } }
 .now-time { flex: none; font: 12px/1 var(--font-mono); letter-spacing: 0; color: var(--muted); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) {
-  .now-grid i { animation: none; opacity: .5; }
   .now-text { animation: none; background: none; color: var(--muted); }
 }
