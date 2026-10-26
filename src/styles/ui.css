@@ -1,0 +1,43 @@
+/* ---------- fixed UI ---------- */
+.ui {
+  position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: var(--pad-y) var(--pad-x);
+}
+.ui .row { display: flex; justify-content: space-between; align-items: flex-start; }
+.ui .row.bottom { align-items: flex-end; }
+.ui a, .ui button { pointer-events: auto; position: relative; }
+.ui a::before, .ui button::before { content: ""; position: absolute; inset: -15px; }
+.ui button { transition: opacity .3s var(--ease); }
+.ui button:hover { opacity: .5; }
+.wordmark { display: inline-flex; align-items: center; gap: 10px; }
+.pixel-face { width: 48px; height: 48px; image-rendering: pixelated; }
+
+.ui .nav { display: flex; gap: 22px; }
+.ui .nav .label[aria-current="true"] { text-decoration: underline; text-underline-offset: var(--underline-offset); }
+
+/* live clock above the status line */
+.hero .me { display: flex; align-items: center; gap: 14px; margin-top: 32px; color: var(--fg); }
+.clock { display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px; border-radius: 12px; background: #fff; border: 1px solid rgba(10,10,10,.1); box-shadow: 0 1px 2px rgba(10,10,10,.04); font-size: 14px; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.clock-date { color: var(--muted); }
+.clock-time { font-weight: 500; animation: clock-tick .45s var(--ease) both; }
+@keyframes clock-tick { from { opacity: 0; transform: translateY(5px); filter: blur(3px); } }
+@media (prefers-reduced-motion: reduce) { .clock-time { animation: none !important; } }
+
+/* "working on now" status: pixel grid, shimmering line, elapsed time */
+.hero p.now { display: flex; align-items: center; gap: 12px; margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+.now-grid { flex: none; display: grid; grid-template-columns: repeat(3, 5px); gap: 2px; }
+.now-grid i { width: 5px; height: 5px; background: var(--fg); opacity: .14; animation: now-px 1.17s steps(1, end) infinite; }
+@keyframes now-px { 0% { opacity: 1; } 22% { opacity: .14; } }
+.now-text {
+  background: linear-gradient(100deg, rgba(10,10,10,.45) 35%, #0a0a0a 50%, rgba(10,10,10,.45) 65%) 100% 0 / 250% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: now-in .5s var(--ease) both, now-shine 2.4s linear infinite;
+}
+@keyframes now-in { from { opacity: 0; transform: translateY(5px); filter: blur(3px); } }
+@keyframes now-shine { to { background-position: -50% 0; } }
+.now-time { flex: none; font: 12px/1 var(--font-mono); letter-spacing: 0; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) {
+  .now-grid i { animation: none; opacity: .5; }
+  .now-text { animation: none; background: none; color: var(--muted); }
+}
