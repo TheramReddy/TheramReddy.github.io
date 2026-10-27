@@ -48,7 +48,7 @@
   .in-action-title { font-size: 24px; }
   .coverflow { --w: 270px; --step: 285px; height: 500px; }
   .coverflow.wide { --w: 310px; --step: 322px; height: 570px; }
-  .coverflow.wide .d-shot { height: 270px; padding: 8px; }
+  .coverflow.wide .d-shot { height: 270px; padding: 14px; }
   .cf-dots { margin-top: 40px; }
   .diagram p { font-size: 16px; }
   .gallery { gap: 80px; padding-top: 0; }
