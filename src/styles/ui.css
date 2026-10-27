@@ -10,8 +10,9 @@
 .ui a::before, .ui button::before { content: ""; position: absolute; inset: -15px; }
 .ui button { transition: opacity .3s var(--ease); }
 .ui button:hover { opacity: .5; }
-.wordmark { display: inline-flex; align-items: center; gap: 10px; }
-.pixel-face { width: 48px; height: 48px; image-rendering: pixelated; }
+.wordmark { display: inline-flex; align-items: baseline; font: 500 17px/1 var(--font-pixel); letter-spacing: .01em; text-transform: none; }
+.wordmark::after { content: ''; width: 4px; height: 4px; margin-left: 4px; background: #4a5bff; }
+.pixel-face { display: none; /* hidden for now */ width: 48px; height: 48px; image-rendering: pixelated; }
 
 .ui .nav { display: flex; gap: 22px; }
 .ui .nav .label[aria-current="true"] { text-decoration: underline; text-underline-offset: var(--underline-offset); }
