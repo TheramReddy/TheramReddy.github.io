@@ -78,6 +78,7 @@
 .in-action-title { font-size: 30px; font-weight: 400; letter-spacing: -.03em; line-height: 1.2; }
 .action-list { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-direction: column; gap: 72px; }
 .action-item { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.action-item::before { content: ""; width: 28px; height: 2px; border-radius: 1px; background: var(--muted); opacity: .45; }
 .action-shot { min-width: 0; padding: 20px; border-radius: 20px; background: var(--tint, #eef2ff); display: grid; place-items: center; }
 .action-item:nth-child(3n + 2) .action-shot { --tint: #fdf3e7; } .action-item:nth-child(3n) .action-shot { --tint: #eaf6ee; }
 .action-shot img { display: block; max-width: 100%; height: auto; border-radius: 8px; }
