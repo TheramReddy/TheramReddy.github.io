@@ -47,12 +47,10 @@
   .stack-title, .about-title { font-size: 14px; }
   .in-action-title { font-size: 24px; }
   .coverflow { --w: 270px; --step: 285px; height: 500px; }
-  .coverflow.wide { --w: 310px; --step: 322px; height: 570px; }
-  .coverflow.wide .d-shot { height: 290px; }
   .cf-dots { margin-top: 40px; }
   .diagram p { font-size: 16px; }
   .gallery { gap: 80px; padding-top: 0; }
-  .gallery > .problems::before { top: -42px !important; }
+  .gallery > .problems::before, .gallery > .action::before { top: -42px !important; }
   /* unfinished case study: keep the scene on the first screen, so skip the tools list and size it to fit */
   .sheet .cols:has(.coming-soon) { gap: 8px; }
   .sheet .cols:has(.coming-soon) .stack { display: none; }

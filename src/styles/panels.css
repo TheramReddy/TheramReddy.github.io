@@ -79,11 +79,9 @@
 .cs { display: block; padding: 32px 0; border-top: 1px solid var(--line); color: inherit; }
 .cs-list li:last-child .cs { border-bottom: 1px solid var(--line); }
 .cs-body { display: flex; flex-direction: column; min-width: 0; }
-.cs-meta { font: 500 14px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--fg); }
 .cs-title { margin-top: 12px; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.05; letter-spacing: -.04em; }
 .cs-summary { margin-top: 12px; max-width: 460px; font-size: 16px; line-height: 1.45; color: var(--muted); }
-.cs-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 24px; font-size: 15px; }
-.cs-stack { color: var(--muted); }
+.cs-foot { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-top: auto; padding-top: 24px; font-size: 15px; }
 .cs-go { display: inline-flex; align-items: center; gap: 4px; text-decoration: underline; text-underline-offset: var(--underline-offset); white-space: nowrap; }
 .cs-go svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
 .cs:hover .cs-go svg, .cs:focus-visible .cs-go svg { transform: translate(2px, -2px); }

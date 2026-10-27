@@ -14,13 +14,9 @@ export function ProjectsPanel({ open }: { open: boolean }) {
             <li key={p.slug} style={{ '--i': i } as CSSProperties}>
               <Link to={`/project/${p.slug}`} className="cs" tabIndex={open ? 0 : -1}>
                 <span className="cs-body">
-                  <span className="cs-meta">
-                    {p.client} · {p.year} · {p.role}
-                  </span>
                   <span className="cs-title">{p.title}</span>
                   <span className="cs-summary">{p.summary}</span>
                   <span className="cs-foot">
-                    <span className="cs-stack">{p.stack.join(' / ')}</span>
                     <span className="cs-go">
                       Read case study
                       <svg viewBox="0 0 24 24" aria-hidden="true">

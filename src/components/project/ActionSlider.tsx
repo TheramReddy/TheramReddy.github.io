@@ -1,34 +1,23 @@
-import type { CSSProperties } from 'react'
-import { cn } from '@/lib/utils'
 import type { Feature } from '@/data/projects'
-import { Carousel } from './Carousel'
 
-/** The GIF walkthrough as a scroll-driven slider, same coverflow as the problems above it. */
+/** The GIF walkthrough as a plain vertical list: one clip and its note per row. */
 export function ActionSlider({ features }: { features: Feature[] }) {
   return (
-    <Carousel id="cs-action" title="See it in action" noun="clip" labels={features.map((f) => f.title)} wide>
-      {(active, go) => features.map((f, i) => {
-        const d = i - active
-        const o = Math.max(-2, Math.min(2, d))
-        return (
-          <article
-            className={cn('diagram', o === 0 && 'is-active')}
-            key={f.gif}
-            style={{ '--o': o } as CSSProperties}
-            aria-hidden={o !== 0}
-            onClick={() => o !== 0 && go(i)}
-          >
-            <div className="d-art d-shot">
-              {/* only the two nearest neighbours each side load; remounting on activation restarts the clip */}
-              {Math.abs(d) <= 2 && <img decoding="async" key={o === 0 ? 'on' : 'off'} src={f.gif} alt={f.alt} />}
+    <section className="action" id="cs-action" aria-label="See it in action">
+      <h3 className="in-action-title">See it in action</h3>
+      <ol className="action-list">
+        {features.map((f) => (
+          <li className="action-item" key={f.gif}>
+            <div className="action-shot">
+              <img loading="lazy" decoding="async" src={f.gif} alt={f.alt} />
             </div>
-            <div className="d-copy">
+            <div className="action-copy">
               <h4>{f.title}</h4>
               <p>{f.body}</p>
             </div>
-          </article>
-        )
-      })}
-    </Carousel>
+          </li>
+        ))}
+      </ol>
+    </section>
   )
 }

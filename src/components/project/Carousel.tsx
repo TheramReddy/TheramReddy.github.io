@@ -52,12 +52,11 @@ type CarouselProps = {
   noun: string
   /** one accessible name per item, for the dots */
   labels: string[]
-  wide?: boolean
   children: (active: number, go: (n: number) => void) => ReactNode
 }
 
 /** Sticky coverflow driven by page scroll, with arrows and dots. Items render as `.diagram` articles. */
-export function Carousel({ id, title, noun, labels, wide, children }: CarouselProps) {
+export function Carousel({ id, title, noun, labels, children }: CarouselProps) {
   const { wrap, stick, active, go } = useCarousel(labels.length)
   return (
     <section className="problems" id={id} aria-label={title} ref={wrap} style={{ '--n': labels.length } as CSSProperties}>
@@ -68,7 +67,7 @@ export function Carousel({ id, title, noun, labels, wide, children }: CarouselPr
           <span className="cf-label">Scroll</span>
           <button className="cf-btn" aria-label={`Next ${noun}`} disabled={active === labels.length - 1} onClick={() => go(active + 1)}><Arrow d="m6 3 5 5-5 5" /></button>
         </div>
-        <div className={cn('coverflow', wide && 'wide')}>{children(active, go)}</div>
+        <div className="coverflow">{children(active, go)}</div>
         <div className="cf-dots" role="tablist" aria-label={`Choose a ${noun}`}>
           {labels.map((label, i) => (
             <button key={label} role="tab" aria-selected={i === active} aria-label={label} className={cn('cf-dot', i === active && 'on')} onClick={() => go(i)} />

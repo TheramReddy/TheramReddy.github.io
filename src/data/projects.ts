@@ -42,9 +42,9 @@ export const projects: Project[] = [
     stack: ['Figma', 'Bootstrap', 'Angular'],
     url: '#',
     client: 'Georgia DHS',
-    summary: 'A legacy mainframe rebuilt as three connected, cloud-native portals on one shared design system, with accessibility built in.',
+    summary: 'Debt Setoff (DSO) Modernization moves Georgia DHS off a legacy mainframe and onto three connected cloud portals that share one design system and meet WCAG 2.1 AA.',
     description:
-      'The Georgia Department of Human Services (DHS) had been using an outdated mainframe system to manage debt recovery for years. The DSO Modernization project brings this process into a modern, cloud-based platform with three connected portals for the public, agency staff, and external vendors. The goal was to make complex tasks like managing claims, hearings, payments, and reconciliation easier, faster, and more accessible for everyone involved.',
+      'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization moves that work to a cloud platform with three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     metrics: [
       { value: '3', label: 'Connected portals', note: 'Separate experiences for taxpayers, agency staff, and external vendors.' },
@@ -85,9 +85,9 @@ export const projects: Project[] = [
     stack: ['Figma', 'Design tokens', 'Responsive grid'],
     url: '#',
     client: 'Scobin',
-    summary: 'Data-dense tables, filters and bulk actions backed by a tokenised design system.',
+    summary: 'Product design that turns common SaaS friction into measurable operational gains, from complex navigation to weak exception handling.',
     description:
-      'Tables, filters and bulk actions for a data-dense inventory and pricing platform, backed by a design system with tokens, versioning and a responsive grid. Result: 40% fewer manual errors, 35% faster task time and 20% adoption growth in 3 months.',
+      'Scobin is a data-heavy inventory and pricing platform, and it had the problems many SaaS products share: complex navigation, poor onboarding, repetitive work, unclear status, data overload, inconsistent controls, weak exception handling and fragmented collaboration. I redesigned its tables, filters and bulk actions on a design system with tokens, versioning and a responsive grid. Within three months, manual errors fell 40%, tasks took 35% less time and adoption grew 20%.',
     gradient: 'linear-gradient(135deg,#3fbf9b,#9ee3c8 55%,#dcf6ec)',
   },
 ]
