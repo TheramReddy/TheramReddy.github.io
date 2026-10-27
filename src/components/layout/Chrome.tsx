@@ -18,20 +18,20 @@ export function Chrome() {
           </span>
         </Link>
         <nav className="nav" aria-label="Primary">
-          <button className="label" aria-current={pathname === '/' || pathname === '/me'} onClick={() => navigate('/')}>
+          <button className="label" data-tour="me" aria-current={pathname === '/' || pathname === '/me'} onClick={() => navigate('/')}>
             Me
           </button>
-          <button className="label" aria-current={pathname === '/work'} onClick={() => toggle('/work')}>
+          <button className="label" data-tour="work" aria-current={pathname === '/work'} onClick={() => toggle('/work')}>
             Work
           </button>
-          <button className="label" aria-current={pathname === '/projects'} onClick={() => toggle('/projects')}>
+          <button className="label" data-tour="projects" aria-current={pathname === '/projects'} onClick={() => toggle('/projects')}>
             Projects
           </button>
         </nav>
       </div>
       <div className="row bottom">
         <span />
-        <button className="label" aria-expanded={pathname === '/contact'} onClick={() => toggle('/contact')}>
+        <button className="label" data-tour="contact" aria-expanded={pathname === '/contact'} onClick={() => toggle('/contact')}>
           {pathname === '/contact' ? 'Close' : 'Contact'}
         </button>
       </div>

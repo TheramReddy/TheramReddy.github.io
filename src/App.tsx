@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { Chrome } from '@/components/layout/Chrome'
 import { Loader } from '@/components/layout/Loader'
+import { Tour } from '@/components/layout/Tour'
 import { ContactPanel } from '@/components/panels/ContactPanel'
 import { MePanel } from '@/components/panels/MePanel'
 import { ProjectsPanel } from '@/components/panels/ProjectsPanel'
@@ -29,6 +30,7 @@ export default function App() {
     <>
       <Loader />
       <Chrome />
+      <Tour />
       <MePanel open={pathname === '/' || pathname === '/me'} />
       <WorkPanel open={pathname === '/work'} />
       <ProjectsPanel open={pathname === '/projects'} />
