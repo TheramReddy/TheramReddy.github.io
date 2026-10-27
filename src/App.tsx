@@ -12,6 +12,8 @@ import { getProject } from '@/data/projects'
 // case study code (diagrams, carousels) loads after the first paint
 const ProjectDetail = lazy(() => import('@/components/project/ProjectDetail').then((m) => ({ default: m.ProjectDetail })))
 
+const ROUTES = ['/', '/me', '/work', '/projects', '/contact']
+
 /**
  * Me, Work, Projects, Contact and project popups are route-driven overlays
  * (/me, /work, /projects, /contact, /project/:slug) so every view is deep-linkable.
@@ -21,6 +23,15 @@ export default function App() {
   const navigate = useNavigate()
   const match = useMatch('/project/:slug')
   const project = getProject(match?.params.slug)
+
+  // GitHub Pages redirects /projects to /projects/ (public/projects exists), and stale links can point anywhere:
+  // drop trailing slashes and send unknown paths home so a panel is always open.
+  useEffect(() => {
+    const clean = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname
+    const known = ROUTES.includes(clean) || (clean.startsWith('/project/') && !!project)
+    if (!known) navigate('/', { replace: true })
+    else if (clean !== pathname) navigate(clean, { replace: true })
+  }, [pathname, project, navigate])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && navigate(pathname.startsWith('/project/') ? '/projects' : '/')
