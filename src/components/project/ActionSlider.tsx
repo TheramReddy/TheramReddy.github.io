@@ -23,7 +23,6 @@ export function ActionSlider({ features }: { features: Feature[] }) {
               {Math.abs(d) <= 2 && <img decoding="async" key={o === 0 ? 'on' : 'off'} src={f.gif} alt={f.alt} />}
             </div>
             <div className="d-copy">
-              <p className="d-tag"><span>{String(i + 1).padStart(2, '0')}</span>of {features.length}</p>
               <h4>{f.title}</h4>
               <p>{f.body}</p>
             </div>

@@ -69,10 +69,10 @@
 .diagram p { margin: 8px 0 0; font-size: 15px; line-height: 1.5; letter-spacing: -.01em; color: var(--muted); }
 /* wide variant: screen recordings need more room than the line drawings */
 @media (min-width: 761px) {
-  .coverflow.wide { --w: 780px; --step: 820px; height: 700px; }
-  .coverflow.wide .d-shot { height: 470px; padding: 20px; }
+  .coverflow.wide { --w: 780px; --step: 820px; height: 740px; }
+  .coverflow.wide .d-shot { height: 510px; }
 }
-.d-shot { display: block; }
+.d-shot { display: block; padding: 0; background: none; }
 .d-shot img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 0 0 1px rgba(10,10,10,.08); }
 .diagram svg { display: block; width: 100%; height: auto; color: var(--fg); overflow: visible; }
 .diagram .d-label { font-size: 27px; } .diagram .d-small { font-size: 22px; }
