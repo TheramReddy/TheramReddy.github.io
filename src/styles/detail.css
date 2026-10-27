@@ -33,7 +33,7 @@
 @media (hover: hover) and (pointer: fine) { .chip:hover { transform: translateY(-2px); border-color: rgba(10,10,10,.25); } }
 .gallery { display: flex; flex-direction: column; gap: 120px; padding-top: 8px; }
 .gallery > .problems, .gallery > .metrics, .gallery > .action { position: relative; }
-.gallery > .metrics + .problems::before, .gallery > .problems + .problems::before, .gallery > .problems + .action::before { content: ""; position: absolute; left: 0; top: -62px; width: 28px; height: 2px; border-radius: 1px; background: var(--muted); opacity: .45; }
+.gallery > .metrics + .problems::before, .gallery > .problems + .problems::before { content: ""; position: absolute; left: 0; top: -62px; width: 28px; height: 2px; border-radius: 1px; background: var(--muted); opacity: .45; }
 .proj-logo { display: block; align-self: flex-start; height: 40px; width: auto; margin-bottom: 24px; }
 .about-title { margin-top: 24px; font-size: 15px; color: var(--muted); }
 .about-title + .desc { margin-top: 8px; }
@@ -63,8 +63,6 @@
 .d-art { display: grid; place-items: center; height: 230px; padding: 16px 8px; min-width: 0; border-radius: 20px; background: var(--tint, #fff); }
 .d-art svg { height: 100%; }
 .d-copy { display: flex; flex-direction: column; flex: 1; padding: 0 4px; }
-.d-tag { margin: 0 0 10px !important; display: flex; align-items: center; gap: 8px; font: 500 13px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) !important; }
-.d-tag span { padding: 4px 7px; border-radius: 999px; background: var(--fg); color: #fff; letter-spacing: .04em; }
 .diagram h4 { font-size: 20px; font-weight: 400; letter-spacing: -.03em; line-height: 1.2; }
 .diagram p { margin: 8px 0 0; font-size: 15px; line-height: 1.5; letter-spacing: -.01em; color: var(--muted); }
 .diagram svg { display: block; width: 100%; height: auto; color: var(--fg); overflow: visible; }

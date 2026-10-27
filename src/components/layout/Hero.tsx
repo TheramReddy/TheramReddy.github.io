@@ -53,7 +53,9 @@ function SelectionFrame({ phrases }: { phrases: string[] }) {
       transition={reduce ? { duration: 0 } : spring.morph}
     >
       {phrases.map((t, n) => (
-        <span key={t} ref={(el) => { refs.current[n] = el }} className="frame-measure" aria-hidden="true">{t}</span>
+        <span key={t} ref={(el) => { refs.current[n] = el }} className="frame-measure" aria-hidden="true">
+          {[...t].map((ch, k) => <span key={k}>{ch === ' ' ? ' ' : ch}</span>)}
+        </span>
       ))}
       <AnimatePresence initial={false}>
         <span key={phrase} className="frame-text" aria-label={phrase}>

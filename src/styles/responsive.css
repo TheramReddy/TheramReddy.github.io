@@ -50,7 +50,7 @@
   .cf-dots { margin-top: 40px; }
   .diagram p { font-size: 16px; }
   .gallery { gap: 80px; padding-top: 0; }
-  .gallery > .problems::before, .gallery > .action::before { top: -42px !important; }
+  .gallery > .problems::before { top: -42px !important; }
   /* unfinished case study: keep the scene on the first screen, so skip the tools list and size it to fit */
   .sheet .cols:has(.coming-soon) { gap: 8px; }
   .sheet .cols:has(.coming-soon) .stack { display: none; }

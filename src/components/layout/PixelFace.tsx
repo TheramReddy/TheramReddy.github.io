@@ -6,7 +6,7 @@ const FRAME_MS = 66 // ~15fps keeps it crunchy
 const BLINK_MS = 180
 
 /** Whether the face has ink at pixel centre (x, y). */
-function ink(x: number, y: number, look: { x: number; y: number }, open: number, thinking: number) {
+function ink(x: number, y: number, look: { x: number; y: number }, open: number) {
   const d = Math.hypot(x - 8, y - 8)
   if (d > 7.6) return false
   if (d > 6.5) return true // outline
@@ -18,17 +18,16 @@ function ink(x: number, y: number, look: { x: number; y: number }, open: number,
     if (Math.abs(x - (ex + lx)) < 1) {
       if (open > 0.5 ? Math.abs(y - (7.5 + ly)) < 1.6 : Math.abs(y - 7.5) < 0.6) return true
     }
-    // Brows: the right one lifts when pondering.
-    const by = 4.5 - (ex > 8 ? Math.round(thinking) : 0)
-    if (Math.abs(x - ex) < 1.6 && Math.abs(y - by) < 0.6) return true
+    // Brows
+    if (Math.abs(x - ex) < 1.6 && Math.abs(y - 4.5) < 0.6) return true
   }
 
-  // Mouth: a small smile, flat when thinking.
-  const my = Math.abs(x - 8) > 2 && thinking < 0.5 ? 11.5 : 12.5
+  // Mouth: a small smile.
+  const my = Math.abs(x - 8) > 2 ? 11.5 : 12.5
   return Math.abs(x - 8) < 2.6 && Math.abs(y - my) < 0.6
 }
 
-/** A tiny pixel face: follows the cursor, blinks, and ponders when idle. */
+/** A tiny pixel face: follows the cursor, blinks, and rests looking down when idle. */
 export function PixelFace() {
   const ref = useRef<HTMLCanvasElement>(null)
 
@@ -40,7 +39,6 @@ export function PixelFace() {
 
     const look = { x: 0, y: 0 }
     const target = { x: 0, y: 0 }
-    let thinking = 0
     let lastMove = performance.now()
     let nextBlink = lastMove + 2500
     let blinkStart = -1
@@ -59,12 +57,12 @@ export function PixelFace() {
     const draw = (now: number) => {
       const idle = now - lastMove > IDLE_MS
       if (idle) {
-        target.x = -0.9
-        target.y = -0.9
+        // Resting: gaze down and smiling, still blinking.
+        target.x = 0
+        target.y = 0.9
       }
       look.x += (target.x - look.x) * 0.25
       look.y += (target.y - look.y) * 0.25
-      thinking += ((idle ? 1 : 0) - thinking) * 0.1
 
       if (blinkStart < 0 && now > nextBlink) blinkStart = now
       let open = 1
@@ -79,7 +77,7 @@ export function PixelFace() {
 
       for (let y = 0; y < N; y++) {
         for (let x = 0; x < N; x++) {
-          const on = ink(x + 0.5, y + 0.5, look, open, thinking)
+          const on = ink(x + 0.5, y + 0.5, look, open)
           const i = (y * N + x) * 4
           img.data.set([10, 10, 10, on ? 255 : 0], i)
         }

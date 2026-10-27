@@ -163,7 +163,9 @@
 [class*="_overlay_"]::-webkit-scrollbar { display: none; }
 /* Figma-style selection frame around the cycling phrase */
 .frame { --c: #3b8fe8; position: relative; box-sizing: content-box; display: inline-grid; vertical-align: baseline; padding: .06em .26em .1em; margin-left: .06em; border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 9%, transparent); transition: border-color .5s var(--ease), background-color .5s var(--ease); }
-.frame-measure { position: absolute; visibility: hidden; white-space: nowrap; pointer-events: none; }
+.frame-measure { position: absolute; visibility: hidden; display: inline-flex; white-space: nowrap; pointer-events: none; }
+/* keep the longest phrase on one line inside the viewport on phones */
+@media (max-width: 640px) { .hero h1 { font-size: clamp(18px, 5.6vw, 30px); } }
 .frame-text { grid-area: 1 / 1; justify-self: start; display: inline-flex; white-space: nowrap; }
 .frame .handle { position: absolute; width: 9px; height: 9px; background: #fff; border: 1.5px solid var(--c); transform: translate(-50%, -50%); transition: border-color .5s var(--ease); }
 .frame .tl-h { left: 0; top: 0; } .frame .tr-h { left: 100%; top: 0; } .frame .bl-h { left: 0; top: 100%; } .frame .br-h { left: 100%; top: 100%; }

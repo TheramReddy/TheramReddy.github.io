@@ -278,7 +278,6 @@ export function Diagrams() {
           >
             <div className="d-art">{d.art}</div>
             <div className="d-copy">
-              <p className="d-tag"><span>{String(i + 1).padStart(2, '0')}</span>{d.tag}</p>
               <h4>{d.title}</h4>
               <p>{d.body}</p>
             </div>
