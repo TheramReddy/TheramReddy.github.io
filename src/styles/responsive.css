@@ -36,8 +36,9 @@
 
   /* project popup */
   .sheet { inset: 10px; border-radius: 20px; }
-  .sheet .cols { grid-template-columns: 1fr; padding: 96px 20px 88px; gap: 24px; }
-  .sheet .info { position: static; padding-top: 0; min-height: 0; }
+  .sheet .cols { grid-template-columns: minmax(0, 1fr); padding: 96px 20px 88px; gap: 24px; }
+  .sheet .info { position: static; width: auto; padding-top: 0; min-height: 0; }
+  .gallery, .d-art, .d-result { min-width: 0; max-width: 100%; }
   .scroll-hint { display: none; }
   .sheet h2 { font-size: 34px; }
   .sheet .desc { margin-top: 16px; font-size: 16px; line-height: 1.45; }
@@ -60,7 +61,7 @@
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
   .coming-marquee { height: 180px; font-size: 12px; padding: 0 12px; }
-  .feature, .diagram, .diagram:nth-child(even) { grid-template-columns: 1fr; gap: 16px; }
+  .feature, .diagram, .diagram:nth-child(even) { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .feature:nth-child(even) figcaption { order: 0; }
   .detail .close { top: 20px; right: 20px; width: 44px; height: 44px; }
   .progress { left: 22px; bottom: 22px; }
