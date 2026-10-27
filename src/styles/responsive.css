@@ -9,7 +9,7 @@
   .tl::before { left: 4px; bottom: -40px; }
   .job { padding-bottom: 40px; }
   .job::before { left: -25px; top: 3px; }
-  .job .when { position: static; display: flex; gap: 8px; align-items: baseline; text-align: left; margin-bottom: 16px; font-size: 13px; }
+  .job .when { position: static; display: flex; gap: 8px; align-items: baseline; text-align: left; margin-bottom: 16px; font-size: 14px; }
   .job .when small { display: inline; margin: 0; }
   .job h4 { font-size: 19px; flex-wrap: wrap; row-gap: 4px; }
   .job .role { margin-top: 8px; font-size: 15px; }
@@ -45,7 +45,7 @@
   .chip { height: 36px; font-size: 14px; }
   .sheet { overflow-x: hidden; }
   .sheet .cols > *, .diagram > *, .feature > * { min-width: 0; }
-  .stack-title, .about-title { font-size: 13px; }
+  .stack-title, .about-title { font-size: 14px; }
   /* heading, text, sketch, then the GIF result */
   .diagram .d-copy { display: contents; }
   .diagram .d-art { order: 1; }
@@ -59,7 +59,7 @@
   .sheet .cols:has(.coming-soon) .stack { display: none; }
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
-  .coming-marquee { height: 180px; font-size: 11px; padding: 0 12px; }
+  .coming-marquee { height: 180px; font-size: 12px; padding: 0 12px; }
   .feature, .diagram, .diagram:nth-child(even) { grid-template-columns: 1fr; gap: 16px; }
   .feature:nth-child(even) figcaption { order: 0; }
   .detail .close { top: 20px; right: 20px; width: 44px; height: 44px; }

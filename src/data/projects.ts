@@ -19,7 +19,11 @@ export type Project = {
   logo?: string
   /** GIF + context blocks shown on the right of the popup; replace the gallery when set */
   features?: Feature[]
+  /** headline numbers for the whole system, shown first on the right of the popup */
+  metrics?: Metric[]
 }
+
+export type Metric = { value: string; label: string; note: string }
 
 export type Feature = { title: string; body: string; gif: string; alt: string }
 
@@ -41,8 +45,16 @@ export const projects: Project[] = [
     description:
       'The Georgia Department of Human Services relied on a decades-old mainframe to collect debts owed to the state, such as overpaid benefits and unpaid taxes. DSO Modernization replaces it with a responsive, cloud-native platform made of three connected portals: one for the public, one for agency staff and one for outside vendors. Behind them are multi-agency business rules, sensitive taxpayer data and bank file exchanges. All three portals share one design system that was built for accessibility from the start.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    metrics: [
+      { value: '3', label: 'Connected portals', note: 'One for the public, one for agency staff and one for outside vendors. They replace a single mainframe.' },
+      { value: '1', label: 'Shared design system', note: 'All three portals are built from it.' },
+      { value: '40%', label: 'Faster task completion', note: 'Measured for state caseworkers after the move from the mainframe to the web.' },
+      { value: 'AA', label: 'WCAG 2.1 target', note: 'I checked screens against it with axe and WAVE.' },
+      { value: '7', label: 'Tabs per taxpayer', note: 'Taxpayer 360 is the hub for one person.' },
+      { value: '16', label: 'Interactions below', note: 'Each one is shown as a short recording.' },
+    ],
     features: [
-      { title: "Watch the integrations work", body: "System process shows each partner interface and the file being handled right now, step by step, from connecting and transferring to validating and updating balances. Every interface has its own menu to view details, test the connection or pause feeds.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
+      { title: "Watch the integrations work", body: "System process lists each partner interface and the file it is handling right now. A checklist moves through connecting, transferring, validating and updating balances. Each interface has a menu for viewing details, testing the connection or pausing feeds.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
       { title: "See where claims come from", body: "A map of Georgia shaded by claims received. Pick a county or an agency, and switch between claims, amounts and intercepts.", gif: gif('counties_map'), alt: "Georgia county map reshading as the metric, agency and county change" },
       { title: "Say what happens next", body: "A void does not take effect straight away. The page confirms the check is waiting for supervisor approval and that nothing is sent to the bank until then.", gif: gif('check_void_approval'), alt: "Filling in a check void reason and comment and submitting for supervisor approval" },
       { title: "Reveal a number only on purpose", body: "Social Security numbers are masked by default. Revealing one is a deliberate click on a single row, limited by role and logged.", gif: gif('ssn_reveal'), alt: "Revealing and hiding a masked SSN in a table row" },

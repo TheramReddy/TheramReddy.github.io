@@ -19,7 +19,7 @@
 .panel.work, .panel.projects { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .panel.work::-webkit-scrollbar { display: none; }
 .work .inner { width: min(640px, calc(100% - 40px)); align-items: stretch; text-align: left; padding: 112px 0 120px 88px; }
-.job h4 em.chip-live { display: inline-flex; align-items: center; gap: 6px; align-self: center; padding: 4px 9px 4px 8px; border-radius: 999px; background: rgba(34,197,94,.07); color: #15803d; font: 500 11px/1 'Geist Variable', system-ui, sans-serif; letter-spacing: 0; }
+.job h4 em.chip-live { display: inline-flex; align-items: center; gap: 6px; align-self: center; padding: 4px 9px 4px 8px; border-radius: 999px; background: rgba(34,197,94,.07); color: #15803d; font: 500 13px/1 'Geist Variable', system-ui, sans-serif; letter-spacing: 0; }
 .chip-live .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.6), 0 0 8px 2px rgba(34,197,94,.55); animation: live-glow 1.8s ease-in-out infinite; }
 @keyframes live-glow { 50% { box-shadow: 0 0 0 4px rgba(34,197,94,0), 0 0 12px 3px rgba(34,197,94,.8); } }
 @media (prefers-reduced-motion: reduce) { .chip-live .dot { animation: none; } }
@@ -30,13 +30,13 @@
   position: absolute; right: calc(100% + 54px); top: 46px; text-align: right; white-space: nowrap;
   font: 600 14px/1.2 var(--font-mono); letter-spacing: .03em; color: rgba(10,10,10,.85);
 }
-.job .when small { display: block; font-size: 11px; font-weight: 500; opacity: .75; margin-bottom: 4px; letter-spacing: .1em; }
+.job .when small { display: block; font-size: 13px; font-weight: 500; opacity: .85; margin-bottom: 4px; letter-spacing: .1em; }
 .job .when small .sep { margin: 0 .6em; }
 .job::before { content: ""; position: absolute; left: -43px; top: 52px; width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1.5px solid rgba(10,10,10,.35); box-shadow: inset 0 0 0 2.5px #d9d7d2; }
 .logos { display: flex; height: 36px; margin-bottom: 16px; }
-.logos i { width: 28px; height: 28px; overflow: hidden; border-radius: 50%; border: 2px solid var(--bg); margin-right: -6px; display: grid; place-items: center; font: 600 10px/1 'Geist Variable', system-ui, sans-serif; font-style: normal; color: #fff; }
+.logos i { width: 28px; height: 28px; overflow: hidden; border-radius: 50%; border: 2px solid var(--bg); margin-right: -6px; display: grid; place-items: center; font: 600 11px/1 'Geist Variable', system-ui, sans-serif; font-style: normal; color: #fff; }
 .job h4 { font-size: 22px; font-weight: 500; line-height: 1.2; letter-spacing: -.02em; display: flex; align-items: baseline; gap: 12px; }
-.job h4 em { font: 500 11px/1 var(--font-mono); letter-spacing: .08em; color: #4a5bff; font-style: normal; }
+.job h4 em { font: 500 13px/1 var(--font-mono); letter-spacing: .08em; color: #4a5bff; font-style: normal; }
 .job .role { margin-top: 12px; font-size: 17px; letter-spacing: -.02em; }
 .job .about { margin-top: 8px; font-size: 17px; line-height: 1.5; letter-spacing: -.02em; color: var(--muted); max-width: 550px; }
 .logos img { width: 100%; height: 100%; object-fit: cover; }
@@ -44,11 +44,11 @@
 .logos i.img img { display: block; width: auto; height: 28px; max-width: none; object-fit: contain; }
 .logos i.img img[src$="scobin.svg"] { filter: brightness(0); }
 .job .proj { margin-top: 16px; margin-left: 20px; }
-.job .proj .view { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: inherit; text-decoration: underline; text-underline-offset: var(--underline-offset); }
+.job .proj .view { display: inline-flex; align-items: center; gap: 4px; font-size: 15px; color: inherit; text-decoration: underline; text-underline-offset: var(--underline-offset); }
 .job .proj .view svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
 .job .proj .view:hover svg { transform: translate(2px,-2px); }
 .job .tools-wrap { margin: 24px 0 0 20px; }
-.job .tools-title { font-size: 12px; color: var(--muted); margin: 0; }
+.job .tools-title { font-size: 14px; color: var(--muted); margin: 0; }
 .job .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 8px 0 0; padding: 0; list-style: none; }
 .job .tools img { display: block; filter: grayscale(1) contrast(.8) brightness(1.1); opacity: .5; transition: opacity .3s var(--ease), transform .3s var(--ease); object-fit: contain; width: 22px; height: 22px; }
 .job .tools li:hover img { opacity: .85; transform: translateY(-2px) scale(1.12); }
@@ -74,15 +74,15 @@
 /* projects: case studies */
 .panel.projects::-webkit-scrollbar { display: none; }
 .projects .inner { width: min(980px, calc(100% - 40px)); align-items: stretch; text-align: left; padding: 112px 0 120px; }
-.cs-eyebrow { margin-bottom: 0; font: 500 12px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cs-eyebrow { margin-bottom: 0; font: 500 15px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg); }
 .cs-list { display: flex; flex-direction: column; margin-top: 32px; }
 .cs { display: block; padding: 32px 0; border-top: 1px solid var(--line); color: inherit; }
 .cs-list li:last-child .cs { border-bottom: 1px solid var(--line); }
 .cs-body { display: flex; flex-direction: column; min-width: 0; }
-.cs-meta { font: 500 11px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.cs-meta { font: 500 14px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--fg); }
 .cs-title { margin-top: 12px; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.05; letter-spacing: -.04em; }
 .cs-summary { margin-top: 12px; max-width: 460px; font-size: 16px; line-height: 1.45; color: var(--muted); }
-.cs-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 24px; font-size: 13px; }
+.cs-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 24px; font-size: 15px; }
 .cs-stack { color: var(--muted); }
 .cs-go { display: inline-flex; align-items: center; gap: 4px; text-decoration: underline; text-underline-offset: var(--underline-offset); white-space: nowrap; }
 .cs-go svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }

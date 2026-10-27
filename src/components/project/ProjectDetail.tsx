@@ -116,6 +116,20 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               </div>
             </div>
             <div className="gallery">
+              {p.metrics && (
+                <section className="metrics" aria-label="System at a glance">
+                  <h3>The system at a glance</h3>
+                  <dl>
+                    {p.metrics.map((m) => (
+                      <div className="metric" key={m.label}>
+                        <dt>{m.label}</dt>
+                        <dd>{m.value}</dd>
+                        <p>{m.note}</p>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              )}
               {p.features && <Diagrams features={p.features} />}
               {p.features?.filter((f) => !diagramGifs.includes(f.gif)).map((f) => (
                 <figure className="feature" key={f.gif}>

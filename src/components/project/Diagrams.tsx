@@ -131,7 +131,7 @@ export const diagramGifs = [
 const items = [
   { title: 'Finding a taxpayer should take one search.', body: 'Staff look people up many times a day, and menus put a wall between them and the taxpayer they need. A single search box goes around it: results as you type, from any screen.', art: <Barrier /> },
   { title: 'Most work is finding the next step.', body: 'A record leads to a claim, a claim to a case, a case to a decision. The interface should move people through those layers with the right context, and surface what to do next instead of making them dig.', art: <Layers /> },
-  { title: 'Sensitive data stays masked until someone asks.', body: 'Sensitive data is masked by default. Seeing more takes a deliberate action that is limited by role and logged.', art: <Reveal /> },
+  { title: 'Sensitive data stays masked until someone asks.', body: 'Social Security numbers show as dots until someone clicks to reveal one. The click works on a single row, depends on the person\'s role, and is logged.', art: <Reveal /> },
   { title: 'Say what has not happened yet.', body: 'A void does not take effect straight away. The page says the check is waiting for a supervisor and that nothing has gone to the bank, so nobody has to guess whether it is done.', art: <Pending /> },
 ]
 

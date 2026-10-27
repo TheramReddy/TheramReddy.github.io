@@ -13,7 +13,7 @@
 :root {
   --bg: #f4f3ef;
   --fg: #0a0a0a;
-  --muted: rgba(10, 10, 10, 0.62);
+  --muted: rgba(10, 10, 10, 0.72);
   --card: #e4e2dc;
   --line: rgba(10, 10, 10, 0.14);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -30,7 +30,7 @@
   --primary-foreground: #ffffff;
   --secondary: #efeeea;
   --secondary-foreground: #0a0a0a;
-  --muted-foreground: rgba(10, 10, 10, 0.62);
+  --muted-foreground: rgba(10, 10, 10, 0.72);
   --accent: #efeeea;
   --accent-foreground: #0a0a0a;
   --destructive: #dc2626;
@@ -128,6 +128,6 @@ ul {
   list-style: none;
 }
 .label {
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: -0.01em;
 }
