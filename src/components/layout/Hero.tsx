@@ -6,7 +6,7 @@ import { site } from '@/data/site'
 import { NowStatus } from './NowStatus'
 
 const CYCLE_MS = 4200
-const COLORS = ['#3b8fe8', '#6a9a82', '#b98562', '#5f86b8']
+const COLORS = ['#3b8fe8', '#2fa37a', '#e0793a', '#8b5cf6', '#d9467a', '#c99a1c', '#1fa5b8']
 const { stagger, spring, blur, duration, ease } = motionTokens
 
 /** Figma-style selection frame whose text keeps swapping; the frame springs to fit the current phrase. */
