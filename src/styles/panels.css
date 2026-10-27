@@ -154,18 +154,6 @@
 .hero p a.work-link { display: inline-flex; align-items: center; white-space: nowrap; }
 .hero p a.work-link svg { flex: none; width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
 .hero p a.work-link:hover svg, .hero p a.work-link:focus-visible svg { transform: translate(2px, -2px); }
-.glyph { display: inline-block; width: .78em; height: .78em; vertical-align: -.05em; margin: 0 .12em; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; transform-origin: 50% 50%; overflow: visible; }
-.glyph .fill { fill: currentColor; stroke: none; }
-.glyph .eye { fill: var(--bg); }
-.glyph-spark { animation: spin 6s linear infinite; }
-.glyph-burst { animation: spin 9s linear infinite reverse; }
-.glyph-plus { animation: spin-pulse 3.2s var(--ease) infinite; }
-.glyph-flower { animation: spin 12s linear infinite, bloom 2.8s ease-in-out infinite; }
-.glyph-star { animation: spin-pulse 2.4s var(--ease) infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes bloom { 0%, 100% { scale: 1; } 50% { scale: 1.18; } }
-@keyframes spin-pulse { 0%, 100% { transform: rotate(0) scale(1); } 50% { transform: rotate(90deg) scale(1.25); } }
-@media (prefers-reduced-motion: reduce) { .glyph { animation: none; } }
 
 /* about me: hero block, left-aligned and centered in the frame */
 .panel.me .inner { width: min(1040px, calc(100% - 40px)); align-items: flex-start; text-align: left; }
@@ -175,3 +163,13 @@
 .arc.contact-modal::-webkit-scrollbar, .arc.contact-modal *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 [class*="_overlay_"], [class*="_overlay_"] * { scrollbar-width: none; }
 [class*="_overlay_"]::-webkit-scrollbar { display: none; }
+/* Figma-style selection frame around the cycling phrase */
+.frame { --c: #3b8fe8; position: relative; box-sizing: content-box; display: inline-grid; vertical-align: baseline; padding: .06em .26em .1em; margin-left: .06em; border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 9%, transparent); transition: border-color .5s var(--ease), background-color .5s var(--ease); }
+.frame-measure { position: absolute; visibility: hidden; white-space: nowrap; pointer-events: none; }
+.frame-text { grid-area: 1 / 1; justify-self: start; display: inline-flex; white-space: nowrap; }
+.frame .handle { position: absolute; width: 9px; height: 9px; background: #fff; border: 1.5px solid var(--c); transform: translate(-50%, -50%); transition: border-color .5s var(--ease); }
+.frame .tl-h { left: 0; top: 0; } .frame .tr-h { left: 100%; top: 0; } .frame .bl-h { left: 0; top: 100%; } .frame .br-h { left: 100%; top: 100%; }
+/* collaborator-style cursor that grabs the bottom-right handle */
+.cursor { position: absolute; left: 100%; top: 100%; z-index: 2; pointer-events: none; font-size: 12px; letter-spacing: 0; line-height: 1; }
+.cursor svg { display: block; fill: var(--c); stroke: #fff; stroke-width: 1.2; stroke-linejoin: round; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); transition: fill .5s var(--ease); }
+.cursor b { position: absolute; left: 14px; top: 20px; padding: 4px 8px; border-radius: 6px; background: var(--c); color: #fff; font: 500 12px/1 var(--font-mono); white-space: nowrap; transition: background-color .5s var(--ease); }

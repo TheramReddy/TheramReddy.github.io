@@ -36,33 +36,29 @@
 
   /* project popup */
   .sheet { inset: 10px; border-radius: 20px; }
-  .sheet .cols { grid-template-columns: minmax(0, 1fr); padding: 96px 20px 88px; gap: 24px; }
-  .sheet .info { position: static; width: auto; padding-top: 0; min-height: 0; }
-  .gallery, .d-art, .d-result { min-width: 0; max-width: 100%; }
-  .scroll-hint { display: none; }
+  .sheet .cols { padding: 96px 20px 88px; gap: 56px; }
+  .gallery, .d-art { min-width: 0; max-width: 100%; }
   .sheet h2 { font-size: 34px; }
   .sheet .desc { margin-top: 16px; font-size: 16px; line-height: 1.45; }
   .sheet .stack { margin-top: 24px; }
   .chip { height: 36px; font-size: 14px; }
   .sheet { overflow-x: hidden; }
-  .sheet .cols > *, .diagram > *, .feature > * { min-width: 0; }
+  .sheet .cols > *, .diagram > * { min-width: 0; }
   .stack-title, .about-title { font-size: 14px; }
-  /* heading, text, sketch, then the GIF result */
-  .diagram .d-copy { display: contents; }
-  .diagram .d-art { order: 1; }
-  .diagram .d-result { order: 2; margin: 0; max-width: none; }
-  .diagram h3, .feature h3 { font-size: 24px; }
-  .diagram p, .feature p { font-size: 16px; }
+  .in-action-title { font-size: 24px; }
+  .coverflow { --w: 270px; --step: 285px; height: 500px; }
+  .coverflow.wide { --w: 310px; --step: 322px; height: 570px; }
+  .coverflow.wide .d-shot { height: 270px; padding: 8px; }
+  .cf-dots { margin-top: 40px; }
+  .diagram p { font-size: 16px; }
   .gallery { gap: 80px; padding-top: 0; }
-  .gallery > .diagram::before, .gallery > .feature::before { top: -42px; }
+  .gallery > .problems::before { top: -42px !important; }
   /* unfinished case study: keep the scene on the first screen, so skip the tools list and size it to fit */
   .sheet .cols:has(.coming-soon) { gap: 8px; }
   .sheet .cols:has(.coming-soon) .stack { display: none; }
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
   .coming-marquee { height: 180px; font-size: 12px; padding: 0 12px; }
-  .feature, .diagram, .diagram:nth-child(even) { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .feature:nth-child(even) figcaption { order: 0; }
   .detail .close { top: 20px; right: 20px; width: 44px; height: 44px; }
   .progress { left: 22px; bottom: 22px; }
 }

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Check } from 'lucide-react'
+import { Check, CircleAlert, FileText, Gauge, Play, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { CONFETTI } from '@/components/layout/confetti'
 import { projects, type Project } from '@/data/projects'
 import { tools, type ToolId } from '@/data/tools'
 import { cn } from '@/lib/utils'
-import { Diagrams, diagramGifs } from './Diagrams'
+import { ActionSlider } from './ActionSlider'
+import { Diagrams } from './Diagrams'
 import { PixelDesk } from './PixelDesk'
 
 const projectTools: ToolId[] = ['figma', 'sketch', 'storybook', 'claude', 'rust', 'css', 'git', 'html']
@@ -44,6 +45,112 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
           Next case study: {next.title}
         </Button>
       )}
+    </div>
+  )
+}
+
+const sections: { id: string; label: string; Icon: LucideIcon }[] = [
+  { id: 'cs-overview', label: 'Overview', Icon: FileText },
+  { id: 'cs-glance', label: 'At a glance', Icon: Gauge },
+  { id: 'cs-problems', label: 'The problems', Icon: CircleAlert },
+  { id: 'cs-action', label: 'In action', Icon: Play },
+]
+
+/** Side menu that stays in view and jumps between the case study sections. */
+function SectionNav({ root }: { root: RefObject<HTMLDivElement | null> }) {
+  const [current, setCurrent] = useState(sections[0].id)
+
+  useEffect(() => {
+    const sheet = root.current
+    if (!sheet) return
+    const onScroll = () => {
+      const line = sheet.getBoundingClientRect().top + sheet.clientHeight * 0.4
+      let id = sections[0].id
+      for (const s of sections) {
+        const el = document.getElementById(s.id)
+        if (el && el.getBoundingClientRect().top <= line) id = s.id
+      }
+      setCurrent(id)
+    }
+    sheet.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => sheet.removeEventListener('scroll', onScroll)
+  }, [root])
+
+  return (
+    <div className="side-nav-rail">
+      <nav className="side-nav" aria-label="Case study sections">
+        {sections.map(({ id, label, Icon }) => (
+          <button
+            key={id}
+            className={cn('side-nav-btn', current === id && 'on')}
+            aria-label={label}
+            aria-current={current === id}
+            onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          >
+            <Icon size={18} strokeWidth={1.8} aria-hidden="true" />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  )
+}
+
+/** Custom page scrollbar for the sheet: draggable thumb, click the track to jump. */
+function SheetScrollbar({ root }: { root: RefObject<HTMLDivElement | null> }) {
+  const bar = useRef<HTMLDivElement>(null)
+  const thumb = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const sheet = root.current
+    if (!sheet) return
+    const sync = () => {
+      const b = bar.current, t = thumb.current
+      if (!b || !t) return
+      const max = sheet.scrollHeight - sheet.clientHeight
+      const h = Math.max(48, (sheet.clientHeight / sheet.scrollHeight) * b.clientHeight)
+      t.style.height = `${h}px`
+      t.style.top = `${max > 0 ? (sheet.scrollTop / max) * (b.clientHeight - h) : 0}px`
+    }
+    sheet.addEventListener('scroll', sync, { passive: true })
+    const ro = new ResizeObserver(sync)
+    ro.observe(sheet)
+    for (const c of Array.from(sheet.children)) ro.observe(c)
+    sync()
+    return () => { sheet.removeEventListener('scroll', sync); ro.disconnect() }
+  }, [root])
+
+  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const sheet = root.current, b = bar.current, t = thumb.current
+    if (!sheet || !b || !t) return
+    const max = sheet.scrollHeight - sheet.clientHeight
+    const room = b.clientHeight - t.offsetHeight
+    if (max <= 0 || room <= 0) return
+    const grab = e.target === t ? e.clientY - t.getBoundingClientRect().top : t.offsetHeight / 2
+    const to = (y: number) => {
+      sheet.scrollTop = Math.max(0, Math.min(1, (y - b.getBoundingClientRect().top - grab) / room)) * max
+    }
+    b.setPointerCapture(e.pointerId)
+    b.classList.add('drag')
+    to(e.clientY)
+    const move = (ev: PointerEvent) => to(ev.clientY)
+    const up = () => {
+      b.classList.remove('drag')
+      b.removeEventListener('pointermove', move)
+      b.removeEventListener('pointerup', up)
+      b.removeEventListener('pointercancel', up)
+    }
+    b.addEventListener('pointermove', move)
+    b.addEventListener('pointerup', up)
+    b.addEventListener('pointercancel', up)
+  }
+
+  return (
+    <div className="sheet-bar-rail" aria-hidden="true">
+      <div className="sheet-bar" ref={bar} onPointerDown={onDown}>
+        <span className="sheet-bar-thumb" ref={thumb} />
+      </div>
     </div>
   )
 }
@@ -91,9 +198,11 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
         </svg>
       </div>
       <div className="sheet" ref={sheet} onScroll={progress}>
+        <SheetScrollbar root={sheet} />
+        {p?.features && <SectionNav root={sheet} />}
         {p && (
           <div className="cols">
-            <div className="info">
+            <div className="info" id="cs-overview">
               {p.logo && <img className="proj-logo" src={p.logo} alt="Georgia Department of Human Services" />}
               <h2>{p.title}</h2>
               <p className="about-title">About project</p>
@@ -109,15 +218,10 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                   ))}
                 </ul>
               </div>
-              <div className="scroll-hint" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9l5-5 5 5" /></svg>
-                <span>Scroll</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 5l5 5 5-5" /></svg>
-              </div>
             </div>
             <div className="gallery">
               {p.metrics && (
-                <section className="metrics" aria-label="System at a glance">
+                <section className="metrics" id="cs-glance" aria-label="System at a glance">
                   <h3>The system at a glance</h3>
                   <dl>
                     {p.metrics.map((m) => (
@@ -130,16 +234,8 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                   </dl>
                 </section>
               )}
-              {p.features && <Diagrams features={p.features} />}
-              {p.features?.filter((f) => !diagramGifs.includes(f.gif)).map((f) => (
-                <figure className="feature" key={f.gif}>
-                  <figcaption>
-                    <h3>{f.title}</h3>
-                    <p>{f.body}</p>
-                  </figcaption>
-                  <img src={f.gif} alt={f.alt} loading="lazy" />
-                </figure>
-              ))}
+              {p.features && <Diagrams />}
+              {p.features && <ActionSlider features={p.features} />}
               {!p.features && (
                 <div className="coming-soon">
                   <PixelDesk />

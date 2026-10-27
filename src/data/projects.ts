@@ -28,6 +28,7 @@ export type Metric = { value: string; label: string; note: string }
 export type Feature = { title: string; body: string; gif: string; alt: string }
 
 const gif = (name: string) => `/projects/liheap-eap/${name}.gif`
+const shot = (name: string) => `/projects/dso-modernization/${name}.gif`
 
 /** Add a project: append an entry here and drop images in /public/projects/<slug>/. */
 export const projects: Project[] = [
@@ -43,26 +44,29 @@ export const projects: Project[] = [
     client: 'Georgia DHS',
     summary: 'A legacy mainframe rebuilt as three connected, cloud-native portals on one shared design system, with accessibility built in.',
     description:
-      'The Georgia Department of Human Services relied on a decades-old mainframe to collect debts owed to the state, such as overpaid benefits and unpaid taxes. DSO Modernization replaces it with a responsive, cloud-native platform made of three connected portals: one for the public, one for agency staff and one for outside vendors. Behind them are multi-agency business rules, sensitive taxpayer data and bank file exchanges. All three portals share one design system that was built for accessibility from the start.',
+      'The Georgia Department of Human Services (DHS) had been using an outdated mainframe system to manage debt recovery for years. The DSO Modernization project brings this process into a modern, cloud-based platform with three connected portals for the public, agency staff, and external vendors. The goal was to make complex tasks like managing claims, hearings, payments, and reconciliation easier, faster, and more accessible for everyone involved.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     metrics: [
-      { value: '3', label: 'Connected portals', note: 'One for the public, one for agency staff and one for outside vendors. They replace a single mainframe.' },
-      { value: '1', label: 'Shared design system', note: 'All three portals are built from it.' },
-      { value: '40%', label: 'Faster task completion', note: 'Measured for state caseworkers after the move from the mainframe to the web.' },
-      { value: 'AA', label: 'WCAG 2.1 target', note: 'I checked screens against it with axe and WAVE.' },
-      { value: '7', label: 'Tabs per taxpayer', note: 'Taxpayer 360 is the hub for one person.' },
-      { value: '16', label: 'Interactions below', note: 'Each one is shown as a short recording.' },
+      { value: '3', label: 'Connected portals', note: 'Separate experiences for taxpayers, agency staff, and external vendors.' },
+      { value: '1', label: 'Shared design system', note: 'Keeping the experience familiar and consistent across all three portals.' },
+      { value: '24/7', label: 'Online access', note: 'Moving essential services online so users aren’t tied to traditional office hours.' },
+      { value: 'AA', label: 'Accessibility target', note: 'Designed with WCAG 2.1 AA accessibility principles in mind.' },
+      { value: '4', label: 'Core workflows', note: 'Claims, hearings, reconciliation, and financial processing—all connected.' },
+      { value: '360°', label: 'Taxpayer view', note: 'Bringing claims, transactions, hearings, and payment history into one place.' },
     ],
     features: [
       { title: "Watch the integrations work", body: "System process lists each partner interface and the file it is handling right now. A checklist moves through connecting, transferring, validating and updating balances. Each interface has a menu for viewing details, testing the connection or pausing feeds.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
       { title: "See where claims come from", body: "A map of Georgia shaded by claims received. Pick a county or an agency, and switch between claims, amounts and intercepts.", gif: gif('counties_map'), alt: "Georgia county map reshading as the metric, agency and county change" },
+      { title: "Follow the money, step by step", body: "Intercepts, disbursements and refunds each get their own tab with a count, under running totals for claimed, intercepted, disbursed and returned.", gif: shot('trail'), alt: "Switching between the intercepts, disbursements and refunds tabs of a taxpayer record" },
       { title: "Say what happens next", body: "A void does not take effect straight away. The page confirms the check is waiting for supervisor approval and that nothing is sent to the bank until then.", gif: gif('check_void_approval'), alt: "Filling in a check void reason and comment and submitting for supervisor approval" },
+      { title: "Explain why funds are held", body: "A taxpayer under hearing review is marked on the record. The Hearing tab says funds are held while a hearing is active and where review and approval happen.", gif: shot('hold'), alt: "A taxpayer marked Hearing: Under review, then the Hearing tab explaining the hold" },
       { title: "Reveal a number only on purpose", body: "Social Security numbers are masked by default. Revealing one is a deliberate click on a single row, limited by role and logged.", gif: gif('ssn_reveal'), alt: "Revealing and hiding a masked SSN in a table row" },
       { title: "Plan a month of batches in a few clicks", body: "Pick a date range, choose how often it repeats and generate the schedule. Past dates are locked, and the page warns that a scheduled batch cannot change on the day it runs.", gif: gif('check_batch_scheduling'), alt: "Choosing a date range and a weekly repeat and generating four scheduled batch dates" },
       { title: "Look inside the file that was sent", body: "Open any bank file to see check-level detail, then the outbound file itself, as fields with character positions or as raw fixed-width text. Rejections can be traced to the exact line.", gif: gif('regions_file_drilldown'), alt: "Opening a bank file and switching between the records view and the raw source text" },
       { title: "Hover to read the number", body: "Moving across the donut highlights the matching status in the legend and shows its count and share in the centre.", gif: gif('chart_tooltips'), alt: "Hovering over segments of a check status donut chart" },
       { title: "Find a person from anywhere", body: "Press Ctrl K on any screen to search pages and taxpayers in one box. Results update as you type and say what each will open.", gif: gif('command_palette_search'), alt: "Command palette searching for the name Alder and listing four matching taxpayers" },
       { title: "Narrow a long list, quickly", body: "Sort by any column header, then filter by column. Built for repeated work: search, filter, open a record, move to the next.", gif: gif('table_sort_filter'), alt: "Taxpayer table sorted by name and then filtered by city to show only Savannah" },
+      { title: "Pull the exceptions to the top", body: "Type Exception into the latest status filter and only the rows that need a person remain, marked in red.", gif: shot('signal'), alt: "Typing Exception into the latest status filter so only the red exception rows remain" },
       { title: "Let people size their own table", body: "Drag the edge of a column to widen or narrow it. The same handle works from the keyboard.", gif: gif('table_column_resize'), alt: "Dragging a column edge to widen the Taxpayer ID column and back again" },
       { title: "Show only what the job needs", body: "The column picker lists every field and says how many are hidden, so a case manager and a supervisor can each see the view they need.", gif: gif('table_choose_columns'), alt: "Opening the column chooser and toggling columns on and off" },
       { title: "Move through results without losing your place", body: "Pagination shows where you are in the set, for example 1 to 15 of 96, and lets you change how many rows appear per page.", gif: gif('table_pagination'), alt: "Paging through the taxpayer table, from page 1 to 2 to 3 and back" },

@@ -1,28 +1,89 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { Link } from 'react-router-dom'
 import { site } from '@/data/site'
 import { NowStatus } from './NowStatus'
 
-type Kind = 'spark' | 'flower' | 'burst' | 'star' | 'plus'
-const order: Kind[] = ['spark', 'flower']
+const CYCLE_MS = 4200
+const COLORS = ['#3b8fe8', '#6a9a82', '#b98562', '#5f86b8']
+const { stagger, spring, blur, duration, ease } = motionTokens
 
-/** Animated glyphs separating the hero phrases. */
-function Glyph({ kind }: { kind: Kind }) {
+/** Figma-style selection frame whose text keeps swapping; the frame springs to fit the current phrase. */
+function SelectionFrame({ phrases }: { phrases: string[] }) {
+  const [i, setI] = useState(0)
+  const [widths, setWidths] = useState<number[]>([])
+  const refs = useRef<(HTMLSpanElement | null)[]>([])
+  const reduce = useReducedMotion()
+
+  const [grab, setGrab] = useState(false)
+  const frameRef = useRef<HTMLSpanElement>(null)
+
+  // Each cycle: a cursor flies to the corner handle, drags the frame to the next phrase's size, then drifts off.
+  useEffect(() => {
+    const timers: number[] = []
+    const tick = () => {
+      setGrab(true)
+      timers.push(window.setTimeout(() => setI((n) => (n + 1) % phrases.length), 700))
+      timers.push(window.setTimeout(() => setGrab(false), 1900))
+    }
+    const loop = window.setInterval(tick, CYCLE_MS)
+    timers.push(window.setTimeout(tick, 1200))
+    return () => { clearInterval(loop); timers.forEach(clearTimeout) }
+  }, [phrases.length])
+
+  useLayoutEffect(() => {
+    const measure = () => setWidths(refs.current.map((el) => el?.offsetWidth ?? 0))
+    measure()
+    document.fonts?.ready.then(measure)
+    addEventListener('resize', measure)
+    return () => removeEventListener('resize', measure)
+  }, [])
+
+  const phrase = phrases[i]
+  const color = COLORS[i % COLORS.length]
+  const rest = { x: 64, y: 44, opacity: 0 }
   return (
-    <svg className={`glyph glyph-${kind}`} viewBox="0 0 24 24" aria-hidden="true">
-      {kind === 'spark' && <path d="M12 1v22M1 12h22M4.2 4.2l15.6 15.6M19.8 4.2L4.2 19.8" />}
-      {kind === 'burst' && <path d="M12 1v22M2.5 6.5l19 11M2.5 17.5l19-11" />}
-      {kind === 'plus' && <path d="M12 3v18M3 12h18" />}
-      {kind === 'star' && <path className="fill" d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z" />}
-      {kind === 'flower' && (
-        <g className="fill">
-          {[0, 45, 90, 135].map((r) => (
-            <ellipse key={r} cx="12" cy="12" rx="3.2" ry="10.5" transform={`rotate(${r} 12 12)`} />
+    <motion.span
+      ref={frameRef}
+      className="frame"
+      style={{ ['--c' as string]: color }}
+      initial={false}
+      animate={{ width: widths[i] || 'auto' }}
+      transition={reduce ? { duration: 0 } : spring.morph}
+    >
+      {phrases.map((t, n) => (
+        <span key={t} ref={(el) => { refs.current[n] = el }} className="frame-measure" aria-hidden="true">{t}</span>
+      ))}
+      <AnimatePresence initial={false}>
+        <span key={phrase} className="frame-text" aria-label={phrase}>
+          {[...phrase].map((ch, n) => (
+            <motion.span
+              key={n}
+              aria-hidden="true"
+              initial={reduce ? false : { opacity: 0, y: '0.5em', filter: `blur(${blur.text}px)` }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: n * stagger.char + 0.08, duration: duration.considered, ease: ease.enter } }}
+              exit={{ opacity: 0, y: '-0.4em', filter: `blur(${blur.text}px)`, transition: { delay: n * stagger.char * 0.5, duration: duration.exit, ease: ease.exit } }}
+            >
+              {ch === ' ' ? ' ' : ch}
+            </motion.span>
           ))}
-          <circle cx="12" cy="12" r="2.6" className="eye" />
-        </g>
+        </span>
+      </AnimatePresence>
+      <i className="handle tl-h" /><i className="handle tr-h" /><i className="handle bl-h" /><i className="handle br-h" />
+      {!reduce && (
+        <motion.span
+          className="cursor"
+          aria-hidden="true"
+          initial={rest}
+          animate={grab ? { x: 0, y: 0, opacity: 1, scale: 1 } : rest}
+          transition={grab ? { type: 'spring', visualDuration: 0.6, bounce: 0.15 } : { duration: 0.5, ease: ease.exit }}
+        >
+          <svg viewBox="0 0 16 20" width="18" height="22"><path d="M1 1v15l4.2-3.8L8 19l2.6-1.1-2.8-6.2H14z" /></svg>
+          <b>{Math.round(widths[i] || 0)} × {frameRef.current?.offsetHeight ?? 0}</b>
+        </motion.span>
       )}
-    </svg>
+    </motion.span>
   )
 }
 
@@ -43,20 +104,12 @@ function LiveClock() {
   )
 }
 
-/** Landing intro: name, disciplines separated by animated glyphs, and a link to the work. */
+/** Landing intro: a headline with a cycling selection frame, and a link to the work. */
 export function Hero() {
   return (
     <header className="hero">
       <h1>
-        <span>{site.name}</span>{' '}
-        {site.disciplines.map((t, i) => (
-          <Fragment key={t}>
-            <span>
-              {t}&nbsp;
-              <Glyph kind={order[i]} />
-            </span>{' '}
-          </Fragment>
-        ))}
+        <span>I make</span> <SelectionFrame phrases={site.disciplines} />
       </h1>
       <p>
         <Link to="/work" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>

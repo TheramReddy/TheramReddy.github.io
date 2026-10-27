@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react'
-import type { Feature } from '@/data/projects'
+import type { CSSProperties, ReactNode } from 'react'
+import { cn } from '@/lib/utils'
+import { Carousel } from './Carousel'
 
-/** Hand-drawn style explainers shown above the GIF walkthrough. */
+/** Hand-drawn style explainers of each problem, shown before the GIF walkthrough. */
 const Defs = ({ id }: { id: string }) => (
   <defs>
     <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
@@ -11,150 +12,279 @@ const Defs = ({ id }: { id: string }) => (
 )
 
 const Box = ({ x, y, w, children }: { x: number; y: number; w: number; children: ReactNode }) => (
-  <g>
-    <rect x={x} y={y} width={w} height="38" rx="11" className="d-box" />
-    <text x={x + w / 2} y={y + 25} textAnchor="middle" className="d-label">{children}</text>
+  <text x={x + w / 2} y={y + 25} textAnchor="middle" className="d-label d-em">{children}</text>
+)
+
+/** Stick figure standing with its feet at (x, y). */
+const Person = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
+  <g fill="currentColor" transform={`translate(${x} ${y}) scale(${s}) translate(-190 -250)`}>
+    <circle cx="190" cy="190" r="9" />
+    <path d="M185 202 L195 202 L204 218 L200 221 L195 213 L195 232 L199 250 L194 250 L190 236 L186 250 L181 250 L185 232 L185 213 L180 221 L176 218 Z" />
   </g>
 )
 
-function Barrier() {
-  const m = 'url(#arr8)'
+const Doc = ({ x, y, w = 110, rot = 0, children }: { x: number; y: number; w?: number; rot?: number; children: ReactNode }) => (
+  <g transform={`rotate(${rot} ${x + w / 2} ${y + 43})`}>
+    <rect x={x} y={y} width={w} height="86" rx="3" className="d-box" />
+    <text x={x + w / 2} y={y + 32} textAnchor="middle" className="d-label">{children}</text>
+    <path d={`M${x + 16} ${y + 50} H${x + w - 16} M${x + 16} ${y + 66} H${x + w - 40}`} className="d-line" />
+  </g>
+)
+
+function Wall() {
+  const m = 'url(#arr-wall)'
   return (
     <svg viewBox="0 0 640 380" role="img" aria-label="A person blocked by menus from the taxpayer they need; one search box goes around the wall">
-      <Defs id="arr8" />
+      <Defs id="arr-wall" />
       <text x="96" y="58" className="d-label">Menus</text>
       <path d="M172 52 Q206 58 240 50" className="d-line" markerEnd={m} />
       <path d="M300 30 L300 250" className="d-line" strokeWidth="2" />
       <path d="M100 250 L540 250" className="d-line" strokeWidth="2" />
-      <g fill="currentColor">
-        <circle cx="190" cy="190" r="9" />
-        <path d="M185 202 L195 202 L204 218 L200 221 L195 213 L195 232 L199 250 L194 250 L190 236 L186 250 L181 250 L185 232 L185 213 L180 221 L176 218 Z" />
-      </g>
+      <Person x={190} y={250} />
       <ellipse cx="420" cy="120" rx="80" ry="44" transform="rotate(-8 420 120)" className="d-box" />
       <text x="420" y="127" textAnchor="middle" className="d-label">Taxpayer</text>
       <path d="M420 206 L407 242 L433 242 Z" fill="currentColor" />
       <path d="M196 270 Q300 320 414 270" className="d-line d-dash" markerEnd={m} />
-      <Box x={185} y={322} w={270}>One search box, Ctrl K</Box>
+      <Box x={185} y={322} w={270}>One search, Ctrl K</Box>
     </svg>
   )
 }
 
-function Layers() {
-  const m = 'url(#arr9)'
+function Hold() {
+  const m = 'url(#arr-hold)'
   return (
-    <svg viewBox="0 0 700 590" role="img" aria-label="Staff move through layers of records, claims, cases and decisions, driven by context and understanding">
-      <Defs id="arr9" />
-      <g className="d-line" strokeWidth="1.2">
-        <path d="M90 450 L90 70" markerEnd={m} />
-        <path d="M90 450 L480 450" markerEnd={m} />
-        <path d="M90 360 A90 90 0 0 1 180 450" />
-        <path d="M90 270 A180 180 0 0 1 270 450" />
-        <path d="M90 180 A270 270 0 0 1 360 450" />
-        <path d="M90 90 A360 360 0 0 1 450 450" />
-        <path d="M376 232 L486 232" markerEnd={m} />
+    <svg viewBox="0 0 640 380" role="img" aria-label="A person waits at a locked gate labelled hearing review, between them and their funds; the page should show who acts next">
+      <Defs id="arr-hold" />
+      <path d="M20 290 H620" className="d-line" strokeWidth="2" />
+      <Person x={70} y={290} />
+      <path d="M100 262 Q160 215 262 232" className="d-line d-dash" markerEnd={m} />
+      <text x="330" y="150" textAnchor="middle" className="d-label">Hearing review</text>
+      <g className="d-line" strokeWidth="2">
+        <path d="M285 290 V175 M375 290 V175 M285 175 Q330 150 375 175" />
+        <path d="M305 290 V168 M325 290 V160 M345 290 V160 M365 290 V168" strokeWidth="1.2" />
       </g>
-      <ellipse cx="185" cy="355" rx="135" ry="52" transform="rotate(-45 185 355)" className="d-line" strokeWidth="2.4" fill="none" />
-      <g className="d-label d-em d-halo" textAnchor="middle">
-        <text x="140" y="424">Records</text>
-        <text x="190" y="360">Claims</text>
-        <text x="252" y="296">Cases</text>
-        <text x="316" y="230">Decisions</text>
-      </g>
-      <text x="500" y="238" className="d-label">Surface the <tspan className="d-em">next step</tspan></text>
-      <g transform="translate(40 290) rotate(-90)">
-        <rect x="-46" y="-17" width="92" height="34" rx="10" className="d-box" />
-        <text x="0" y="7" textAnchor="middle" className="d-label">Context</text>
-      </g>
-      <Box x={205} y={470} w={170}>Understanding</Box>
-      <path d="M96 458 Q92 520 128 540" className="d-line" markerEnd={m} />
-      <text x="142" y="546" className="d-label">Drill through</text>
-      <text x="142" y="570" className="d-label">the layers</text>
+      <rect x="312" y="215" width="36" height="30" rx="4" fill="currentColor" />
+      <path d="M319 215 V205 A11 11 0 0 1 341 205 V215" className="d-line" strokeWidth="3" />
+      <path d="M390 232 Q450 225 500 245" className="d-line d-dash" markerEnd={m} />
+      <ellipse cx="548" cy="255" rx="62" ry="34" className="d-box" />
+      <text x="548" y="264" textAnchor="middle" className="d-label">Funds</text>
+      <path d="M200 340 Q260 340 322 300" className="d-line" markerEnd={m} />
+      <text x="190" y="352" textAnchor="end" className="d-small d-em">Who acts next?</text>
+      <Box x={390} y={326} w={235}>Show the next action</Box>
     </svg>
   )
 }
 
-function Pending() {
-  const m = 'url(#arr10)'
+function Maze() {
+  const m = 'url(#arr-maze)'
   return (
-    <svg viewBox="0 0 640 340" role="img" aria-label="A person on the submitted step asks if it is done; the approval and bank steps are dashed because they have not happened yet">
-      <Defs id="arr10" />
-      <ellipse cx="205" cy="74" rx="66" ry="30" className="d-box" />
-      <text x="205" y="81" textAnchor="middle" className="d-label">Is it done?</text>
-      <g fill="currentColor">
-        <circle cx="90" cy="130" r="9" />
-        <path d="M85 142 L95 142 L104 158 L100 161 L95 153 L95 172 L99 190 L94 190 L90 176 L86 190 L81 190 L85 172 L85 153 L80 161 L76 158 Z" />
-      </g>
-      <rect x="30" y="190" width="140" height="46" rx="12" className="d-box d-big" />
-      <text x="100" y="219" textAnchor="middle" className="d-label">Submitted</text>
-      <rect x="250" y="150" width="140" height="46" rx="12" className="d-box" strokeDasharray="6 6" />
-      <text x="320" y="179" textAnchor="middle" className="d-label">Approval</text>
-      <rect x="480" y="110" width="130" height="46" rx="12" className="d-box" strokeDasharray="6 6" />
-      <text x="545" y="139" textAnchor="middle" className="d-label">Bank</text>
+    <svg viewBox="0 0 640 380" role="img" aria-label="A person faces a tangled maze of claims, cases, hearings and decisions; one clear dashed path leads straight to the claim">
+      <Defs id="arr-maze" />
+      <path d="M20 300 H90" className="d-line" strokeWidth="2" />
+      <Person x={55} y={300} />
+      <path d="M90 300 C130 300 130 235 175 235 S215 340 255 300 S290 205 335 228 S375 335 415 295 S455 215 495 275 H520" className="d-line" strokeWidth="2.2" />
+      <path d="M100 262 Q320 40 535 262" className="d-line d-dash" markerEnd={m} />
+      <text x="190" y="118" className="d-small d-em">One clear path.</text>
+      <text x="152" y="208" className="d-small">Claims</text>
+      <text x="250" y="348" className="d-small">Cases</text>
+      <text x="325" y="204" className="d-small">Hearings</text>
+      <text x="410" y="342" className="d-small">Decisions</text>
+      <ellipse cx="572" cy="288" rx="52" ry="30" className="d-box" />
+      <text x="572" y="297" textAnchor="middle" className="d-label">Claim</text>
+    </svg>
+  )
+}
+
+const Gate = ({ x, y, label }: { x: number; y: number; label: string }) => (
+  <g>
+    <path d={`M${x - 24} ${y} V${y - 36} A24 24 0 0 1 ${x + 24} ${y - 36} V${y}`} className="d-line" strokeWidth="2" />
+    <path d={`M${x} ${y - 84} V${y - 58}`} className="d-line" strokeWidth="2" />
+    <path d={`M${x} ${y - 84} l20 8 l-20 8 Z`} fill="currentColor" />
+    <text x={x} y={y - 96} textAnchor="middle" className="d-small" style={{ fontSize: 21 }}>{label}</text>
+  </g>
+)
+
+function Trail() {
+  const m = 'url(#arr-trail)'
+  return (
+    <svg viewBox="0 0 640 380" role="img" aria-label="A person asks where the money went; a coin rolls past three gates, intercepted, on hold and distributed, so the trail is visible">
+      <Defs id="arr-trail" />
+      <path d="M20 300 C100 285 170 295 250 292 S400 320 500 306 S590 300 620 296" className="d-line" strokeWidth="2" markerEnd={m} />
+      <Person x={60} y={298} />
+      <text x="30" y="190" className="d-small d-em">Where did it go?</text>
+      <circle cx="170" cy="262" r="30" className="d-box" strokeWidth="2" />
+      <text x="170" y="274" textAnchor="middle" className="d-label">$</text>
+      <Gate x={265} y={296} label="Intercepted" />
+      <Gate x={400} y={310} label="On hold" />
+      <Gate x={535} y={304} label="Distributed" />
+    </svg>
+  )
+}
+
+const Sign = ({ x, label, children }: { x: number; label: string; children: ReactNode }) => (
+  <g>
+    <path d={`M${x + 50} 270 V300`} className="d-line" strokeWidth="2" />
+    <rect x={x} y="160" width="100" height="110" rx="6" className="d-box" strokeWidth="1.6" />
+    <text x={x + 50} y="196" textAnchor="middle" className="d-label">{label}</text>
+    {children}
+  </g>
+)
+
+function Story() {
+  const m = 'url(#arr-story)'
+  return (
+    <svg viewBox="0 0 640 380" role="img" aria-label="Three signs, past, now and next; a person standing at now asks what happens next">
+      <Defs id="arr-story" />
+      <path d="M20 300 H610" className="d-line" strokeWidth="2" />
+      <Sign x={40} label="Past">
+        <circle cx="90" cy="235" r="20" className="d-line" />
+        <path d="M80 235 L88 243 L102 227" className="d-line" strokeWidth="2" />
+      </Sign>
+      <Sign x={240} label="Now">
+        <path d="M274 218 H306 M274 254 H306 M276 218 Q290 236 276 254 M304 218 Q290 236 304 254" className="d-line" strokeWidth="2" />
+        <path d="M280 250 H300 L290 240 Z" fill="currentColor" />
+      </Sign>
+      <Sign x={450} label="Next">
+        <path d="M478 235 H512 V224 L534 240 L512 256 V245 H478 Z" className="d-line" strokeWidth="1.8" />
+      </Sign>
+      <Person x={185} y={300} />
+      <path d="M270 150 Q370 80 490 150" className="d-line d-dash" markerEnd={m} />
+      <text x="380" y="92" textAnchor="middle" className="d-small d-em">What happens next?</text>
+    </svg>
+  )
+}
+
+function Picture() {
+  const m = 'url(#arr-picture)'
+  return (
+    <svg viewBox="0 0 640 380" role="img" aria-label="Claim, hearing, refund and payment records all connect to one taxpayer">
+      <Defs id="arr-picture" />
+      <Doc x={60} y={20} rot={-6}>Claim</Doc>
+      <Doc x={440} y={20} rot={5}>Hearing</Doc>
+      <Doc x={30} y={170} rot={-6}>Refund</Doc>
+      <Doc x={470} y={170} rot={6}>Payment</Doc>
+      <ellipse cx="320" cy="205" rx="90" ry="42" className="d-box" strokeWidth="1.6" />
+      <text x="320" y="214" textAnchor="middle" className="d-label">Taxpayer</text>
       <g className="d-line d-dash">
-        <path d="M174 206 Q212 206 246 184" markerEnd={m} />
-        <path d="M394 166 Q436 166 476 142" markerEnd={m} />
+        <path d="M175 85 Q250 100 280 165" markerEnd={m} />
+        <path d="M455 80 Q380 100 360 163" markerEnd={m} />
+        <path d="M150 230 Q200 240 225 215" markerEnd={m} />
+        <path d="M465 235 Q420 245 410 222" markerEnd={m} />
       </g>
-      <text x="320" y="224" textAnchor="middle" className="d-small d-em">waiting on a supervisor</text>
-      <text x="545" y="184" textAnchor="middle" className="d-small d-em">nothing sent yet</text>
-      <Box x={150} y={282} w={340}>Say what has not happened</Box>
+      <path d="M20 360 H620" className="d-line" strokeWidth="2" />
+      <Person x={320} y={360} s={0.85} />
+      <text x="360" y="345" className="d-small d-em">Connect the records.</text>
     </svg>
   )
 }
 
-function Reveal() {
-  const m = 'url(#arr3)'
+const Cell = ({ x, label }: { x: number; label: string }) => (
+  <g>
+    <rect x={x} y="190" width="106" height="110" rx="4" className="d-box" />
+    <text x={x + 53} y="220" textAnchor="middle" className="d-small" style={{ fontSize: 21 }}>{label}</text>
+    <Person x={x + 53} y={290} s={0.6} />
+  </g>
+)
+
+function Queue() {
+  const m = 'url(#arr-queue)'
   return (
-    <svg viewBox="0 0 640 260" role="img" aria-label="A masked number is revealed by a deliberate click and the reveal is logged">
-      <Defs id="arr3" />
-      <Box x={30} y={50} w={150}>•••-••-1234</Box>
-      <Box x={410} y={50} w={150}>123-45-1234</Box>
-      <g className="d-line">
-        <path d="M184 66 Q300 28 406 66" markerEnd={m} />
-        <path d="M485 92 Q470 150 500 190 Q520 214 480 226" className="d-dash" markerEnd={m} />
-      </g>
-      <text x="295" y="40" textAnchor="middle" className="d-label d-em">deliberate click</text>
-      <text x="295" y="108" textAnchor="middle" className="d-small">one row, by role</text>
-      <Box x={330} y={208} w={150}>Logged</Box>
-      <text x="105" y="130" textAnchor="middle" className="d-small">masked by default</text>
+    <svg viewBox="0 0 640 380" role="img" aria-label="A person posts an approval into a dark queue and wonders where it went; showing the owner at assigned, pending and decision steps answers that">
+      <Defs id="arr-queue" />
+      <path d="M10 300 H625" className="d-line" strokeWidth="2" />
+      <Person x={40} y={300} />
+      <text x="50" y="150" className="d-label d-em">?</text>
+      <rect x="85" y="170" width="120" height="130" rx="4" fill="currentColor" />
+      <rect x="100" y="245" width="90" height="34" rx="3" fill="#fff" />
+      <text x="145" y="269" textAnchor="middle" className="d-small" style={{ fill: '#111', fontSize: 21 }}>Queue</text>
+      <path d="M210 275 Q235 285 255 275" className="d-line d-dash" />
+      <Cell x={260} label="Assigned" />
+      <Cell x={385} label="Pending" />
+      <Cell x={510} label="Decision" />
+      <path d="M368 245 H385 M493 245 H510" className="d-line d-dash" />
+      <path d="M390 352 Q300 350 300 312" className="d-line" markerEnd={m} />
+      <text x="400" y="358" className="d-small d-em">Show the owner.</text>
     </svg>
   )
 }
 
-/** `gif` is the path of the feature GIF shown under the diagram as the result. */
-export const diagramGifs = [
-  '/projects/liheap-eap/command_palette_search.gif',
-  '/projects/liheap-eap/dashboard_filter_collapse.gif',
-  '/projects/liheap-eap/ssn_reveal.gif',
-  '/projects/liheap-eap/check_void_approval.gif',
-]
+const gridRows = [0, 1, 2, 3, 4]
+const gridCols = Array.from({ length: 12 }, (_, i) => i)
+const hot = new Set(['3-1', '8-3', '10-1'])
+
+function Exceptions() {
+  return (
+    <svg viewBox="0 0 640 380" role="img" aria-label="A grid of ordinary rows with a few highlighted exceptions and a magnifier on one of them">
+      <path d="M10 330 H70" className="d-line" strokeWidth="2" />
+      <Person x={40} y={330} />
+      <text x="20" y="62" className="d-small d-em">Review what matters.</text>
+      {gridRows.map((r) => gridCols.map((c) => {
+        const x = 110 + c * 42
+        const y = 120 + r * 48
+        return hot.has(`${c}-${r}`)
+          ? <g key={`${c}-${r}`}><circle cx={x + 8} cy={y + 8} r="20" className="d-box" /><rect x={x} y={y} width="16" height="16" fill="currentColor" /></g>
+          : <rect key={`${c}-${r}`} x={x} y={y} width="16" height="16" className="d-line" strokeWidth="1.1" />
+      }))}
+      <circle cx="486" cy="188" r="44" className="d-line" strokeWidth="2.4" fill="none" />
+      <path d="M518 220 L560 262" className="d-line" strokeWidth="6" />
+    </svg>
+  )
+}
+
+const dotRows = [0, 1, 2, 3, 4, 5]
+const dotCols = Array.from({ length: 11 }, (_, i) => i)
+
+function Unmatched() {
+  return (
+    <svg viewBox="0 0 640 380" role="img" aria-label="A person with a flashlight finds the one unmatched dot among a field of matched ones">
+      <Defs id="arr-unmatched" />
+      {dotRows.map((r) => dotCols.map((c) => (
+        <circle key={`${c}-${r}`} cx={20 + c * 32 + r * 9} cy={120 + r * 40} r="3.4" fill="currentColor" />
+      )))}
+      <Person x={430} y={290} />
+      <path d="M446 262 L520 322 M446 262 L618 308" className="d-line" strokeWidth="1.2" />
+      <ellipse cx="570" cy="322" rx="48" ry="12" className="d-line" strokeWidth="1.4" />
+      <circle cx="570" cy="320" r="5" fill="currentColor" />
+      <text x="440" y="150" className="d-small d-em">Find the exceptions.</text>
+      <path d="M560 168 Q590 220 580 300" className="d-line" markerEnd="url(#arr-unmatched)" />
+    </svg>
+  )
+}
 
 const items = [
-  { title: 'Finding a taxpayer should take one search.', body: 'Staff look people up many times a day, and menus put a wall between them and the taxpayer they need. A single search box goes around it: results as you type, from any screen.', art: <Barrier /> },
-  { title: 'Most work is finding the next step.', body: 'A record leads to a claim, a claim to a case, a case to a decision. The interface should move people through those layers with the right context, and surface what to do next instead of making them dig.', art: <Layers /> },
-  { title: 'Sensitive data stays masked until someone asks.', body: 'Social Security numbers show as dots until someone clicks to reveal one. The click works on a single row, depends on the person\'s role, and is logged.', art: <Reveal /> },
-  { title: 'Say what has not happened yet.', body: 'A void does not take effect straight away. The page says the check is waiting for a supervisor and that nothing has gone to the bank, so nobody has to guess whether it is done.', art: <Pending /> },
+  { tag: 'Wall', title: 'Finding a taxpayer should take one search.', body: 'Menus put a wall between staff and the taxpayer they need. One search box goes around it: results as you type, from any screen.', art: <Wall /> },
+  { tag: 'Hold', title: 'A hold should explain itself.', body: 'When funds are held, the page says why, which step it is waiting on, and who acts next.', art: <Hold /> },
+  { tag: 'Maze', title: 'A claim shouldn’t be a maze.', body: 'Claims, cases, hearings and decisions are linked. Staff get one clear path through them instead of hunting between screens.', art: <Maze /> },
+  { tag: 'Trail', title: 'Every dollar needs a trail.', body: 'Money moves through steps such as intercepted, on hold and distributed. Each one is shown, so nobody has to ask where it went.', art: <Trail /> },
+  { tag: 'Story', title: 'A status should tell a story.', body: 'A status shows what is done, what is happening now and what comes next.', art: <Story /> },
+  { tag: 'Picture', title: 'One taxpayer. One complete picture.', body: 'Claims, hearings, refunds and payments for one person are connected in a single view.', art: <Picture /> },
+  { tag: 'Queue', title: 'Approvals shouldn’t disappear into a queue.', body: 'An approval shows who has it and where it stands: assigned, pending or decided.', art: <Queue /> },
+  { tag: 'Signal', title: 'Make exceptions stand out.', body: 'In long lists, the few rows that need a person are highlighted so staff can review what matters.', art: <Exceptions /> },
+  { tag: 'Hidden', title: 'Unmatched doesn’t mean invisible.', body: 'Records that did not match are surfaced and easy to find, not buried among the ones that did.', art: <Unmatched /> },
 ]
 
-export function Diagrams({ features }: { features: Feature[] }) {
+export function Diagrams() {
   return (
-    <>
-      {items.map((d, i) => {
-        const result = features.find((f) => f.gif === diagramGifs[i])
+    <Carousel id="cs-problems" title="The problems" noun="problem" labels={items.map((d) => d.tag)}>
+      {(active, go) => items.map((d, i) => {
+        const o = Math.max(-2, Math.min(2, i - active))
         return (
-          <section className="diagram" key={d.title}>
-            <div className="d-copy">
-              <h3>{d.title}</h3>
-              <p>{d.body}</p>
-              {result && (
-                <figure className="d-result">
-                  <img src={result.gif} alt={result.alt} loading="lazy" />
-                </figure>
-              )}
-            </div>
+          <article
+            className={cn('diagram', o === 0 && 'is-active')}
+            key={d.title}
+            style={{ '--o': o } as CSSProperties}
+            aria-hidden={o !== 0}
+            onClick={() => o !== 0 && go(i)}
+          >
             <div className="d-art">{d.art}</div>
-          </section>
+            <div className="d-copy">
+              <p className="d-tag"><span>{String(i + 1).padStart(2, '0')}</span>{d.tag}</p>
+              <h4>{d.title}</h4>
+              <p>{d.body}</p>
+            </div>
+          </article>
         )
       })}
-    </>
+    </Carousel>
   )
 }

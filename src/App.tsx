@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { Chrome } from '@/components/layout/Chrome'
 import { Loader } from '@/components/layout/Loader'
@@ -7,8 +7,10 @@ import { ContactPanel } from '@/components/panels/ContactPanel'
 import { MePanel } from '@/components/panels/MePanel'
 import { ProjectsPanel } from '@/components/panels/ProjectsPanel'
 import { WorkPanel } from '@/components/panels/WorkPanel'
-import { ProjectDetail } from '@/components/project/ProjectDetail'
 import { getProject } from '@/data/projects'
+
+// case study code (diagrams, carousels) loads after the first paint
+const ProjectDetail = lazy(() => import('@/components/project/ProjectDetail').then((m) => ({ default: m.ProjectDetail })))
 
 /**
  * Me, Work, Projects, Contact and project popups are route-driven overlays
@@ -35,7 +37,9 @@ export default function App() {
       <WorkPanel open={pathname === '/work'} />
       <ProjectsPanel open={pathname === '/projects'} />
       <ContactPanel open={pathname === '/contact'} />
-      <ProjectDetail project={project} open={!!project} />
+      <Suspense fallback={null}>
+        <ProjectDetail project={project} open={!!project} />
+      </Suspense>
     </>
   )
 }
