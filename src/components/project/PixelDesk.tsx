@@ -1,18 +1,18 @@
 import { useEffect, useRef } from 'react'
 
-const W = 64
-const H = 48
+export const W = 64
+export const H = 48
 const FRAME_MS = 140 // slow, chunky typing
 const BLINK_MS = 280
 
-const INK = '#0a0a0a'
-const SHIRT = '#3d3a2e'
-const SKIN = '#efeeea'
-const LIGHT = '#d6d3c8'
-const MID = '#9a978a'
-const SCREEN = '#f7f6f2'
+export const INK = '#0a0a0a'
+export const SHIRT = '#3d3a2e'
+export const SKIN = '#efeeea'
+export const LIGHT = '#d6d3c8'
+export const MID = '#9a978a'
+export const SCREEN = '#f7f6f2'
 
-function draw(ctx: CanvasRenderingContext2D, tick: number, blink: boolean) {
+export function drawDesk(ctx: CanvasRenderingContext2D, tick: number, blink: boolean) {
   const r = (c: string, x: number, y: number, w: number, h: number) => {
     ctx.fillStyle = c
     ctx.fillRect(x, y, w, h)
@@ -104,7 +104,7 @@ export function PixelDesk() {
           nextBlink = now + 2000 + Math.random() * 3000
         }
       }
-      draw(ctx, tick, blink)
+      drawDesk(ctx, tick, blink)
     }
 
     frame(performance.now())

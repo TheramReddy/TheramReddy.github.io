@@ -69,7 +69,7 @@ export function Tour() {
   const pos = below ? { top: box.y + box.h + 18 } : { bottom: innerHeight - box.y + 18 }
 
   return (
-    <div className="tour" role="dialog" aria-label="Site tour">
+    <div className="tour" role="dialog" aria-label="Site tour" onClick={(e) => e.target === e.currentTarget && close()}>
       <div className="tour-ring" style={{ left: box.x - 12, top: box.y - 8, width: box.w + 24, height: box.h + 16 }}>
         <span className="label">{box.text}</span>
       </div>

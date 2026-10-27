@@ -89,23 +89,6 @@ function SelectionFrame({ phrases }: { phrases: string[] }) {
   )
 }
 
-/** Live local date and time, ticking each second but only re-rendering digits that changed. */
-function LiveClock() {
-  const [now, setNow] = useState(() => new Date())
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(t)
-  }, [])
-  const date = now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })
-  const time = now.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
-  return (
-    <time className="clock" dateTime={now.toISOString()}>
-      <span className="clock-date">{date}</span>
-      <span className="clock-time" key={time}>{time}</span>
-    </time>
-  )
-}
-
 /** Landing intro: a headline with a cycling selection frame, and a link to the work. */
 export function Hero() {
   return (
@@ -116,9 +99,6 @@ export function Hero() {
       <p>
         <Link to="/work" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>
       </p>
-      <div className="me">
-        <LiveClock />
-      </div>
       <NowStatus />
     </header>
   )
