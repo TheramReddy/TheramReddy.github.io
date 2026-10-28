@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
+import { createPortal } from 'react-dom'
 
-const IDLE_MS = 1800
 const LAND_SCALE = 0.35 // keep in step with --land in loader.css
 
 // The small passenger who hops out after landing.
@@ -30,9 +30,11 @@ const ROCKET = [
 const W = 16
 const FLAME_ROWS = 8
 const H = ROCKET.length + FLAME_ROWS
-const PX = 5 // canvas pixel size on screen, keep in step with loader.css
+const PX = 4 // canvas pixel size on screen, keep in step with loader.css
 
 type Burn = 'idle' | 'boost' | 'off'
+
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 function drawRocket(ctx: CanvasRenderingContext2D, spin: number, burn: Burn) {
   ctx.clearRect(0, 0, W, H)
@@ -51,10 +53,23 @@ function drawRocket(ctx: CanvasRenderingContext2D, spin: number, burn: Burn) {
   if (burn === 'boost') ctx.fillRect(spin ? 4 : 11, ROCKET.length + (spin ? 2 : 4), 1, 1)
 }
 
-/** Intro: a pixel rocket idles on the pad, then lifts off and lands on the tour's Next button. */
-export function Loader() {
+/** Idle rocket on its pad, flickering. Hidden while the flight overlay carries it away. */
+export const RocketPad = ({ hidden, canvasRef }: { hidden: boolean; canvasRef: RefObject<HTMLCanvasElement | null> }) => {
+  useEffect(() => {
+    const ctx = canvasRef.current?.getContext('2d')
+    if (!ctx) return
+    drawRocket(ctx, 0, 'idle')
+    if (prefersReducedMotion()) return
+    let n = 0
+    const flicker = window.setInterval(() => drawRocket(ctx, ++n % 2 ? 2 : 0, 'idle'), 70)
+    return () => clearInterval(flicker)
+  }, [canvasRef])
+  return <canvas ref={canvasRef} className="rocket-pad" style={{ visibility: hidden ? 'hidden' : 'visible' }} width={W} height={H} aria-hidden="true" />
+}
+
+/** One flight: lifts off from `from`, curves over and lands on the element matching `target`, then calls `onDone`. */
+export function RocketFlight({ from, target, onDone }: { from: DOMRect; target: string; onDone: () => void }) {
   const [go, setGo] = useState(false)
-  const [gone, setGone] = useState(false)
   const rocket = useRef<HTMLCanvasElement>(null)
   const guy = useRef<HTMLCanvasElement>(null)
   const fx = useRef<HTMLDivElement>(null)
@@ -63,7 +78,7 @@ export function Loader() {
   useEffect(() => {
     const ctx = rocket.current?.getContext('2d')
     if (!ctx) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefersReducedMotion()
     drawRocket(ctx, 0, 'idle')
     const g = guy.current?.getContext('2d')
     if (g) {
@@ -88,9 +103,9 @@ export function Loader() {
           box.appendChild(b)
         }, 70)
     const t = setTimeout(() => {
-      // Blast off, curve over to the tour card and touch down on its Next button.
+      // Blast off, curve over and touch down on the target.
       const el = rocket.current
-      const next = document.querySelector('.tour-next') ?? document.querySelector('[data-tour="me"]')
+      const next = document.querySelector(target)
       if (el && next) {
         const a = el.getBoundingClientRect()
         const b = next.getBoundingClientRect()
@@ -107,42 +122,30 @@ export function Loader() {
       burn.current = 'boost'
       setTimeout(() => (burn.current = 'off'), reduce ? 0 : 1950)
       setGo(true)
-      setTimeout(() => setGone(true), 4200)
-    }, reduce ? 600 : IDLE_MS)
+    }, reduce ? 100 : 500)
+    const end = setTimeout(onDone, reduce ? 700 : 4200)
     return () => {
       clearTimeout(t)
+      clearTimeout(end)
       clearInterval(flicker)
       clearInterval(trail)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return (
+  // The overlay is centred on the pad's centre.
+  const left = from.left + from.width / 2 - (W * PX) / 2
+  const top = from.top + from.height / 2 - (H * PX) / 2
+  return createPortal(
     <>
-    <div className={go ? 'loader done' : 'loader'} aria-hidden="true">
-      {[0, 1, 2, 3, 4].map((n) => (
-        <b key={n} className="puff" style={{ animationDelay: `${0.12 + n * 0.1}s` }} />
-      ))}
-      <i />
-      <i />
-      <i />
-    </div>
-    {!gone && (
-      <canvas
-        ref={rocket}
-        className={go ? 'loader-rocket go' : 'loader-rocket'}
-        width={W}
-        height={H}
-        aria-hidden="true"
-      />
-    )}
-    {!gone && (
+      <canvas ref={rocket} className={go ? 'loader-rocket go' : 'loader-rocket'} style={{ left, top }} width={W} height={H} aria-hidden="true" />
       <div ref={fx} className={go ? 'loader-fx go' : 'loader-fx'} aria-hidden="true">
         <canvas ref={guy} className="loader-guy" width={5} height={7} />
         {[0, 1, 2, 3, 4, 5].map((n) => (
           <b key={n} className="poof" />
         ))}
       </div>
-    )}
-    </>
+    </>,
+    document.body,
   )
 }

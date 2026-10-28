@@ -1,5 +1,5 @@
+import { createPortal } from 'react-dom'
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import { Briefcase, FolderOpen, Mail, User, X } from 'lucide-react'
 import '@/styles/tour.css'
 
@@ -19,22 +19,19 @@ function read(id: string): Box | null {
   return { x: r.left, y: r.top, w: r.width, h: r.height, text: el.textContent ?? '' }
 }
 
-/** First-visit walkthrough: highlights each nav button and opens its section. */
-export function Tour() {
+/** Walkthrough that highlights each nav button in turn. Shown on request from the Fun components. */
+export function Tour({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [step, setStep] = useState<number | null>(null)
   const [box, setBox] = useState<Box | null>(null)
-  const { pathname } = useLocation()
 
   useEffect(() => {
-    if (!pathname.match(/^\/(me)?$/)) return
-    const t = setTimeout(() => setStep(0), 1300)
-    return () => clearTimeout(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    setStep(open ? 0 : null)
+  }, [open])
 
   const close = useCallback(() => {
     setStep(null)
-  }, [])
+    onClose()
+  }, [onClose])
 
   const go = useCallback((i: number) => {
     if (i >= steps.length) return close()
@@ -68,7 +65,8 @@ export function Tour() {
   const arrow = box.x + box.w / 2 - left
   const pos = below ? { top: box.y + box.h + 18 } : { bottom: innerHeight - box.y + 18 }
 
-  return (
+  // portalled to <body>: inside a scrolling, transformed panel `position: fixed` no longer means the viewport
+  return createPortal(
     <div className="tour" role="dialog" aria-label="Site tour" onClick={(e) => e.target === e.currentTarget && close()}>
       <div className="tour-ring" style={{ left: box.x - 12, top: box.y - 8, width: box.w + 24, height: box.h + 16 }}>
         <span className="label">{box.text}</span>
@@ -85,6 +83,7 @@ export function Tour() {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

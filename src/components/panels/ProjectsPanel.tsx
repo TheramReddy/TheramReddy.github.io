@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
-import type { CSSProperties } from 'react'
+import { lazy, Suspense, type CSSProperties } from 'react'
 import { projects } from '@/data/projects'
 import { cn } from '@/lib/utils'
+
+// rocket, tour and status code load only once Projects is first opened
+const FunComponents = lazy(() => import('./FunComponents').then((m) => ({ default: m.FunComponents })))
 
 /** Projects: one case-study card per project, opening the project popup. */
 export function ProjectsPanel({ open }: { open: boolean }) {
@@ -29,6 +32,11 @@ export function ProjectsPanel({ open }: { open: boolean }) {
             </li>
           ))}
         </ul>
+        {open && (
+          <Suspense fallback={null}>
+            <FunComponents />
+          </Suspense>
+        )}
       </div>
     </section>
   )

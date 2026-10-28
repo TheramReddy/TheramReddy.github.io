@@ -1,25 +1,9 @@
-/* ---------- loader ---------- */
-.loader {
-  position: fixed; inset: 0; z-index: 99; background: var(--bg);
-  transition: opacity .8s var(--ease) .1s, visibility 0s .9s;
-}
-.loader.done { opacity: 0; visibility: hidden; transition-delay: 0s, .9s; }
-.loader { display: flex; align-items: center; justify-content: center; gap: 8px; padding-top: 200px; }
-.loader i {
-  display: block; width: 50px; height: 6px; background: #6e6a5c;
-  /* stepped corners read as pixels */
-  clip-path: polygon(0 2px, 2px 2px, 2px 0, calc(100% - 2px) 0, calc(100% - 2px) 2px, 100% 2px, 100% 4px, calc(100% - 2px) 4px, calc(100% - 2px) 6px, 2px 6px, 2px 4px, 0 4px);
-  animation: bar 1.1s steps(5) infinite alternate;
-}
-.loader i:nth-of-type(2) { animation-delay: .12s; }
-.loader i:nth-of-type(3) { animation-delay: .24s; }
-@keyframes bar { from { opacity: .12; transform: scaleX(.5); } to { opacity: .7; transform: scaleX(1); } }
-
+/* ---------- rocket flight ---------- */
 .loader-rocket {
   --lift: 150px;
   --land: .35;
-  position: fixed; z-index: 200; pointer-events: none; left: calc(50% - 40px); top: calc(50% - 65px);
-  width: 80px; height: 130px; image-rendering: pixelated;
+  position: fixed; z-index: 200; pointer-events: none;
+  width: 64px; height: 104px; image-rendering: pixelated;
   animation: idle .24s steps(1) infinite alternate;
 }
 .loader-rocket.go { animation: takeoff 3.6s linear forwards; }
@@ -71,30 +55,4 @@
 @keyframes poof {
   from { opacity: .8; transform: translate(0, 0) scale(.5); }
   to { opacity: 0; transform: translate(var(--px), var(--py)) scale(2.2); }
-}
-
-/* smoke left behind on the pad */
-.puff {
-  position: absolute; left: calc(50% - 6px); top: calc(50% + 22px);
-  width: 12px; height: 12px; background: #6e6a5c; opacity: 0;
-}
-.loader.done .puff { animation: puff 1s steps(5) both; }
-.loader .puff:nth-of-type(1) { --px: -70px; }
-.loader .puff:nth-of-type(2) { --px: -35px; }
-.loader .puff:nth-of-type(3) { --px: 0px; }
-.loader .puff:nth-of-type(4) { --px: 35px; }
-.loader .puff:nth-of-type(5) { --px: 70px; }
-@keyframes puff {
-  from { opacity: .5; transform: translate(0, 0) scale(.6); }
-  to { opacity: 0; transform: translate(var(--px), 10px) scale(2); }
-}
-
-/* smoke dropped along the flight path */
-.trail {
-  position: absolute; width: 10px; height: 10px; background: #8a8677; opacity: 0;
-  animation: trail .8s steps(4) forwards;
-}
-@keyframes trail {
-  from { opacity: .55; transform: scale(.5); }
-  to { opacity: 0; transform: translate(0, 14px) scale(1.8); }
 }

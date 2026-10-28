@@ -20,7 +20,7 @@
 /* "working on now" status: shimmering line, side tag */
 .now-wrap { margin-top: 56px; }
 .pixel-life { display: block; width: 64px; aspect-ratio: 64 / 48; image-rendering: pixelated; animation: now-in .5s var(--ease) both; }
-.hero p.now { display: flex; align-items: center; gap: 12px; margin: 10px 0 0; font-size: 13px; line-height: 1.4; color: var(--muted); }
+.now-wrap p.now { display: flex; align-items: center; gap: 12px; margin: 10px 0 0; font-size: 13px; line-height: 1.4; color: var(--muted); }
 .now-text {
   display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   background: linear-gradient(100deg, rgba(10,10,10,.6) 35%, #0a0a0a 50%, rgba(10,10,10,.6) 65%) 100% 0 / 250% 100%;

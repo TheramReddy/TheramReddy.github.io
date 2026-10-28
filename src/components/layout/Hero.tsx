@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { Link } from 'react-router-dom'
 import { site } from '@/data/site'
-import { NowStatus } from './NowStatus'
 
 const CYCLE_MS = 4200
 const COLORS = ['#3b8fe8', '#2fa37a', '#e0793a', '#8b5cf6', '#d9467a', '#c99a1c', '#1fa5b8']
@@ -99,7 +98,6 @@ export function Hero() {
       <p>
         <Link to="/work" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>
       </p>
-      <NowStatus />
     </header>
   )
 }
