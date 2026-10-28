@@ -74,7 +74,7 @@
 /* projects: case studies */
 .panel.projects::-webkit-scrollbar { display: none; }
 .projects .inner { width: min(980px, calc(100% - 40px)); align-items: stretch; text-align: left; padding: 112px 0 120px; }
-.cs-eyebrow { margin-bottom: 0; font: 500 15px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg); }
+.cs-heading, .fun-label { margin: 0; font-size: 22px; font-weight: 500; line-height: 1.2; letter-spacing: -.03em; color: var(--fg); }
 .cs-list { display: flex; flex-direction: column; margin-top: 32px; }
 .cs { display: block; padding: 32px 0; border-top: 1px solid var(--line); color: inherit; }
 .cs.soon .cs-title { color: var(--muted); }
@@ -87,10 +87,10 @@
 .cs-go svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
 .cs:hover .cs-go svg, .cs:focus-visible .cs-go svg { transform: translate(2px, -2px); }
 
-/* entrance: eyebrow, then each case study rises in */
-.projects .cs-eyebrow, .projects .cs-list li { opacity: 0; transform: translateY(18px); }
-.projects.open .cs-eyebrow, .projects.open .cs-list li { opacity: 1; transform: none; transition: opacity .7s var(--ease), transform .8s var(--ease); transition-delay: calc(.15s + var(--i, 0) * .14s); }
-@media (prefers-reduced-motion: reduce) { .projects .cs-eyebrow, .projects .cs-list li { opacity: 1; transform: none; transition: none; }  }
+/* entrance: heading, then each case study rises in */
+.projects .cs-heading, .projects .cs-list li { opacity: 0; transform: translateY(18px); }
+.projects.open .cs-heading, .projects.open .cs-list li { opacity: 1; transform: none; transition: opacity .7s var(--ease), transform .8s var(--ease); transition-delay: calc(.15s + var(--i, 0) * .14s); }
+@media (prefers-reduced-motion: reduce) { .projects .cs-heading, .projects .cs-list li { opacity: 1; transform: none; transition: none; }  }
 
 /* Contact modal (Arc dialog), re-themed to the site palette */
 .arc.contact-modal {
@@ -178,11 +178,9 @@
 
 /* projects: fun components */
 .fun { margin-top: 112px; }
-.fun-head { position: relative; }
+.fun-head { margin: 0; font: inherit; }
 .fun-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 0 28px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; text-align: left; }
 
-.fun-label { display: flex; flex-direction: column; gap: 10px; }
-.fun-sub { font-size: 16px; line-height: 1.3; color: var(--muted); }
 .fun-chev { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: -8px; border-radius: 50%; background: transparent; border: 1px solid var(--line); color: var(--fg); transition: transform .4s var(--ease); }
 .fun.open .fun-chev { transform: rotate(180deg); }
 .fun-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease); }

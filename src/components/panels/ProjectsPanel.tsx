@@ -11,7 +11,7 @@ export function ProjectsPanel({ open }: { open: boolean }) {
   return (
     <section className={cn('panel projects', open && 'open')} aria-label="Projects" aria-hidden={!open}>
       <div className="inner">
-        <p className="cs-eyebrow">Selected case studies</p>
+        <h2 className="cs-heading">Selected case studies</h2>
         <ul className="cs-list">
           {projects.slice(0, 3).map((p, i) => (
             <li key={p.slug} style={{ '--i': i } as CSSProperties}>

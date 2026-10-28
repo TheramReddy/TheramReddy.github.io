@@ -47,12 +47,12 @@ export function FunComponents() {
   const [open, setOpen] = useState(false)
   return (
     <div className={open ? 'fun open' : 'fun'}>
-      <div className="fun-head">
+      <h2 className="fun-head">
         <button className="fun-toggle" aria-expanded={open} aria-controls="fun-body" onClick={() => setOpen((o) => !o)}>
-          <span className="fun-label"><span className="cs-eyebrow">Fun components</span></span>
+          <span className="fun-label">Fun components</span>
           <span className="fun-chev"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
         </button>
-      </div>
+      </h2>
       <div className="fun-body" id="fun-body" inert={!open}>
         <div className="fun-inner">
           <p className="fun-intro">Go on, poke them.</p>

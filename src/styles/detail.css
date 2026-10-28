@@ -105,9 +105,9 @@
 .metrics h3 { font-size: 30px; font-weight: 400; letter-spacing: -.03em; line-height: 1.2; }
 .metrics dl { margin: 28px 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid rgba(10,10,10,.12); }
 .metric { display: flex; flex-direction: column; padding: 24px 24px 28px 0; border-bottom: 1px solid rgba(10,10,10,.12); }
-.metric dt { order: 1; font-size: 15px; color: var(--muted); }
-.metric dd { order: 0; margin: 0 0 6px; font-size: clamp(44px, 4.4vw, 68px); font-weight: 400; letter-spacing: -.05em; line-height: 1; }
-.metric p { order: 2; margin: 8px 0 0; font-size: 15px; line-height: 1.45; letter-spacing: -.01em; color: var(--muted); }
+.metric dd { order: 0; align-self: flex-start; margin: 0 0 14px; padding: 4px 8px; border: 1px solid rgba(10,10,10,.14); border-radius: 6px; font: 500 12px/1 var(--font-mono); letter-spacing: .04em; }
+.metric dt { order: 1; font-size: 20px; line-height: 1.25; letter-spacing: -.02em; color: var(--fg); }
+.metric p { order: 2; margin: 8px 0 0; font-size: 16px; line-height: 1.45; letter-spacing: -.01em; color: var(--muted); max-width: 46ch; }
 @media (max-width: 560px) { .metrics dl { grid-template-columns: 1fr; } }
 
 
