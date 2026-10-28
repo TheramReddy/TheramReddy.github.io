@@ -51,7 +51,7 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
 
 const sections: { id: string; label: string; Icon: LucideIcon }[] = [
   { id: 'cs-overview', label: 'Overview', Icon: FileText },
-  { id: 'cs-glance', label: 'At a glance', Icon: Gauge },
+  { id: 'cs-glance', label: 'What changed', Icon: Gauge },
   { id: 'cs-problems', label: 'The problems', Icon: CircleAlert },
   { id: 'cs-action', label: 'In action', Icon: Play },
 ]
@@ -221,8 +221,8 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
             </div>
             <div className="gallery">
               {p.metrics && (
-                <section className="metrics" id="cs-glance" aria-label="System at a glance">
-                  <h3>The system at a glance</h3>
+                <section className="metrics" id="cs-glance" aria-label="What changed for users">
+                  <h3>What changed for the people using it</h3>
                   <dl>
                     {p.metrics.map((m) => (
                       <div className="metric" key={m.label}>

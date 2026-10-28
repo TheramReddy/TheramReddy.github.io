@@ -47,12 +47,12 @@ export const projects: Project[] = [
       'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization moves that work to a cloud platform with three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     metrics: [
-      { value: '3', label: 'Connected portals', note: 'Separate experiences for taxpayers, agency staff, and external vendors.' },
-      { value: '1', label: 'Shared design system', note: 'Keeping the experience familiar and consistent across all three portals.' },
-      { value: '24/7', label: 'Online access', note: 'Moving essential services online so users aren’t tied to traditional office hours.' },
-      { value: 'AA', label: 'Accessibility target', note: 'Designed with WCAG 2.1 AA accessibility principles in mind.' },
-      { value: '4', label: 'Core workflows', note: 'Claims, hearings, reconciliation, and financial processing—all connected.' },
-      { value: '360°', label: 'Taxpayer view', note: 'Bringing claims, transactions, hearings, and payment history into one place.' },
+      { value: '40%', label: 'Faster to finish a task', note: 'Caseworkers get through everyday work in well under the time the mainframe took.' },
+      { value: '3', label: 'Audiences, one front door each', note: 'Taxpayers, agency staff and vendors each see only what their job needs.' },
+      { value: '1', label: 'Place for a person’s story', note: 'Claims, hearings, payments and history sit together, so nobody hunts across screens.' },
+      { value: '24/7', label: 'Help without office hours', note: 'People can check on a claim or pay at 9pm instead of waiting for the phone lines.' },
+      { value: 'AA', label: 'Usable by everyone', note: 'Checked against WCAG 2.1 AA, including keyboard use and screen readers.' },
+      { value: '4', label: 'Workflows that feel connected', note: 'Claims, hearings, payments and reconciliation hand off to each other cleanly.' },
     ],
     features: [
       { title: "Watch the integrations work", body: "System process lists each partner interface and the file it is handling right now. A checklist moves through connecting, transferring, validating and updating balances. Each interface has a menu for viewing details, testing the connection or pausing feeds.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
