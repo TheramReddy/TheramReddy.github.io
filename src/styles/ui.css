@@ -30,7 +30,7 @@
 @keyframes now-in { from { opacity: 0; transform: translateY(5px); filter: blur(3px); } }
 @keyframes now-shine { to { background-position: -50% 0; } }
 /* side note: a small outlined mono tag, so it reads as a label rather than more sentence */
-.now-tag { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid rgba(10,10,10,.14); border-radius: 6px; font: 500 10px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; color: var(--fg); }
+.now-tag { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid rgba(10,10,10,.14); border-radius: 6px; font: 500 11px/1 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; color: var(--fg); }
 .now-tag::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .55; }
 @media (prefers-reduced-motion: reduce) {
   .now-text { animation: none; background: none; color: var(--muted); }
