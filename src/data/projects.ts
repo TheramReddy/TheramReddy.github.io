@@ -48,9 +48,7 @@ export const projects: Project[] = [
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     metrics: [
       { value: '40%', label: 'Faster to finish a task', note: 'Caseworkers get through everyday work in well under the time the mainframe took.' },
-      { value: '3', label: 'Audiences, one front door each', note: 'Taxpayers, agency staff and vendors each see only what their job needs.' },
       { value: '1', label: 'Place for a person’s story', note: 'Claims, hearings, payments and history sit together, so nobody hunts across screens.' },
-      { value: '24/7', label: 'Help without office hours', note: 'People can check on a claim or pay at 9pm instead of waiting for the phone lines.' },
       { value: 'AA', label: 'Usable by everyone', note: 'Checked against WCAG 2.1 AA, including keyboard use and screen readers.' },
       { value: '4', label: 'Workflows that feel connected', note: 'Claims, hearings, payments and reconciliation hand off to each other cleanly.' },
     ],
