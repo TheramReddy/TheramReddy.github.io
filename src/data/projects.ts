@@ -77,19 +77,6 @@ export const projects: Project[] = [
       { title: "Give the work more room", body: "Collapse the sidebar to icons when the table needs the width, and bring it back in one click.", gif: gif('sidebar_collapse'), alt: "Collapsing the sidebar to icons and expanding it again" },
     ],
   },
-  {
-    slug: 'scobin-tables',
-    title: 'Scobin',
-    year: '2024',
-    role: 'Product Designer',
-    stack: ['Figma', 'Design tokens', 'Responsive grid'],
-    url: '#',
-    client: 'Scobin',
-    summary: 'Product design that turns common SaaS friction into measurable operational gains, from complex navigation to weak exception handling.',
-    description:
-      'Scobin is a data-heavy inventory and pricing platform, and it had the problems many SaaS products share: complex navigation, poor onboarding, repetitive work, unclear status, data overload, inconsistent controls, weak exception handling and fragmented collaboration. I redesigned its tables, filters and bulk actions on a design system with tokens, versioning and a responsive grid. Within three months, manual errors fell 40%, tasks took 35% less time and adoption grew 20%.',
-    gradient: 'linear-gradient(135deg,#3fbf9b,#9ee3c8 55%,#dcf6ec)',
-  },
 ]
 
 export const getProject = (slug?: string) => projects.find((p) => p.slug === slug)

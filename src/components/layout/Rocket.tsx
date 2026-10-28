@@ -38,7 +38,7 @@ const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: r
 
 function drawRocket(ctx: CanvasRenderingContext2D, spin: number, burn: Burn) {
   ctx.clearRect(0, 0, W, H)
-  ctx.fillStyle = '#6e6a5c'
+  ctx.fillStyle = '#a9a698'
   ROCKET.forEach((row, y) => {
     for (let x = 0; x < row.length; x++) if (row[x] === '#') ctx.fillRect(x, y, 1, 1)
   })

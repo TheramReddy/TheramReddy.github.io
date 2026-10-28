@@ -33,7 +33,7 @@ export const jobs: Job[] = [
     role: 'Product Designer',
     about: 'Designed an inventory and pricing platform, 40% fewer manual errors and 35% faster tasks.',
     logos: [{ label: 'S', color: '#fff', src: '/logos/scobin.svg' }],
-    projects: [{ slug: 'scobin-tables' }],
+    projects: [],
     tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
   },
   {
@@ -43,7 +43,7 @@ export const jobs: Job[] = [
     role: 'UI Developer',
     about: 'Built accessible enterprise portals, A/B tested for +15% engagement and +10% conversions.',
     logos: [{ label: 'W', color: '#fff', src: '/logos/wipro.webp' }],
-    projects: [{ slug: 'dso-modernization' }],
+    projects: [],
     tools: ['angular', 'typescript', 'javascript', 'html', 'css', 'bootstrap', 'git'],
   },
 ]
