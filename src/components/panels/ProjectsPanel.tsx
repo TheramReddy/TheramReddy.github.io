@@ -31,6 +31,14 @@ export function ProjectsPanel({ open }: { open: boolean }) {
               </Link>
             </li>
           ))}
+          <li style={{ '--i': projects.length } as CSSProperties}>
+            <div className="cs soon" aria-label="Next case study, coming soon">
+              <span className="cs-body">
+                <span className="cs-title">Coming soon</span>
+                <span className="cs-summary">Another case study is on its way.</span>
+              </span>
+            </div>
+          </li>
         </ul>
         {open && (
           <Suspense fallback={null}>
