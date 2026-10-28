@@ -37,8 +37,7 @@
 .proj-logo { display: block; align-self: flex-start; height: 40px; width: auto; margin-bottom: 24px; }
 .about-title { margin-top: 24px; font-size: 15px; color: var(--muted); }
 .about-title + .desc { margin-top: 8px; }
-.cf-controls { margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 14px; color: var(--muted); }
-.cf-label { font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
+.cf-controls { margin-top: 24px; display: flex; align-items: center; justify-content: flex-start; gap: 14px; color: var(--muted); }
 .cf-btn { width: 32px; height: 32px; display: grid; place-items: center; color: inherit; transition: color .3s, opacity .3s; }
 .cf-btn:first-child svg { animation: hint-left 1.8s ease-in-out infinite; }
 .cf-btn:last-child svg { animation: hint-right 1.8s ease-in-out infinite; }
@@ -48,8 +47,6 @@
 .cf-btn:disabled { opacity: .3; cursor: default; }
 .cf-btn:disabled svg { animation: none !important; }
 @media (hover: hover) and (pointer: fine) { .cf-btn:not(:disabled):hover { color: var(--fg); } }
-.problems { height: calc(760px + (var(--n, 9) - 1) * 45vh); }
-.problems-stick { position: sticky; top: 24px; }
 .coverflow { clip-path: inset(-60px 0); --w: 340px; --step: 370px; position: relative; height: 520px; margin-top: 28px; perspective: 1400px; }
 .cf-dots { margin-top: 20px; display: flex; justify-content: center; gap: 10px; }
 .cf-dot { width: 8px; height: 8px; padding: 0; border-radius: 50%; background: rgba(10,10,10,.2); transition: background .3s, transform .3s var(--ease); }
