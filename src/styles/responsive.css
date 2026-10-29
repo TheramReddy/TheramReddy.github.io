@@ -59,7 +59,7 @@
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
   .coming-marquee { height: 180px; font-size: 12px; padding: 0 12px; }
-  .detail .close { top: 20px; right: 20px; width: 44px; height: 44px; }
+  .detail .close { top: 12px; right: 10px; width: 44px; height: 44px; }
   .progress { left: 22px; bottom: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {

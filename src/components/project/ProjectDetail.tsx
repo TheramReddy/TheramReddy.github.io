@@ -206,11 +206,6 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       inert={!open}
       onClick={(e) => e.target === e.currentTarget && navigate('/projects')}
     >
-      <button className="close" aria-label="Close project" onClick={() => navigate('/projects')}>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
-          <path d="M3 3l12 12M15 3L3 15" />
-        </svg>
-      </button>
       <div className="progress" aria-hidden="true">
         <svg viewBox="0 0 38 38">
           <circle className="bg" cx="19" cy="19" r="16" />
@@ -220,6 +215,13 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       <div className="sheet" ref={sheet} onScroll={progress}>
         <SheetScrollbar root={sheet} />
         {p?.features && <Disclaimer />}
+        <div className="close-rail">
+          <button className="close" aria-label="Close project" onClick={() => navigate('/projects')}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 3l12 12M15 3L3 15" />
+            </svg>
+          </button>
+        </div>
         {p?.features && <SectionNav root={sheet} />}
         {p && (
           <div className="cols">
