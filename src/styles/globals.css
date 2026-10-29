@@ -16,7 +16,7 @@
   --muted: rgba(10, 10, 10, 0.72);
   --card: #e4e2dc;
   --line: rgba(10, 10, 10, 0.14);
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
   --font-pixel: 'Pixelify Sans', var(--font-mono);
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --underline-offset: 3px;
@@ -116,7 +116,11 @@ a {
   color: inherit;
   text-decoration: none;
 }
+html {
+  -webkit-tap-highlight-color: transparent;
+}
 button {
+  touch-action: manipulation;
   font: inherit;
   color: inherit;
   background: none;

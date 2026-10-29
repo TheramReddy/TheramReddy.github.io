@@ -1,6 +1,6 @@
 import { jobs } from '@/data/work'
 import { tools } from '@/data/tools'
-import { Fragment, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
 import { cn } from '@/lib/utils'
@@ -13,15 +13,15 @@ export function WorkPanel({ open }: { open: boolean }) {
           {jobs.map((j, i) => (
             <div className="job" key={j.company} style={{ '--i': i } as CSSProperties}>
               <div className="when">
-                <small>
-                  {j.where.split('>').map((w, k) => (
-                    <Fragment key={w}>
-                      {k > 0 && <span className="sep">&gt;</span>}
-                      {w}
-                    </Fragment>
-                  ))}
-                </small>
-                {j.when}
+                <span className="yr">
+                  {j.when}
+                  {j.current && (
+                    <em className="chip-live">
+                      <span className="dot" aria-hidden="true" />
+                      Current
+                    </em>
+                  )}
+                </span>
               </div>
               <div className="logos">
                 {j.logos.map((l) => (
@@ -30,14 +30,7 @@ export function WorkPanel({ open }: { open: boolean }) {
                   </i>
                 ))}
               </div>
-              <h4>
-                {j.company} {j.current && (
-                  <em className="chip-live">
-                    <span className="dot" aria-hidden="true" />
-                    Current
-                  </em>
-                )}
-              </h4>
+              <h4>{j.company}</h4>
               <p className="role">{j.role}</p>
               <p className="about">{j.about}</p>
               {j.projects.map((p) => (

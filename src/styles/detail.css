@@ -28,13 +28,15 @@
 .sheet .stack { margin-top: 32px; }
 .stack-title { font-size: 15px; color: var(--muted); margin-bottom: 12px; }
 .sheet .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { height: 44px; padding: 0 18px 0 14px; display: inline-flex; align-items: center; gap: 10px; border-radius: 999px; background: #fff; border: 1px solid rgba(10,10,10,.1); font-size: 16px; letter-spacing: -.02em; transition: transform .3s var(--ease), border-color .3s var(--ease); }
+.chip { height: 44px; padding: 0 18px 0 14px; display: inline-flex; align-items: center; gap: 10px; border-radius: 999px; background: #fff; border: 1px solid rgba(10,10,10,.1); font-size: 16px; letter-spacing: -.02em; transition: transform .2s var(--ease), border-color .2s var(--ease); }
+.chip:active { transform: scale(.97); }
 .chip img { display: block; width: 18px; height: 18px; object-fit: contain; filter: grayscale(1) contrast(1.1); }
 @media (hover: hover) and (pointer: fine) { .chip:hover { transform: translateY(-2px); border-color: rgba(10,10,10,.25); } }
 .gallery { display: flex; flex-direction: column; gap: 120px; padding-top: 8px; }
 .gallery > .problems, .gallery > .metrics, .gallery > .action { position: relative; }
 .gallery > .metrics + .problems::before, .gallery > .problems + .problems::before { content: ""; position: absolute; left: 0; top: -62px; width: 28px; height: 2px; border-radius: 1px; background: var(--muted); opacity: .45; }
 .proj-logo { display: block; align-self: flex-start; height: 40px; width: auto; margin-bottom: 24px; }
+.proj-logo[src$="scobin.svg"] { height: 28px; }
 .about-title { margin-top: 24px; font-size: 15px; color: var(--muted); }
 .about-title + .desc { margin-top: 8px; }
 .cf-controls { margin-top: 24px; display: flex; align-items: center; justify-content: flex-start; gap: 14px; color: var(--muted); }
@@ -92,7 +94,8 @@
   background: var(--fg); color: #fff; display: grid; place-items: center; font-size: 22px;
   transition: transform .5s var(--ease);
 }
-.detail .close:hover { transform: rotate(90deg); }
+@media (hover: hover) and (pointer: fine) { .detail .close:hover { transform: rotate(90deg); } }
+.detail .close:active { transform: scale(.94); }
 .progress { position: absolute; left: 52px; bottom: 52px; z-index: 3; width: 38px; height: 38px; pointer-events: none; }
 .progress svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .progress circle { fill: rgba(255,255,255,.9); stroke-width: 1.5; }
@@ -130,3 +133,84 @@
 .sheet-bar-thumb { position: absolute; left: 0; width: 100%; border-radius: 999px; background: rgba(10,10,10,.25); transition: background .3s; }
 .sheet-bar:hover .sheet-bar-thumb, .sheet-bar.drag .sheet-bar-thumb { background: rgba(10,10,10,.5); }
 @media (max-width: 768px) { .sheet-bar-rail { display: none; } }
+
+/* ---------- design system story: real Figma frames and drawn process work ---------- */
+.story { display: flex; flex-direction: column; gap: 120px; }
+.chapter { position: relative; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; align-items: center; scroll-margin-top: 96px; }
+/* the same short rule the DSO list puts above each item */
+.chapter::before { content: ""; position: absolute; top: -40px; left: 0; width: 28px; height: 2px; border-radius: 1px; background: var(--muted); opacity: .45; }
+/* art lands first, the copy follows a beat later */
+.chapter-art, .chapter-copy { transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.chapter-copy { transition-delay: .09s; }
+.chapter.pre .chapter-art { opacity: 0; transform: translateY(20px) scale(.985); }
+.chapter.pre .chapter-copy { opacity: 0; transform: translateY(14px); }
+.chapter.flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+.chapter.flip .chapter-art { order: 2; }
+.chapter-art { min-width: 0; display: grid; align-content: center; }
+.chapter-art > svg { display: block; width: 100%; height: auto; color: var(--fg); overflow: visible; }
+.chapter-art img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 0 0 1px rgba(10,10,10,.08); }
+.chapter-art .d-label { font-size: 24px; }
+.chapter-art .d-small { font-size: 20px; }
+.chapter-art .d-note { font: 19px "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; fill: currentColor; }
+.chapter-art .d-dim { font: 11px var(--font-mono); fill: var(--muted); }
+.chapter-copy h3, .story-principles li { font-size: 30px; font-weight: 400; letter-spacing: -.03em; line-height: 1.2; }
+.chapter-text { margin-top: 16px; }
+.chapter-text p, .story-intro { max-width: 52ch; font-size: 17px; line-height: 1.5; letter-spacing: -.01em; color: var(--muted); }
+.chapter-text p { margin: 16px 0 0; }
+.chapter-text p:first-child { margin-top: 0; }
+.chapter-text .chapter-decision { color: var(--fg); }
+
+/* story intro and principles, set in the same voice as the chapters */
+.story-intro { margin: 0 0 24px; text-wrap: pretty; }
+.story-principles { list-style: none; margin: 0 0 40px; padding: 0; display: grid; gap: 2px; text-wrap: balance; }
+
+/* full-width art above the text, text in two columns */
+.chapter.wide { grid-template-columns: 1fr; gap: 32px; align-items: start; }
+.chapter.wide .chapter-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 48px; align-items: start; }
+.chapter.wide .chapter-text { margin-top: 0; }
+
+/* wide Figma boards scroll sideways on small screens instead of shrinking past reading size */
+.board { border-radius: 10px; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: center; }
+.stack-shots { display: flex; flex-direction: column; gap: 20px; }
+
+/* sticky notes settle into their groups. */
+.note { transform-box: fill-box; transform-origin: center; transition: transform 1s var(--ease) calc(var(--i, 0) * 70ms); }
+.chapter.pre .note { transform: translate(var(--sx), var(--sy)) rotate(var(--sr)); }
+
+/* token layers */
+.ladder { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+.ladder li { display: flex; flex-direction: column; align-items: center; gap: 12px; transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.ladder li:nth-child(2) { transition-delay: .09s; } .ladder li:nth-child(3) { transition-delay: .18s; }
+.chapter.pre .ladder li { opacity: 0; transform: translateY(10px); }
+.ladder-row { align-self: stretch; padding: 20px 24px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px rgba(10,10,10,.12); }
+.ladder-k { font-size: 15px; color: var(--muted); }
+.ladder-v { margin-top: 4px; font: 500 16px/1.3 var(--font-mono); letter-spacing: 0; overflow-wrap: anywhere; }
+.ladder-n { margin-top: 6px; font-size: 15px; line-height: 1.4; color: var(--muted); }
+.ladder-arrow { color: var(--muted); }
+
+@media (max-width: 860px) {
+  .story { gap: 80px; }
+  .chapter, .chapter.flip { grid-template-columns: 1fr; gap: 28px; }
+  .chapter.flip .chapter-art { order: 0; }
+  .chapter.wide .chapter-copy { grid-template-columns: 1fr; gap: 16px; }
+  .pair { grid-template-columns: 1fr; }
+  .board { overflow-x: auto; }
+  .board img { min-width: 860px; }
+  .story-principles li { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-art, .chapter-copy, .ladder li, .note { transition: none; }
+  .chapter.pre .chapter-art, .chapter.pre .chapter-copy, .chapter.pre .ladder li { opacity: 1; transform: none; }
+}
+.figma-link { margin-top: 28px; align-self: flex-start; display: inline-flex; align-items: center; gap: 14px; padding: 12px 20px 12px 14px; border-radius: 16px; background: var(--fg); color: #fff; text-decoration: none; transition: transform .25s var(--ease), background .25s var(--ease); }
+.figma-link img { display: block; width: 28px; height: 28px; padding: 5px; box-sizing: content-box; border-radius: 10px; background: #fff; }
+.figma-link > span:not(.sr-only) { display: flex; flex-direction: column; gap: 2px; font-size: 16px; line-height: 1.2; letter-spacing: -.01em; }
+.figma-link small { font-size: 13px; color: rgba(255,255,255,.66); }
+.figma-link svg { flex: none; margin-left: 6px; transition: transform .3s var(--ease); }
+.figma-link:active { transform: scale(.97); }
+.figma-link:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .figma-link:hover { background: #262626; transform: translateY(-2px); }
+  .figma-link:hover svg { transform: translate(3px, -3px); }
+}

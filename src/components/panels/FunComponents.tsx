@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState, type ReactNode } from 'react'
 import { NowStatus } from '@/components/layout/NowStatus'
+import { PixelFlower } from '@/components/layout/PixelFlower'
 import { RocketFlight, RocketPad } from '@/components/layout/Rocket'
 import { Tour } from '@/components/layout/Tour'
 
@@ -50,6 +51,7 @@ export function FunComponents() {
       <h2 className="fun-head">
         <button className="fun-toggle" aria-expanded={open} aria-controls="fun-body" onClick={() => setOpen((o) => !o)}>
           <span className="fun-label">Fun components</span>
+          <PixelFlower />
           <span className="fun-chev"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
         </button>
       </h2>

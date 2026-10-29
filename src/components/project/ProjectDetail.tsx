@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Check, CircleAlert, FileText, Gauge, Play, type LucideIcon } from 'lucide-react'
+import { ArrowUpRight, Check, CircleAlert, FileText, Gauge, Play, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { CONFETTI } from '@/components/layout/confetti'
 import { projects, type Project } from '@/data/projects'
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { ActionSlider } from './ActionSlider'
 import { Diagrams } from './Diagrams'
 import { PixelDesk } from './PixelDesk'
+import { ScobinStory } from './ScobinStory'
 
 const projectTools: ToolId[] = ['figma', 'sketch', 'storybook', 'claude', 'rust', 'css', 'git', 'html']
 
@@ -203,14 +204,25 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
         {p && (
           <div className="cols">
             <div className="info" id="cs-overview">
-              {p.logo && <img className="proj-logo" src={p.logo} alt="Georgia Department of Human Services" />}
+              {p.logo && <img className="proj-logo" src={p.logo} alt={p.client} />}
               <h2>{p.title}</h2>
               <p className="about-title">About project</p>
               <p className="desc">{p.description}</p>
+              {p.figma && (
+                <a className="figma-link" href={p.figma} target="_blank" rel="noopener noreferrer">
+                  <img src="/tools/figma.svg" alt="" />
+                  <span>
+                    Open the Figma file
+                    <small>Every component, token and sample screen</small>
+                  </span>
+                  <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              )}
               <div className="stack">
                 <p className="stack-title">Tools used</p>
                 <ul className="chips" aria-label="Tools used">
-                  {projectTools.map((id) => (
+                  {(p.tools ?? projectTools).map((id) => (
                     <li className="chip" key={id}>
                       <img src={`/tools/${id}.svg`} alt="" width="18" height="18" />
                       {tools[id]}
@@ -220,7 +232,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               </div>
             </div>
             <div className="gallery">
-              {p.metrics && (
+              {p.metrics && !p.story && (
                 <section className="metrics" id="cs-glance" aria-label="What changed for users">
                   <h3>What changed for the people using it</h3>
                   <dl>
@@ -236,7 +248,8 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               )}
               {p.features && <Diagrams />}
               {p.features && <ActionSlider features={p.features} />}
-              {!p.features && (
+              {p.story && <ScobinStory />}
+              {!p.features && !p.story && (
                 <div className="coming-soon">
                   <PixelDesk />
                   <div className="coming-marquee" aria-label="Work in progress">
@@ -250,7 +263,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                   </div>
                 </div>
               )}
-              {p.features && <WalkthroughEnd key={p.slug} slug={p.slug} root={sheet} />}
+              {(p.features || p.story) && <WalkthroughEnd key={p.slug} slug={p.slug} root={sheet} />}
             </div>
           </div>
         )}

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { Carousel } from './Carousel'
 
 /** Hand-drawn style explainers of each problem, shown before the GIF walkthrough. */
-const Defs = ({ id }: { id: string }) => (
+export const Defs = ({ id }: { id: string }) => (
   <defs>
     <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M1 1.5 9 5 1 8.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />

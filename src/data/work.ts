@@ -31,9 +31,9 @@ export const jobs: Job[] = [
     where: 'SCOBIN>UX',
     company: 'Scobin',
     role: 'Product Designer',
-    about: 'Designed an inventory and pricing platform, 40% fewer manual errors and 35% faster tasks.',
+    about: 'Built the design system from scratch: 548 variables, 41 documented components, used by more than 120 employees.',
     logos: [{ label: 'S', color: '#fff', src: '/logos/scobin.svg' }],
-    projects: [],
+    projects: [{ slug: 'scobin-design-system' }],
     tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
   },
   {

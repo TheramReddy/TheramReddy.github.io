@@ -5,7 +5,7 @@
   display: flex; align-items: center; justify-content: center;
   background: var(--bg); color: var(--fg);
   box-shadow: 0 0 0 2px #3b8fe8, 0 0 0 9999px rgba(10, 10, 10, .28);
-  transition: all .45s var(--ease);
+  transition: top .45s var(--ease), left .45s var(--ease), width .45s var(--ease), height .45s var(--ease), border-radius .45s var(--ease);
 }
 .tour-card {
   position: fixed; padding: 22px 22px 18px; border-radius: 22px;
@@ -22,13 +22,16 @@
 .tour-card p { margin: 0; font-size: 16px; line-height: 1.45; color: rgba(255, 255, 255, .78); }
 .tour-icon { display: block; }
 .tour-x { position: absolute; top: 16px; right: 16px; color: rgba(255, 255, 255, .7); cursor: pointer; }
-.tour-x:hover { color: #fff; }
+.tour-x { transition: color .2s var(--ease), transform .16s var(--ease); }
+@media (hover: hover) and (pointer: fine) { .tour-x:hover { color: #fff; } }
+.tour-x:active { transform: scale(.92); }
 .tour-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; font-size: 15px; color: rgba(255, 255, 255, .78); }
 .tour-next {
   padding: 10px 22px; border-radius: 999px; background: #f4f3ef; color: #0a0a0a;
-  font-size: 16px; font-weight: 500; cursor: pointer; transition: transform .2s var(--ease);
+  font-size: 16px; font-weight: 500; cursor: pointer; transition: transform .16s var(--ease);
 }
-.tour-next:hover { transform: scale(1.05); }
+@media (hover: hover) and (pointer: fine) { .tour-next:hover { transform: scale(1.05); } }
+.tour-next:active { transform: scale(.97); }
 @keyframes tour-in { from { opacity: 0; transform: translateY(8px); } }
 @media (prefers-reduced-motion: reduce) {
   .tour-card { animation: none; }

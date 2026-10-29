@@ -1,3 +1,5 @@
+import type { ToolId } from './tools'
+
 export type Project = {
   slug: string
   title: string
@@ -21,6 +23,12 @@ export type Project = {
   features?: Feature[]
   /** headline numbers for the whole system, shown first on the right of the popup */
   metrics?: Metric[]
+  /** tools shown in the popup; falls back to the default set */
+  tools?: ToolId[]
+  /** render the chaptered design-system story instead of metrics and GIFs */
+  story?: boolean
+  /** public Figma file, shown as a link with the Figma logo under the tools */
+  figma?: string
 }
 
 export type Metric = { value: string; label: string; note: string }
@@ -74,6 +82,24 @@ export const projects: Project[] = [
       { title: "From referral to decision, at a glance", body: "Claim to decision shows how many claims reach each stage and where they drop off. Filter by agency or switch quarters. All figures are demo data.", gif: gif('dashboard_filter_collapse'), alt: "Filtering the claim funnel by agency and collapsing a dashboard panel" },
       { title: "Give the work more room", body: "Collapse the sidebar to icons when the table needs the width, and bring it back in one click.", gif: gif('sidebar_collapse'), alt: "Collapsing the sidebar to icons and expanding it again" },
     ],
+  },
+  {
+    slug: 'scobin-design-system',
+    title: 'Scobin Design System',
+    logo: '/logos/scobin.svg',
+    cover: '/projects/scobin/cover.png',
+    year: '2024',
+    role: 'Product Designer',
+    stack: ['Figma', 'Storybook'],
+    url: '#',
+    client: 'Scobin',
+    summary: 'A design system built from the ground up to make consistency easier, now supporting more than 120 employees.',
+    description:
+      'Scobin didn’t have a shared design language. Similar components looked and behaved differently across screens, leaving designers and developers to solve the same problems repeatedly. I built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons, and 95 text styles. The system now supports a user base of more than 120 employees.',
+    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
+    story: true,
+    figma: 'https://www.figma.com/design/aQDljAL3G6oGoaenWvq81E/Scobin-Design-System?node-id=6-9',
   },
 ]
 
