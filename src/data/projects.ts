@@ -31,7 +31,7 @@ export type Project = {
   figma?: string
 }
 
-export type Metric = { value: string; label: string; note: string }
+type Metric = { value: string; label: string; note: string }
 
 export type Feature = { title: string; body: string; gif: string; alt: string }
 
@@ -61,26 +61,26 @@ export const projects: Project[] = [
       { value: '4', label: 'Workflows that feel connected', note: 'Claims, hearings, payments and reconciliation hand off to each other cleanly.' },
     ],
     features: [
-      { title: "Watch the integrations work", body: "System process lists each partner interface and the file it is handling right now. A checklist moves through connecting, transferring, validating and updating balances. Each interface has a menu for viewing details, testing the connection or pausing feeds.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
-      { title: "See where claims come from", body: "A map of Georgia shaded by claims received. Pick a county or an agency, and switch between claims, amounts and intercepts.", gif: gif('counties_map'), alt: "Georgia county map reshading as the metric, agency and county change" },
-      { title: "Follow the money, step by step", body: "Intercepts, disbursements and refunds each get their own tab with a count, under running totals for claimed, intercepted, disbursed and returned.", gif: shot('trail'), alt: "Switching between the intercepts, disbursements and refunds tabs of a taxpayer record" },
-      { title: "Say what happens next", body: "A void does not take effect straight away. The page confirms the check is waiting for supervisor approval and that nothing is sent to the bank until then.", gif: gif('check_void_approval'), alt: "Filling in a check void reason and comment and submitting for supervisor approval" },
-      { title: "Explain why funds are held", body: "A taxpayer under hearing review is marked on the record. The Hearing tab says funds are held while a hearing is active and where review and approval happen.", gif: shot('hold'), alt: "A taxpayer marked Hearing: Under review, then the Hearing tab explaining the hold" },
-      { title: "Reveal a number only on purpose", body: "Social Security numbers are masked by default. Revealing one is a deliberate click on a single row, limited by role and logged.", gif: gif('ssn_reveal'), alt: "Revealing and hiding a masked SSN in a table row" },
-      { title: "Plan a month of batches in a few clicks", body: "Pick a date range, choose how often it repeats and generate the schedule. Past dates are locked, and the page warns that a scheduled batch cannot change on the day it runs.", gif: gif('check_batch_scheduling'), alt: "Choosing a date range and a weekly repeat and generating four scheduled batch dates" },
-      { title: "Look inside the file that was sent", body: "Open any bank file to see check-level detail, then the outbound file itself, as fields with character positions or as raw fixed-width text. Rejections can be traced to the exact line.", gif: gif('regions_file_drilldown'), alt: "Opening a bank file and switching between the records view and the raw source text" },
-      { title: "Hover to read the number", body: "Moving across the donut highlights the matching status in the legend and shows its count and share in the centre.", gif: gif('chart_tooltips'), alt: "Hovering over segments of a check status donut chart" },
-      { title: "Find a person from anywhere", body: "Press Ctrl K on any screen to search pages and taxpayers in one box. Results update as you type and say what each will open.", gif: gif('command_palette_search'), alt: "Command palette searching for the name Alder and listing four matching taxpayers" },
-      { title: "Narrow a long list, quickly", body: "Sort by any column header, then filter by column. Built for repeated work: search, filter, open a record, move to the next.", gif: gif('table_sort_filter'), alt: "Taxpayer table sorted by name and then filtered by city to show only Savannah" },
-      { title: "Pull the exceptions to the top", body: "Type Exception into the latest status filter and only the rows that need a person remain, marked in red.", gif: shot('signal'), alt: "Typing Exception into the latest status filter so only the red exception rows remain" },
-      { title: "Let people size their own table", body: "Drag the edge of a column to widen or narrow it. The same handle works from the keyboard.", gif: gif('table_column_resize'), alt: "Dragging a column edge to widen the Taxpayer ID column and back again" },
-      { title: "Show only what the job needs", body: "The column picker lists every field and says how many are hidden, so a case manager and a supervisor can each see the view they need.", gif: gif('table_choose_columns'), alt: "Opening the column chooser and toggling columns on and off" },
-      { title: "Move through results without losing your place", body: "Pagination shows where you are in the set, for example 1 to 15 of 96, and lets you change how many rows appear per page.", gif: gif('table_pagination'), alt: "Paging through the taxpayer table, from page 1 to 2 to 3 and back" },
-      { title: "One person, seven views", body: "Taxpayer 360 is the hub for a person. Empty tabs say what will appear there instead of showing a blank box.", gif: gif('tabs_switching'), alt: "Switching between the tabs of a taxpayer record" },
-      { title: "Comments that stay on the record", body: "The dialog states its rule up front: comments stay with the taxpayer record and cannot be deleted.", gif: gif('add_comment_dialog'), alt: "Adding a comment to a taxpayer record in a dialog" },
-      { title: "Two audiences, one system", body: "Switching role changes the navigation. A partner-agency worker sees only Hearings; DHS staff see the full set.", gif: gif('role_switch_nav'), alt: "Switching roles from the profile menu and the sidebar changing to show only hearing pages" },
-      { title: "From referral to decision, at a glance", body: "Claim to decision shows how many claims reach each stage and where they drop off. Filter by agency or switch quarters. All figures are demo data.", gif: gif('dashboard_filter_collapse'), alt: "Filtering the claim funnel by agency and collapsing a dashboard panel" },
-      { title: "Give the work more room", body: "Collapse the sidebar to icons when the table needs the width, and bring it back in one click.", gif: gif('sidebar_collapse'), alt: "Collapsing the sidebar to icons and expanding it again" },
+      { title: "Real-time status tracking", body: "Checklist pattern, stepper, contextual action menu.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
+      { title: "Geospatial data visualization", body: "Choropleth map, metric toggle, hierarchical drill-down (county, agency).", gif: gif('counties_map'), alt: "Georgia county map reshading as the metric, agency and county change" },
+      { title: "Segmented record views", body: "Tabbed navigation, summary KPIs, information grouping.", gif: shot('trail'), alt: "Switching between the intercepts, disbursements and refunds tabs of a taxpayer record" },
+      { title: "System status visibility", body: "Confirmation feedback, pending-approval state, clear next-step affordance.", gif: gif('check_void_approval'), alt: "Filling in a check void reason and comment and submitting for supervisor approval" },
+      { title: "Status signaling", body: "Status badge, explanatory tab, plain-language rationale.", gif: shot('hold'), alt: "A taxpayer marked Hearing: Under review, then the Hearing tab explaining the hold" },
+      { title: "Progressive disclosure", body: "Data masked by default, intentional reveal, role-based access control.", gif: gif('ssn_reveal'), alt: "Revealing and hiding a masked SSN in a table row" },
+      { title: "Guided scheduling", body: "Date range picker, recurrence presets, disabled past dates, inline validation warnings.", gif: gif('check_batch_scheduling'), alt: "Choosing a date range and a weekly repeat and generating four scheduled batch dates" },
+      { title: "Layered detail", body: "Drill-down hierarchy, records and raw data views, traceable error states.", gif: gif('regions_file_drilldown'), alt: "Opening a bank file and switching between the records view and the raw source text" },
+      { title: "Interactive data visualization", body: "Linked hover states, legend highlighting, centered data readout.", gif: gif('chart_tooltips'), alt: "Hovering over segments of a check status donut chart" },
+      { title: "Global command palette", body: "Keyboard shortcut, instant search, categorized results.", gif: gif('command_palette_search'), alt: "Command palette searching for the name Alder and listing four matching taxpayers" },
+      { title: "Sortable, filterable data tables", body: "Column sorting, per-column filters, reduced interaction cost for repeat tasks.", gif: gif('table_sort_filter'), alt: "Taxpayer table sorted by name and then filtered by city to show only Savannah" },
+      { title: "Exception highlighting", body: "Status filter, color-coded rows, priority-based ordering.", gif: shot('signal'), alt: "Typing Exception into the latest status filter so only the red exception rows remain" },
+      { title: "Resizable columns", body: "Drag handle, keyboard parity, user-controlled information density.", gif: gif('table_column_resize'), alt: "Dragging a column edge to widen the Taxpayer ID column and back again" },
+      { title: "Customizable views", body: "Column picker, hidden-field indicator, role-based layouts.", gif: gif('table_choose_columns'), alt: "Opening the column chooser and toggling columns on and off" },
+      { title: "Pagination controls", body: "Position indicator, adjustable page size, persistent context.", gif: gif('table_pagination'), alt: "Paging through the taxpayer table, from page 1 to 2 to 3 and back" },
+      { title: "Tabbed hub layout", body: "Single entry point, designed empty states, consistent page structure.", gif: gif('tabs_switching'), alt: "Switching between the tabs of a taxpayer record" },
+      { title: "Focused modal dialogs", body: "Rules surfaced up front, permanent record, single-task input.", gif: gif('add_comment_dialog'), alt: "Adding a comment to a taxpayer record in a dialog" },
+      { title: "Role-based navigation", body: "Adaptive sidebar, scoped access, shared layout system.", gif: gif('role_switch_nav'), alt: "Switching roles from the profile menu and the sidebar changing to show only hearing pages" },
+      { title: "Funnel visualization", body: "Stage conversion, agency and quarter filters, collapsible panels.", gif: gif('dashboard_filter_collapse'), alt: "Filtering the claim funnel by agency and collapsing a dashboard panel" },
+      { title: "Collapsible sidebar", body: "Icon rail, expanded canvas, one-click restore.", gif: gif('sidebar_collapse'), alt: "Collapsing the sidebar to icons and expanding it again" },
     ],
   },
   {

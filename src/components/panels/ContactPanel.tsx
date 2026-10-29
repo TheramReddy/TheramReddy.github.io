@@ -42,7 +42,7 @@ export function ContactPanel({ open }: { open: boolean }) {
   return (
     <Dialog open={open} onOpenChange={onModalChange}>
       <DialogContent
-        className="arc contact-modal"
+        className="kit contact-modal"
         title={sent ? 'Message received' : 'Let’s talk'}
         description={sent ? undefined : 'Tell me who you are, pick a day for a call, and attach anything about your design idea.'}
       >

@@ -198,7 +198,7 @@ export function PixelLife({ activity }: { activity: Activity }) {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const ctx = ref.current?.getContext('2d')
+    const ctx = ref.current?.getContext('2d', { willReadFrequently: true })
     if (!ctx) return
 
     let tick = 0

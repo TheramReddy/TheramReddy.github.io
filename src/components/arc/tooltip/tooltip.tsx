@@ -29,7 +29,7 @@ export function Tooltip({ label, children, gap = 8 }: TooltipProps) {
         <AnimatePresence>
           {pos && (
             <motion.div
-              key="tip" id={id} role="tooltip" className={`arc ${styles.tip}`} style={{ left: pos.x, top: pos.y }}
+              key="tip" id={id} role="tooltip" className={`kit ${styles.tip}`} style={{ left: pos.x, top: pos.y }}
               initial={{ opacity: 0, y: reduce ? 0 : 4, scale: reduce ? 1 : 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: motionTokens.duration.fast, ease: motionTokens.ease.enter } }}
               exit={{ opacity: 0, transition: { duration: motionTokens.duration.instant } }}

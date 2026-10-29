@@ -1,0 +1,10 @@
+.banner { --banner-bg: var(--neutral-11); --banner-ink: var(--neutral-1); position: relative; display: flex; align-items: flex-start; justify-content: center; box-sizing: border-box; padding: var(--space-4) calc(var(--space-12) + var(--space-2)); border-radius: var(--radius-panel) var(--radius-panel) 0 0; background: var(--banner-bg); color: var(--banner-ink); font-family: var(--font-body); font-size: var(--text-sm); line-height: var(--leading-body); letter-spacing: var(--tracking-body); text-align: center; }
+.body { max-width: 52rem; }
+.body p { margin: 0; }
+.more { margin-top: var(--space-3) !important; text-align: left; opacity: .85; }
+.toggle { display: inline-flex; align-items: center; gap: .25rem; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; vertical-align: baseline; cursor: pointer; transition: opacity var(--duration-fast) var(--ease-standard); }
+.toggle:hover { opacity: .7; }
+.close { position: absolute; top: 50%; right: var(--space-5); display: grid; place-items: center; width: 1.75rem; height: 1.75rem; margin-top: -.875rem; padding: 0; border: 0; border-radius: var(--radius-pill); background: none; color: inherit; opacity: .65; cursor: pointer; transition: opacity var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard); }
+.close:hover { opacity: 1; background: oklch(100% 0 0 / .12); }
+.restore { display: block; margin: 0 auto; padding: var(--space-2) var(--space-3); border: 0; background: none; color: var(--neutral-8); font-family: var(--font-body); font-size: var(--text-sm); letter-spacing: var(--tracking-body); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; transition: color var(--duration-fast) var(--ease-standard); }
+.restore:hover { color: var(--foreground); }

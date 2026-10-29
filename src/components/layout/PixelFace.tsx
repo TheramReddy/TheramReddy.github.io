@@ -30,7 +30,7 @@ function ink(x: number, y: number, look: { x: number; y: number }, open: number)
 }
 
 /** Paints one frame of the face; `excited` swaps in raised brows and a wide open grin. */
-export function drawFace(
+function drawFace(
   ctx: CanvasRenderingContext2D,
   look: { x: number; y: number },
   open: number,

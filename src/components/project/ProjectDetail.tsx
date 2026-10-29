@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowUpRight, Check, CircleAlert, FileText, Gauge, Play, type LucideIcon } from 'lucide-react'
+import { Banner } from '@/components/arc/banner/banner'
 import { Button } from '@/components/arc/button/button'
 import { CONFETTI } from '@/components/layout/confetti'
 import { projects, type Project } from '@/data/projects'
@@ -33,7 +34,7 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
   const next = projects[(i + 1) % projects.length]
 
   return (
-    <div className="arc contact-done walkthrough-end" ref={ref}>
+    <div className="kit contact-done walkthrough-end" ref={ref}>
       {seen && (
         <div className="contact-burst" aria-hidden="true">
           {CONFETTI.map((st, n) => <i key={n} style={st} />)}
@@ -156,6 +157,24 @@ function SheetScrollbar({ root }: { root: RefObject<HTMLDivElement | null> }) {
   )
 }
 
+/** Note at the top of a case study saying the screens are recreated, not the real product. */
+function Disclaimer() {
+  return (
+    <div className="disclaimer">
+      <Banner
+        restoreLabel="Show disclaimer"
+        more={<>
+          This case study is a fictional recreation made for portfolio purposes only. It does not show, copy, or disclose any real system, software, data, or confidential information belonging to a past employer or client.
+          <br /><br />
+          Menus, option names, field labels, workflows, and all data (names, records, amounts) have been changed or invented.
+        </>}
+      >
+        These screens are not the real product.<br />Every screen, menu option, label, and piece of data has been changed or made up.
+      </Banner>
+    </div>
+  )
+}
+
 /** Popup sheet with description, gallery and a scroll-progress ring. */
 export function ProjectDetail({ project, open }: { project?: Project; open: boolean }) {
   const navigate = useNavigate()
@@ -184,7 +203,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
   return (
     <article
       className={cn('detail', open && 'open')}
-      aria-hidden={!open}
+      inert={!open}
       onClick={(e) => e.target === e.currentTarget && navigate('/projects')}
     >
       <button className="close" aria-label="Close project" onClick={() => navigate('/projects')}>
@@ -200,6 +219,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       </div>
       <div className="sheet" ref={sheet} onScroll={progress}>
         <SheetScrollbar root={sheet} />
+        {p?.features && <Disclaimer />}
         {p?.features && <SectionNav root={sheet} />}
         {p && (
           <div className="cols">

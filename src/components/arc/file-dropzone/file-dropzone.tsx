@@ -51,7 +51,7 @@ const shakeTransition: Transition = { duration: .42, ease: "easeOut" };
 /** New rows drop out of the target into the list, with a touch of life as they land. */
 const land: Transition = { type: "spring", visualDuration: .42, bounce: 0 };
 
-export function formatFileSize(bytes: number) {
+function formatFileSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < MB) return `${Math.round(bytes / 1024)} KB`;
   const mb = bytes / MB;
@@ -119,7 +119,7 @@ type RowProps = { item: FileDropzoneItem; reduce: boolean; delay: number; fresh:
 function Thumb({ item }: { item: FileDropzoneItem }) {
   const [broken, setBroken] = useState(false);
   if (!item.preview || broken) return <span className={styles.fileIcon}><TypeIcon name={item.name} /></span>;
-  // eslint-disable-next-line @next/next/no-img-element -- registry components stay framework agnostic, and previews are often object URLs
+  // eslint-disable-next-line @next/next/no-img-element -- previews are often object URLs
   return <span className={styles.thumb}><img src={item.preview} alt="" width={40} height={40} decoding="async" onError={() => setBroken(true)} /></span>;
 }
 
@@ -439,4 +439,3 @@ export function FileDropzone({ accept, multiple = true, maxFiles = 5, onFilesCha
   </div>;
 }
 
-export default FileDropzone;

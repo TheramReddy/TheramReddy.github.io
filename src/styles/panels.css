@@ -94,8 +94,8 @@
 .projects.open .cs-heading, .projects.open .cs-list li { opacity: 1; transform: none; transition: opacity .7s var(--ease), transform .8s var(--ease); transition-delay: calc(.15s + var(--i, 0) * .14s); }
 @media (prefers-reduced-motion: reduce) { .projects .cs-heading, .projects .cs-list li { opacity: 1; transform: none; transition: none; }  }
 
-/* Contact modal (Arc dialog), re-themed to the site palette */
-.arc.contact-modal {
+/* Contact modal, themed to the site palette */
+.kit.contact-modal {
   --background: var(--bg); --surface-raised: var(--bg); --surface: #fff; --surface-muted: #efeeea;
   --foreground: var(--fg); --text-secondary: var(--muted); --text-muted: var(--muted);
   --border: rgba(10, 10, 10, .12); --border-strong: rgba(10, 10, 10, .2);
@@ -105,7 +105,7 @@
   width: min(calc(100vw - 2rem), 680px);
   font-family: 'Geist Variable', system-ui, sans-serif; letter-spacing: -.02em;
 }
-/* Overlay matches the other panels (portaled outside .arc, so matched by its generated class) */
+/* Overlay matches the other panels (portaled outside the modal scope, so matched by its generated class) */
 [class*="_overlay_"] { background: rgba(244, 243, 239, .86); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
 .contact-form { display: grid; gap: var(--space-5); }
 .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
@@ -114,7 +114,7 @@
 .contact-done { position: relative; display: grid; justify-items: center; gap: var(--space-4); padding: var(--space-8) 0; text-align: center; font-size: var(--text-base); }
 .contact-done-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--fg); color: #fff; animation: done-pop .6s var(--ease) both; }
 .contact-done-icon svg { stroke-dasharray: 26; stroke-dashoffset: 26; animation: done-draw .5s .3s var(--ease) forwards; }
-.contact-done p, .contact-done .arc { animation: done-rise .6s .35s var(--ease) both; }
+.contact-done p, .contact-done .kit { animation: done-rise .6s .35s var(--ease) both; }
 .walkthrough-end { padding: var(--space-8) 0 0; min-height: 200px; align-content: start; }
 .contact-burst { position: absolute; top: calc(var(--space-8) + 24px); left: 50%; width: 0; height: 0; pointer-events: none; }
 .contact-burst i { position: absolute; width: 7px; height: 11px; border-radius: 2px; background: var(--c); opacity: 0; animation: confetti 1.3s var(--d) cubic-bezier(.12,.7,.3,1) forwards; }
@@ -126,9 +126,9 @@
   70% { opacity: 1; }
   100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 70px)) rotate(var(--rot)) scale(1); }
 }
-@media (prefers-reduced-motion: reduce) { .contact-burst { display: none; } .contact-done-icon, .contact-done-icon svg, .contact-done p, .contact-done .arc { animation: none; stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .contact-burst { display: none; } .contact-done-icon, .contact-done-icon svg, .contact-done p, .contact-done .kit { animation: none; stroke-dashoffset: 0; } }
 
-/* Icon inside the Arc input, vertically centred on the field (below its label) */
+/* Icon inside the input, vertically centred on the field (below its label) */
 .icon-field { position: relative; }
 .icon-field > svg {
   position: absolute; left: var(--space-3); z-index: 1; pointer-events: none; color: var(--text-muted);
@@ -177,8 +177,8 @@
 .panel.me .inner { width: min(1040px, calc(100% - 40px)); align-items: flex-start; text-align: left; }
 
 /* Hide the scrollbar in the contact modal (still scrollable) */
-.arc.contact-modal, .arc.contact-modal * { scrollbar-width: none; -ms-overflow-style: none; }
-.arc.contact-modal::-webkit-scrollbar, .arc.contact-modal *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.kit.contact-modal, .kit.contact-modal * { scrollbar-width: none; -ms-overflow-style: none; }
+.kit.contact-modal::-webkit-scrollbar, .kit.contact-modal *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 [class*="_overlay_"], [class*="_overlay_"] * { scrollbar-width: none; }
 [class*="_overlay_"]::-webkit-scrollbar { display: none; }
 /* Figma-style selection frame around the cycling phrase */

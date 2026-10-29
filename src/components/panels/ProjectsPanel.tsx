@@ -9,7 +9,7 @@ const FunComponents = lazy(() => import('./FunComponents').then((m) => ({ defaul
 /** Projects: one case-study card per project, opening the project popup. */
 export function ProjectsPanel({ open }: { open: boolean }) {
   return (
-    <section className={cn('panel projects', open && 'open')} aria-label="Projects" aria-hidden={!open}>
+    <section className={cn('panel projects', open && 'open')} aria-label="Projects" inert={!open}>
       <div className="inner">
         <h2 className="cs-heading">Selected case studies</h2>
         <ul className="cs-list">

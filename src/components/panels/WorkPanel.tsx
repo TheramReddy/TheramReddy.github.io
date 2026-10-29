@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 export function WorkPanel({ open }: { open: boolean }) {
   return (
-    <section className={cn('panel work', open && 'open')} aria-label="Work" aria-hidden={!open}>
+    <section className={cn('panel work', open && 'open')} aria-label="Work" inert={!open}>
       <div className="inner">
         <div className="tl">
           {jobs.map((j, i) => (

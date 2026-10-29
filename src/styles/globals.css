@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/geist';
+@import 'tw-animate-css';
 @import '@fontsource/pixelify-sans/500.css';
 @import './ui.css';
 @import './panels.css';
@@ -9,7 +10,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Site tokens (light theme). shadcn / Arc UI components read the semantic ones below. */
+/* Site tokens (light theme). The UI components read the semantic ones below. */
 :root {
   --bg: #f4f3ef;
   --fg: #0a0a0a;
