@@ -8,6 +8,8 @@ import '@/components/project/crew/crew.css'
 
 const CYCLE_MS = 4200
 const COLORS = ['#3b8fe8', '#2fa37a', '#e0793a', '#8b5cf6', '#d9467a', '#c99a1c', '#1fa5b8']
+// what the bot says while Telemetric is in the works: the roles I play on a small founding team
+const BOT_WORDS = ['building', 'designing', 'co-founding', 'prototyping', 'shipping', 'testing']
 const { stagger, blur, duration, ease } = motionTokens
 // the frame glides to the next phrase's width: slower and softer than the UI springs, no overshoot
 const frameSpring = { type: 'spring', visualDuration: 0.7, bounce: 0 } as const
@@ -118,10 +120,17 @@ function Lead({ text }: { text: string }) {
 
 /** Beta teaser: an announcement pill with a typing bot linking to the Telemetric case study. */
 function BetaComment() {
+  const reduce = useReducedMotion()
+  const [w, setW] = useState(0)
+  useEffect(() => {
+    if (reduce) return
+    const id = window.setInterval(() => setW((n) => (n + 1) % BOT_WORDS.length), 2600)
+    return () => clearInterval(id)
+  }, [reduce])
   return (
     <Link to="/project/telemetric" className="comment">
       <span className="comment-pin crew" data-working="true" aria-hidden="true">
-        <span className="ap-bubble" data-say="d">building</span>
+        <span className="ap-bubble" key={BOT_WORDS[w]} data-say="d">{BOT_WORDS[w]}</span>
         <Bot act="type" size={40} />
         <span className="ap-trail"><span className="ap-trail-fill" /></span>
       </span>

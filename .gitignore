@@ -1,3 +1,8 @@
 node_modules
 dist
 *.log
+tsconfig.tsbuildinfo
+.agents
+.claude
+.impeccable
+skills-lock.json

@@ -48,9 +48,9 @@ export const projects: Project[] = [
     stack: ['Figma'],
     url: '#',
     client: 'Telemetric',
-    summary: 'A desktop workspace where several AI agents organize your documents while you watch, step in and stay in control. Coming to beta.',
+    summary: 'A workspace where your files become a map, and a team of AI agents works on that map while you watch, steer and edit. Coming soon to beta.',
     description:
-      'Most AI tools give you a familiar routine: type a request, wait, and see what comes back. Telemetric is a desktop workspace where a crew of AI agents converts, structures, links and files your documents. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface, so people who don’t live in a terminal can see what the agents are doing and direct them.',
+      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric organizes the folder into connected nodes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
     story: true,

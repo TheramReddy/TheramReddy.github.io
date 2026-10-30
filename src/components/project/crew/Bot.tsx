@@ -81,20 +81,27 @@ export function Bot({ act, dir = 'r', look, size = 37.2 }: { act: Act; dir?: Dir
   )
 }
 
-const BOSS: [string, number, number, number, number][] = [
+type Px = [string, number, number, number, number]
+const BOSS_BODY: Px[] = [
   ['#8d96ec', 4, 0, 2, 1], ['#4f5bd5', 4, 1, 2, 1], ['#4f5bd5', 2, 2, 6, 1], ['#4f5bd5', 1, 3, 8, 1], ['#4f5bd5', 0, 4, 10, 4],
   ['#3a43ad', 0, 8, 10, 1], ['#3a43ad', 1, 9, 8, 1], ['#3a43ad', 2, 10, 2, 1], ['#3a43ad', 6, 10, 2, 1],
   ['#8d96ec', 2, 2, 2, 1], ['#8d96ec', 1, 3, 1, 1],
-  ['#ffffff', 3, 4, 4, 1], ['#ffffff', 2, 5, 6, 2], ['#ffffff', 3, 7, 4, 1],
-  ['#1f1e1b', 5, 5, 2, 2], ['#ffffff', 5.25, 5.25, 0.5, 0.5],
-  ['#f2a7a0', 1, 7, 1, 1], ['#f2a7a0', 8, 7, 1, 1],
 ]
+const BOSS_EYE: Px[] = [['#ffffff', 3, 4, 4, 1], ['#ffffff', 2, 5, 6, 2], ['#ffffff', 3, 7, 4, 1]]
+const BOSS_PUPIL: Px[] = [['#1f1e1b', 5, 5, 2, 2], ['#ffffff', 5.25, 5.25, 0.5, 0.5]]
+const BOSS_CHEEKS: Px[] = [['#f2a7a0', 1, 7, 1, 1], ['#f2a7a0', 8, 7, 1, 1]]
+const px = ([fill, x, y, w, h]: Px, i: number) => <rect key={i} fill={fill} x={x} y={y} width={w} height={h} />
 
-/** The blue one-eyed boss who hands out the work. */
-export function BossBot({ width = 43.18 }: { width?: number }) {
+/** The blue one-eyed boss who hands out the work. The eye and pupil are grouped so CSS can blink and look around. */
+export function BossBot({ width = 43.18, className }: { width?: number; className?: string }) {
   return (
-    <svg width={width} height={(width * 11) / 10} viewBox="0 0 10 11" shapeRendering="crispEdges" aria-hidden="true" style={{ display: 'block', flexShrink: 0 }}>
-      {BOSS.map(([fill, x, y, w, h], i) => <rect key={i} fill={fill} x={x} y={y} width={w} height={h} />)}
+    <svg className={className} width={width} height={(width * 11) / 10} viewBox="0 0 10 11" shapeRendering="crispEdges" aria-hidden="true" style={{ display: 'block', flexShrink: 0 }}>
+      {BOSS_BODY.map(px)}
+      <g className="boss-eye">
+        {BOSS_EYE.map(px)}
+        <g className="boss-pupil">{BOSS_PUPIL.map(px)}</g>
+      </g>
+      {BOSS_CHEEKS.map(px)}
     </svg>
   )
 }

@@ -231,3 +231,17 @@
 .crew-pal .pal-in { position: absolute; left: -42px; top: -45px; width: 84px; }
 .crew-pal .pal-bot { transform: scale(.45); transform-origin: 50% 50%; }
 .crew-pal .pal-say { position: absolute; bottom: 100%; left: 50%; margin-bottom: 8px; transform: translateX(-50%); }
+
+/* the closing beat of the Telemetric case study: the mascot, big and alive */
+.story-soon { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 96px 0 64px; text-align: center; }
+.story-soon p { margin: 10px 0 0; font-size: 28px; font-weight: 400; letter-spacing: -.03em; line-height: 1.2; color: var(--muted); }
+.story-soon em { font-style: normal; color: inherit; }
+.story-soon-mark { animation: soon-float 3.2s ease-in-out infinite; }
+.story-soon-mark .boss-eye { transform-box: fill-box; transform-origin: center; animation: soon-blink 5s infinite; }
+.story-soon-mark .boss-pupil { animation: soon-look 6s ease-in-out infinite; }
+.story-soon-shadow { width: 100px; height: 8px; border-radius: 50%; background: rgba(60,50,20,.14); animation: soon-shadow 3.2s ease-in-out infinite; }
+@keyframes soon-float { 50% { transform: translateY(-10px); } }
+@keyframes soon-shadow { 50% { transform: scaleX(.8); opacity: .6; } }
+@keyframes soon-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@keyframes soon-look { 0%, 12%, 100% { transform: translateX(0); } 20%, 40% { transform: translateX(-.5px); } 55%, 75% { transform: translateX(.5px); } }
+@media (prefers-reduced-motion: reduce) { .story-soon-mark, .story-soon-mark .boss-eye, .story-soon-mark .boss-pupil, .story-soon-shadow { animation: none; } }
