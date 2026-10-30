@@ -76,23 +76,24 @@
 /* projects: case studies */
 .panel.projects::-webkit-scrollbar { display: none; }
 .projects .inner { width: min(980px, calc(100% - 40px)); align-items: stretch; text-align: left; padding: 112px 0 120px; }
-.cs-heading, .fun-label { margin: 0; font-size: 22px; font-weight: 500; line-height: 1.2; letter-spacing: -.03em; color: var(--fg); }
-.cs-list { display: flex; flex-direction: column; margin-top: 32px; }
-.cs { display: block; padding: 32px 0; border-top: 1px solid var(--line); color: inherit; }
+.fun-label { margin: 0; font-size: 22px; font-weight: 500; line-height: 1.2; letter-spacing: -.03em; color: var(--fg); }
+.cs-list { display: flex; flex-direction: column; }
+.cs { display: block; padding: 32px 0; color: inherit; }
+.cs-list li:first-child .cs { padding-top: 0; }
 .cs-list li:last-child .cs { border-bottom: 1px solid var(--line); }
 .cs-body { display: flex; flex-direction: column; min-width: 0; }
-.cs-title { margin-top: 12px; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.05; letter-spacing: -.04em; }
-.cs-summary { margin-top: 12px; max-width: 460px; font-size: 16px; line-height: 1.45; color: var(--muted); }
-.cs-foot { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-top: auto; padding-top: 24px; font-size: 15px; }
+.cs-title { font-size: clamp(26px, 3vw, 36px); line-height: 1.05; letter-spacing: -.04em; }
+.cs-summary { margin-top: 12px; max-width: none; font-size: 16px; line-height: 1.55; text-wrap: pretty; color: var(--muted); }
+.cs-foot { display: flex; align-items: center; justify-content: flex-start; gap: 16px; margin-top: auto; padding-top: 16px; font-size: 14px; }
 .cs-go { display: inline-flex; align-items: center; gap: 4px; text-decoration: underline; text-underline-offset: var(--underline-offset); white-space: nowrap; }
 .cs-go svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
 @media (hover: hover) and (pointer: fine) { .cs:hover .cs-go svg { transform: translate(2px, -2px); } }
 .cs:focus-visible .cs-go svg { transform: translate(2px, -2px); }
 
 /* entrance: heading, then each case study rises in */
-.projects .cs-heading, .projects .cs-list li { opacity: 0; transform: translateY(18px); }
-.projects.open .cs-heading, .projects.open .cs-list li { opacity: 1; transform: none; transition: opacity .7s var(--ease), transform .8s var(--ease); transition-delay: calc(.15s + var(--i, 0) * .14s); }
-@media (prefers-reduced-motion: reduce) { .projects .cs-heading, .projects .cs-list li { opacity: 1; transform: none; transition: none; }  }
+.projects .cs-list li { opacity: 0; transform: translateY(18px); }
+.projects.open .cs-list li { opacity: 1; transform: none; transition: opacity .7s var(--ease), transform .8s var(--ease); transition-delay: calc(.15s + var(--i, 0) * .14s); }
+@media (prefers-reduced-motion: reduce) { .projects .cs-list li { opacity: 1; transform: none; transition: none; }  }
 
 /* Contact modal, themed to the site palette */
 .kit.contact-modal {

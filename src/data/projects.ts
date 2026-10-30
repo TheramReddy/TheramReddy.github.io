@@ -48,7 +48,7 @@ export const projects: Project[] = [
     stack: ['Figma'],
     url: '#',
     client: 'Telemetric',
-    summary: 'A workspace where your files become a map, and a team of AI agents works on that map while you watch, steer and edit. Coming soon to beta.',
+    summary: 'A workspace where AI agents work on your files as a map. Coming soon to beta.',
     description:
       'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric organizes the folder into connected nodes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
@@ -65,7 +65,7 @@ export const projects: Project[] = [
     stack: ['Figma', 'Bootstrap', 'Angular'],
     url: '#',
     client: 'Georgia DHS',
-    summary: 'Debt Setoff (DSO) Modernization moves Georgia DHS off a legacy mainframe and onto three connected cloud portals that share one design system and meet WCAG 2.1 AA.',
+    summary: 'Moving Georgia DHS debt recovery off a legacy mainframe onto three connected cloud portals.',
     description:
       'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization moves that work to a cloud platform with three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
@@ -108,7 +108,7 @@ export const projects: Project[] = [
     stack: ['Figma', 'Storybook'],
     url: '#',
     client: 'Scobin',
-    summary: 'A design system built from the ground up to make consistency easier, now supporting more than 120 employees.',
+    summary: 'A design system built from the ground up, now supporting 120+ employees.',
     description:
       'Scobin didn’t have a shared design language. Similar components looked and behaved differently across screens, leaving designers and developers to solve the same problems repeatedly. I built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons, and 95 text styles. The system now supports a user base of more than 120 employees.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
