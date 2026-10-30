@@ -1,0 +1,175 @@
+/* The crew: pixel agents. One sprite, one data-act per activity. Everything is scoped to .crew. */
+
+.crew {
+  --neutral-0: #fff; --neutral-100: #ececf0; --neutral-200: #e5e5ea; --neutral-300: #d2d2d7;
+  --neutral-400: #a1a1a6; --neutral-500: #76767b; --neutral-600: #5c5c61; --neutral-900: #1d1d1f;
+  --a-converter: oklch(66% .13 205); --a-structurer: oklch(66% .13 150); --a-organizer: oklch(70% .13 75); --a-linker: oklch(64% .13 330);
+  --ds-ease-out: cubic-bezier(.16, 1, .3, 1); --ds-base: 180ms;
+  width: 100%; overflow: hidden; color: var(--neutral-900);
+}
+.crew-fit { transform-origin: 0 0; width: max-content; }
+
+.crew .bot { display: block; overflow: visible; }
+.crew .bot g, .crew .bot rect, .crew .bot path, .crew .bot circle { transform-box: fill-box; }
+
+.crew .bot-legs rect, .crew .bot-body, .crew .bot-armL rect, .crew .bot-armR rect, .crew .bot-antenna rect, .crew .bot-stool rect { fill: var(--neutral-400); }
+.crew .bot-pupils rect { fill: var(--neutral-600); }
+.crew .bot-stool rect { fill: var(--neutral-300); }
+
+/* a working agent picks up its own hue, kept quiet */
+.crew .bot-legs rect, .crew .bot-body, .crew .bot-armL rect, .crew .bot-armR rect, .crew .bot-antenna rect { transition: fill var(--ds-base) var(--ds-ease-out); }
+.crew [data-working='true'] .bot-legs rect,
+.crew [data-working='true'] .bot-body,
+.crew [data-working='true'] .bot-armL rect,
+.crew [data-working='true'] .bot-armR rect,
+.crew [data-working='true'] .bot-antenna rect { fill: color-mix(in oklab, var(--c) 70%, var(--neutral-400)); }
+.crew [data-working='true'] .ap-trail-fill { background: color-mix(in oklab, var(--c) 75%, var(--neutral-400)); }
+
+/* props are hidden until their activity asks for them */
+.crew .prop { opacity: 0; transition: opacity 220ms var(--ds-ease-out); }
+.crew .p-dark { fill: var(--neutral-600); }
+.crew .p-light { fill: var(--neutral-300); }
+.crew .p-ink { fill: var(--neutral-900); }
+.crew .p-paper { fill: var(--neutral-0); stroke: var(--neutral-300); stroke-width: 0.15; }
+.crew .p-handle { fill: none; stroke: var(--neutral-600); stroke-width: 0.8; stroke-linecap: square; }
+.crew .p-ring { fill: rgb(255 255 255 / 0.55); stroke: var(--neutral-600); stroke-width: 0.4; }
+
+/* ---- pose: sitting vs standing ---- */
+.crew .bot-pose { transition: transform 320ms var(--ds-ease-out); }
+.crew .bot-legs { transform-origin: 50% 0; transition: transform 320ms var(--ds-ease-out); }
+.crew .bot-stool { opacity: 0; transition: opacity 240ms var(--ds-ease-out); }
+.crew .bot[data-act='sit'] .bot-pose, .crew .bot[data-act='type'] .bot-pose, .crew .bot[data-act='draw'] .bot-pose { transform: translateY(1.4px); }
+.crew .bot[data-act='sit'] .bot-legs, .crew .bot[data-act='type'] .bot-legs, .crew .bot[data-act='draw'] .bot-legs { transform: scaleY(0.4); }
+.crew .bot[data-act='sit'] .bot-stool, .crew .bot[data-act='type'] .bot-stool, .crew .bot[data-act='draw'] .bot-stool { opacity: 1; }
+
+/* ---- always alive: breathing, blinking, antenna ---- */
+.crew .bot-bob { transform-origin: 50% 100%; animation: bot-breathe 3.2s ease-in-out infinite; }
+.crew .bot-pupils { transform-origin: 50% 50%; animation: bot-blink 4.6s infinite; }
+.crew .bot-antenna { transform-origin: 50% 100%; animation: bot-sway 2.8s ease-in-out infinite; }
+.crew .bot-armL, .crew .bot-armR { transition: transform 240ms var(--ds-ease-out); }
+@keyframes bot-breathe { 50% { transform: translateY(0.3px); } }
+@keyframes bot-blink { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.12); } }
+@keyframes bot-sway { 50% { transform: rotate(9deg); } 0%, 100% { transform: rotate(-9deg); } }
+
+/* ---- type ---- */
+.crew .bot[data-act='type'] .prop-kbd, .crew .bot[data-act='type'] .prop-sheet { opacity: 1; }
+.crew .bot[data-act='type'] .sheet-ink { opacity: 0; }
+.crew .bot[data-act='type'] .bot-armL { animation: bot-tap 300ms ease-in-out infinite; }
+.crew .bot[data-act='type'] .bot-armR { animation: bot-tap 300ms ease-in-out infinite 150ms; }
+.crew .bot[data-act='type'] .bot-antenna { animation-duration: 1.1s; }
+.crew .prop-kbd .key { fill: var(--neutral-0); animation: bot-key 540ms steps(1) infinite paused; }
+.crew .bot[data-act='type'] .prop-kbd .key { animation-play-state: running; }
+.crew .sheet-lines rect { fill: var(--neutral-900); transform-origin: 0 50%; transform: scaleX(0); animation: bot-line 3s ease-out infinite; }
+@keyframes bot-tap { 50% { transform: translateY(1.5px); } }
+@keyframes bot-key { 0%, 100% { fill: var(--neutral-0); } 50% { fill: var(--neutral-600); } }
+@keyframes bot-line { 0% { transform: scaleX(0); opacity: 1; } 28%, 86% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+
+/* ---- draw ---- */
+.crew .bot[data-act='draw'] .prop-sheet, .crew .bot[data-act='draw'] .prop-pencil { opacity: 1; }
+.crew .bot[data-act='draw'] .sheet-lines { opacity: 0; }
+.crew .bot[data-act='draw'] .bot-armR { transform: translateY(-1.7px); }
+.crew .bot[data-act='draw'] .prop-pencil { animation: bot-scribble 1.5s ease-in-out infinite; }
+.crew .sheet-ink { fill: none; stroke: var(--neutral-900); stroke-width: 0.35; stroke-linecap: square; stroke-linejoin: miter; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+.crew .bot[data-act='draw'] .sheet-ink { opacity: 1; animation: bot-ink 3.2s ease-in-out infinite; }
+@keyframes bot-scribble { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(1.2px, -0.7px); } 50% { transform: translate(2.4px, 0.7px); } 75% { transform: translate(1.1px, 1.3px); } }
+@keyframes bot-ink { 0% { stroke-dashoffset: 1; opacity: 1; } 68%, 90% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+
+/* ---- search ---- */
+.crew .bot[data-act='search'] .bot-armL { animation: bot-reach 1.35s ease-in-out infinite; }
+.crew .bot[data-act='search'] .bot-pupils { animation: bot-scan 1.8s ease-in-out infinite; }
+.crew .bot[data-act='search'] .bot-legs rect:nth-child(1) { animation: bot-step 600ms steps(1) infinite; }
+.crew .bot[data-act='search'] .bot-legs rect:nth-child(2) { animation: bot-step 600ms steps(1) infinite 300ms; }
+.crew .bot[data-act='search'] .prop-stack { opacity: 1; }
+.crew .page { fill: var(--neutral-0); stroke: var(--neutral-300); stroke-width: 0.15; animation: bot-flip 2.7s ease-in-out infinite; }
+@keyframes bot-reach { 50% { transform: translate(-1px, -0.8px); } }
+@keyframes bot-scan { 0%, 100% { transform: translateX(-0.8px); } 50% { transform: translateX(0.8px); } }
+@keyframes bot-step { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.45px); } }
+@keyframes bot-flip { 0%, 12% { transform: translateX(0); opacity: 1; } 45% { transform: translateX(4.4px) translateY(-1px); opacity: 1; } 62%, 100% { transform: translateX(5.6px) translateY(-1px); opacity: 0; } }
+
+/* ---- find ---- */
+.crew .bot[data-act='find'] .prop-lens { opacity: 1; animation: bot-sweep 2.4s ease-in-out infinite; }
+.crew .bot[data-act='find'] .bot-armR { transform: translateY(-1.5px); }
+.crew .bot[data-act='find'] .bot-pupils { animation: bot-scan 2.4s ease-in-out infinite; }
+.crew .bot[data-act='find'] .prop-bang { animation: bot-bang 2.4s ease-out infinite; }
+.crew .prop-bang rect { fill: var(--neutral-900); }
+@keyframes bot-sweep { 0%, 100% { transform: translate(-0.6px, 0.4px) rotate(-6deg); } 35% { transform: translate(2.6px, -0.6px) rotate(8deg); } 70% { transform: translate(0.4px, 1.2px) rotate(0); } }
+@keyframes bot-bang { 0%, 68% { opacity: 0; transform: scale(0.3); } 78% { opacity: 1; transform: scale(1.25); } 88% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+
+/* ---- pass: lift the packet, lean, throw ---- */
+.crew .bot[data-dir='r'] { --lx: 1.3px; --ly: 0px; }
+.crew .bot[data-dir='l'] { --lx: -1.3px; --ly: 0px; }
+.crew .bot[data-dir='u'] { --lx: 0px; --ly: -1.1px; }
+.crew .bot[data-dir='d'] { --lx: 0px; --ly: 0.9px; }
+.crew .bot[data-act='pass'] .bot-bob { animation: bot-throw 800ms var(--ds-ease-out) both; }
+.crew .bot[data-act='pass'] .bot-armL, .crew .bot[data-act='pass'] .bot-armR { animation: bot-arms-throw 800ms var(--ds-ease-out) both; }
+.crew .bot[data-act='pass'] .prop-held { animation: bot-held 800ms linear both; }
+@keyframes bot-throw { 0% { transform: translate(0, 0) scale(1, 1); } 22% { transform: translate(0, 0.5px) scale(1.06, 0.92); } 38% { transform: translate(var(--lx), calc(var(--ly) - 1.3px)) scale(0.96, 1.06); } 62%, 100% { transform: translate(0, 0) scale(1, 1); } }
+@keyframes bot-arms-throw { 0%, 15% { transform: translateY(-1.3px); } 38% { transform: translateY(-2.2px); } 70%, 100% { transform: translateY(0); } }
+@keyframes bot-held { 0%, 28% { opacity: 1; } 34%, 100% { opacity: 0; } }
+
+/* ---- catch ---- */
+.crew .bot[data-act='catch'] .bot-bob { animation: bot-catch 700ms var(--ds-ease-out) both; }
+.crew .bot[data-act='catch'] .bot-armL { transform: translate(-0.8px, -1.4px); }
+.crew .bot[data-act='catch'] .bot-armR { transform: translate(0.8px, -1.4px); }
+.crew .bot[data-act='catch'] .prop-held { animation: bot-landed 700ms linear both; }
+@keyframes bot-catch { 0%, 100% { transform: translateY(0); } 32% { transform: translateY(-1.4px); } 58% { transform: translateY(0) scale(1.04, 0.95); } }
+@keyframes bot-landed { 0%, 25% { opacity: 0; } 40%, 70% { opacity: 1; } 100% { opacity: 0; } }
+
+/* eyes follow the conversation */
+.crew .bot-pupils rect { transition: transform 160ms var(--ds-ease-out); }
+.crew .bot[data-look='l'] .bot-pupils rect { transform: translateX(-0.6px); }
+.crew .bot[data-look='r'] .bot-pupils rect { transform: translateX(0.6px); }
+.crew .bot[data-look='u'] .bot-pupils rect { transform: translateY(-0.5px); }
+.crew .bot[data-look='d'] .bot-pupils rect { transform: translateY(0.5px); }
+
+/* ---- the strip ---- */
+.crew .ap-mission-body { position: relative; display: flex; align-items: stretch; gap: 8px; padding: 16px 0 20px; width: max-content; }
+.crew .ap-boss-card, .crew .ap-tile { position: relative; flex: none; width: 132px; height: 150px; display: block; text-align: left; }
+.crew .ap-boss-card { margin-right: 40px; }
+.crew .ap-boss-card::after { content: ''; position: absolute; top: 18px; bottom: 18px; right: -24px; width: 1px; background: var(--neutral-200); }
+.crew .ap-tiles { display: flex; gap: 8px; }
+.crew .ap-tile-stage, .crew .ap-boss-stage { position: absolute; top: 59.74px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.crew .ap-boss-orb { position: relative; display: block; width: 29.75px; height: 32.24px; margin-top: -6px; animation: ap-bob 3.4s ease-in-out infinite; }
+.crew .ap-boss-orb > svg { position: absolute; top: 2.25px; left: 2.37px; }
+.crew .ap-boss-orb[data-state='pass'] { animation: ap-dispatch 800ms var(--ds-ease-out) both; }
+.crew .ap-boss-orb[data-state='catch'] { animation: ap-receive 700ms var(--ds-ease-out) both; }
+@keyframes ap-bob { 50% { transform: translateY(-1.5px); } }
+@keyframes ap-dispatch { 0% { transform: translateY(0); } 25% { transform: translateY(1px) scale(1.04, 0.94); } 40% { transform: translateY(-3px) scale(0.97, 1.05); } 70%, 100% { transform: translateY(0); } }
+@keyframes ap-receive { 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+.crew .ap-trail { position: absolute; top: 121.54px; left: 8px; right: 8px; height: 5px; border-radius: 2px; overflow: hidden; background: var(--neutral-200); box-shadow: 0 1px 0 var(--neutral-300); }
+.crew .ap-boss-card .ap-trail { right: auto; width: 116px; }
+.crew .ap-trail-fill { position: absolute; inset: 0; background: var(--neutral-400); transform-origin: 0 50%; animation: ap-trail linear both; }
+@keyframes ap-trail { from { transform: scaleX(0); } }
+
+/* speech: same bubble, with a tail toward whoever it is talking to */
+.crew .ap-bubble { position: relative; display: block; white-space: nowrap; padding: 4px 7px; border-radius: 6px; background: var(--neutral-100); font: 400 9.5px/normal var(--font-geist, system-ui, sans-serif); animation: ap-rise 200ms var(--ds-ease-out); }
+.crew .ap-bubble[data-say]::after { content: ''; position: absolute; bottom: -3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; background: var(--neutral-100); transform: rotate(45deg); }
+.crew .ap-bubble[data-say='l']::after { left: 24%; }
+.crew .ap-bubble[data-say='r']::after { left: 76%; }
+@keyframes ap-rise { 0% { opacity: 0; transform: translateY(6px); } }
+
+/* things thrown between the desks */
+.crew .ap-flyer { position: absolute; left: 0; top: 0; z-index: 3; width: 10px; height: 7px; margin: -3.5px 0 0 -5px; opacity: 0; pointer-events: none; background: color-mix(in oklab, var(--c, var(--neutral-600)) 60%, var(--neutral-500)); box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.4); filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.2)); }
+
+/* thin stacks beside each agent: inbox on the left, done on the right */
+.crew .ap-piles { position: absolute; left: 12px; top: 121px; transform: translateY(-100%); display: flex; gap: 6px; align-items: flex-end; }
+.crew .ap-pile { --t: color-mix(in oklab, var(--c) 55%, var(--neutral-300)); display: flex; flex-direction: column-reverse; gap: 1px; width: 12px; height: 21px; padding-bottom: 1px; border-bottom: 1px solid var(--neutral-300); }
+.crew .ap-slab { display: block; flex: none; width: 12px; height: 3px; border-radius: 1px; background: var(--neutral-300); transform-origin: 50% 100%; }
+.crew .ap-pile[data-side='in'] .ap-slab { animation: slab-land 360ms var(--ds-ease-out) both; }
+.crew .ap-pile[data-side='out'] .ap-slab { background: var(--t); animation: slab-emerge 520ms var(--ds-ease-out) both; }
+.crew .ap-piles[data-kind='converter'] .ap-pile[data-side='in'] .ap-slab { background: repeating-linear-gradient(90deg, var(--neutral-300) 0 2px, var(--neutral-200) 2px 3px); }
+.crew .ap-piles[data-kind='structurer'] .ap-pile[data-side='out'] .ap-slab { background: linear-gradient(90deg, var(--neutral-300) 0 68%, var(--c) 68%); }
+.crew .ap-piles[data-kind='linker'] .ap-pile[data-side='out'] .ap-slab { background: linear-gradient(90deg, var(--t) 0 30%, transparent 30% 38%, var(--t) 38% 62%, transparent 62% 70%, var(--t) 70%); }
+.crew .ap-piles[data-kind='organizer'] .ap-pile[data-side='out'] .ap-slab { position: relative; }
+.crew .ap-piles[data-kind='organizer'] .ap-pile[data-side='out'] .ap-slab::before { content: ''; position: absolute; left: 0; top: -1px; width: 5px; height: 1px; background: var(--t); }
+@keyframes slab-land { 0% { transform: translateY(-9px); opacity: 0; } 55% { transform: translateY(0) scale(1.18, 0.7); opacity: 1; } 100% { transform: none; } }
+@keyframes slab-emerge { 0% { transform: translate(38px, -14px) scale(0.7); opacity: 0; } 35% { transform: translate(20px, -22px) scale(1); opacity: 1; } 75% { transform: translate(0, -1px); } 88% { transform: scale(1.18, 0.7); } 100% { transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .crew .bot *, .crew .ap-boss-orb, .crew .ap-bubble, .crew .ap-trail-fill, .crew .ap-slab { animation: none !important; }
+  .crew .ap-flyer { display: none; }
+}
+
+/* the floating companion carries its agent's hue */
+.crew-pal .bot-legs rect, .crew-pal .bot-body, .crew-pal .bot-armL rect, .crew-pal .bot-armR rect, .crew-pal .bot-antenna rect { fill: color-mix(in oklab, var(--c) 70%, var(--neutral-400)); }

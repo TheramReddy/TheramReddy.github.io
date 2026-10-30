@@ -15,7 +15,7 @@ const Board = (props: Parameters<typeof Shot>[0]) => (
   </div>
 )
 
-type Chapter = {
+export type Chapter = {
   id: string
   title: string
   body: string[]
@@ -334,7 +334,7 @@ const chapters: Chapter[] = [
   },
 ]
 
-function ChapterBlock({ c }: { c: Chapter }) {
+export function ChapterBlock({ c }: { c: Chapter }) {
   const ref = useRef<HTMLElement>(null)
 
   // rise in once as the chapter scrolls into the sheet; content stays visible if this never runs

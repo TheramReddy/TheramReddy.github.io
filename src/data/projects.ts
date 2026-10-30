@@ -41,6 +41,21 @@ const shot = (name: string) => `/projects/dso-modernization/${name}.gif`
 /** Add a project: append an entry here and drop images in /public/projects/<slug>/. */
 export const projects: Project[] = [
   {
+    slug: 'telemetric',
+    title: 'Telemetric',
+    year: '2026',
+    role: 'Product Designer',
+    stack: ['Figma'],
+    url: '#',
+    client: 'Telemetric',
+    summary: 'A desktop workspace where several AI agents organize your documents while you watch, step in and stay in control. Coming to beta.',
+    description:
+      'Most AI tools give you a familiar routine: type a request, wait, and see what comes back. Telemetric is a desktop workspace where a crew of AI agents converts, structures, links and files your documents. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface, so people who don’t live in a terminal can see what the agents are doing and direct them.',
+    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
+    story: true,
+  },
+  {
     slug: 'dso-modernization',
     title: 'DSO Modernization',
     logo: '/logos/georgia-dhs.png',

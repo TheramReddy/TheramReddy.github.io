@@ -3,6 +3,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { Link } from 'react-router-dom'
 import { site } from '@/data/site'
+import { Bot } from '@/components/project/crew/Bot'
+import '@/components/project/crew/crew.css'
 
 const CYCLE_MS = 4200
 const COLORS = ['#3b8fe8', '#2fa37a', '#e0793a', '#8b5cf6', '#d9467a', '#c99a1c', '#1fa5b8']
@@ -114,6 +116,23 @@ function Lead({ text }: { text: string }) {
   )
 }
 
+/** Beta teaser: an announcement pill with a typing bot linking to the Telemetric case study. */
+function BetaComment() {
+  return (
+    <Link to="/project/telemetric" className="comment">
+      <span className="comment-pin crew" data-working="true" aria-hidden="true">
+        <span className="ap-bubble" data-say="d">building</span>
+        <Bot act="type" size={40} />
+        <span className="ap-trail"><span className="ap-trail-fill" /></span>
+      </span>
+      <span className="comment-bubble">
+        <span className="comment-text">I’m building something new: <em>Telemetric</em>. It’s coming to beta soon.</span>
+        <span className="comment-go">Read the case study<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></span>
+      </span>
+    </Link>
+  )
+}
+
 /** Landing intro: a headline with a cycling selection frame, and a link to the work. */
 export function Hero() {
   return (
@@ -123,6 +142,9 @@ export function Hero() {
       </h1>
       <p>
         <Link to="/work" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>
+      </p>
+      <p className="beta-wrap">
+        <BetaComment />
       </p>
     </header>
   )

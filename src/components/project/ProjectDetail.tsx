@@ -10,7 +10,11 @@ import { cn } from '@/lib/utils'
 import { ActionSlider } from './ActionSlider'
 import { Diagrams } from './Diagrams'
 import { PixelDesk } from './PixelDesk'
+import { Companion } from './crew/Companion'
+import { Mission } from './crew/Mission'
+import type { AgentId } from './crew/crew'
 import { ScobinStory } from './ScobinStory'
+import { TelemetricStory } from './TelemetricStory'
 
 const projectTools: ToolId[] = ['figma', 'sketch', 'storybook', 'claude', 'rust', 'css', 'git', 'html']
 
@@ -180,6 +184,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
   const navigate = useNavigate()
   const sheet = useRef<HTMLDivElement>(null)
   const ring = useRef<SVGCircleElement>(null)
+  const [away, setAway] = useState<AgentId | null>(null)
 
   // keep the last project mounted so the close animation has content
   const shown = useRef<Project | undefined>(undefined)
@@ -212,6 +217,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
           <circle className="fg" ref={ring} cx="19" cy="19" r="16" pathLength={100} />
         </svg>
       </div>
+      {p?.slug === 'telemetric' && <Companion sheet={sheet} open={open} onAway={setAway} />}
       <div className="sheet" ref={sheet} onScroll={progress}>
         <SheetScrollbar root={sheet} />
         {p?.features && <Disclaimer />}
@@ -226,6 +232,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
         {p && (
           <div className="cols">
             <div className="info" id="cs-overview">
+              {p.slug === 'telemetric' && <Mission className="info-crew" away={away} />}
               {p.logo && <img className="proj-logo" src={p.logo} alt={p.client} />}
               <h2>{p.title}</h2>
               <p className="about-title">About project</p>
@@ -270,7 +277,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               )}
               {p.features && <Diagrams />}
               {p.features && <ActionSlider features={p.features} />}
-              {p.story && <ScobinStory />}
+              {p.story && (p.slug === 'telemetric' ? <TelemetricStory /> : <ScobinStory />)}
               {!p.features && !p.story && (
                 <div className="coming-soon">
                   <PixelDesk />

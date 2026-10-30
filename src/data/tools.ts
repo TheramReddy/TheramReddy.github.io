@@ -14,6 +14,10 @@ export const tools = {
   typescript: 'TypeScript',
   git: 'Git',
   react: 'React',
+  aftereffects: 'After Effects',
+  rive: 'Rive',
+  lottie: 'Lottie',
+  framer: 'Framer',
 } as const
 
 export type ToolId = keyof typeof tools

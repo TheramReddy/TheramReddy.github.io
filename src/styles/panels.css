@@ -158,6 +158,29 @@
 @media (hover: hover) and (pointer: fine) { .hero p a.work-link:hover svg { transform: translate(2px, -2px); } }
 .hero p a.work-link:focus-visible svg { transform: translate(2px, -2px); }
 
+/* beta teaser: a dark announcement pill */
+.hero p.beta-wrap { margin-top: 48px; }
+.hero p a.comment { --c: oklch(66% .13 205); position: relative; display: inline-flex; align-items: center; gap: 22px; max-width: 100%; padding: 18px 36px 18px 28px; border-radius: 32px; background: #fbfaf6; color: #1f1e18; box-shadow: 0 0 0 1px rgba(60,50,20,.06), 0 12px 28px -14px rgba(60,50,20,.22); text-decoration: none; animation: bubble-open .5s var(--ease) 1.9s both; }
+.comment-pin.crew { flex: none; width: auto; overflow: visible; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.comment-pin .prop-sheet { display: none; }
+.hero p a.comment .comment-pin .ap-bubble { font-size: 10px; color: #3d3a2e; background: #ececf0; }
+.hero p a.comment .comment-pin .ap-trail { position: relative; top: auto; left: auto; right: auto; width: 76px; height: 5px; }
+.hero p a.comment .comment-pin .ap-trail-fill { background: #2f9fb0; animation: ap-trail 2.4s linear infinite; }
+.hero p a.comment .comment-pin .bot-legs rect, .hero p a.comment .comment-pin .bot-body, .hero p a.comment .comment-pin .bot-armL rect, .hero p a.comment .comment-pin .bot-armR rect, .hero p a.comment .comment-pin .bot-antenna rect { fill: #2f9fb0; }
+.hero p a.comment .comment-pin .bot-pupils rect { fill: #0f3a42; }
+.hero p a.comment .comment-pin .bot-stool rect { fill: #b9c9c8; }
+.comment-bubble { display: grid; gap: 3px; }
+.comment-text { font-size: 14px; line-height: 1.35; letter-spacing: -.01em; color: #4a473a; text-wrap: pretty; }
+.comment-text em { font-style: normal; font-weight: 600; color: #0a0a0a; }
+.comment-go { display: inline-flex; align-items: center; font-size: 14px; line-height: 1.35; color: #1f1e18; text-decoration: underline; text-underline-offset: var(--underline-offset); }
+.comment-go svg { flex: none; width: 12px; height: 12px; margin-left: 3px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+@keyframes bubble-open { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+@media (hover: hover) and (pointer: fine) {
+  .comment:hover   .comment:hover .comment-go svg { transform: translate(2px, -2px); }
+}
+.hero p a.comment:focus-visible { outline: 2px solid #1f1e18; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .hero p a.comment { animation: none; } }
+
 /* page-load entrance: headline lines rise and unblur in sequence, then the link, then the corner chrome */
 .hero p { animation: hero-in .8s var(--ease) 1.25s both; }
 .frame .handle { animation: handle-pop .5s var(--ease) both; }
