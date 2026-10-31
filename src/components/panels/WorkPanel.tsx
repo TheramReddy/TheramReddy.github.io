@@ -30,7 +30,7 @@ export function WorkPanel({ open }: { open: boolean }) {
                   </i>
                 ))}
               </div>
-              <h4>{j.company}</h4>
+              <h4 className="sr-only">{j.company}</h4>
               <p className="role">{j.role}</p>
               <p className="about">{j.about}</p>
               {j.projects.map((p) => (
