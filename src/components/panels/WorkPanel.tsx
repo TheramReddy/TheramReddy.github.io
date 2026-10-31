@@ -1,9 +1,28 @@
 import { jobs } from '@/data/work'
 import { tools } from '@/data/tools'
-import type { CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
 import { cn } from '@/lib/utils'
+import { Bot } from '@/components/project/crew/Bot'
+import '@/components/project/crew/crew.css'
+
+const NOW_WORDS = ['Designing…', 'Shipping…', 'Prototyping…', 'Testing…']
+
+function NowBot() {
+  const [w, setW] = useState(0)
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = window.setInterval(() => setW((n) => (n + 1) % NOW_WORDS.length), 2600)
+    return () => clearInterval(id)
+  }, [])
+  return (
+    <span className="now-bot crew" data-working="true" aria-hidden="true">
+      <Bot act="type" size={34} />
+      <span className="ap-bubble" key={NOW_WORDS[w]}>{NOW_WORDS[w]}</span>
+    </span>
+  )
+}
 
 export function WorkPanel({ open }: { open: boolean }) {
   return (
@@ -11,16 +30,11 @@ export function WorkPanel({ open }: { open: boolean }) {
       <div className="inner">
         <div className="tl">
           {jobs.map((j, i) => (
-            <div className="job" key={j.company} style={{ '--i': i } as CSSProperties}>
+            <div className={cn('job', j.current && 'current')} key={j.company} style={{ '--i': i } as CSSProperties}>
               <div className="when">
                 <span className="yr">
                   {j.when}
-                  {j.current && (
-                    <em className="chip-live">
-                      <span className="dot" aria-hidden="true" />
-                      Current
-                    </em>
-                  )}
+                  {j.current && <span className="sr-only"> (current)</span>}
                 </span>
               </div>
               <div className="logos">
@@ -29,6 +43,7 @@ export function WorkPanel({ open }: { open: boolean }) {
                     {l.src ? <img src={l.src} alt="" /> : l.label}
                   </i>
                 ))}
+                {j.current && <NowBot />}
               </div>
               <h4 className="sr-only">{j.company}</h4>
               <p className="role">{j.role}</p>

@@ -20,10 +20,15 @@
 .panel.work::-webkit-scrollbar { display: none; }
 .work .inner { width: min(640px, calc(100% - 40px)); align-items: stretch; text-align: left; padding: 112px 0 120px 88px; }
 .job .when .yr { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; }
-.job em.chip-live { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 8px; border-radius: 999px; background: rgba(34,197,94,.07); color: #15803d; font: 500 13px/1 'Geist Variable', system-ui, sans-serif; letter-spacing: 0; }
-.chip-live .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.6), 0 0 8px 2px rgba(34,197,94,.55); animation: live-glow 1.8s ease-in-out infinite; }
-@keyframes live-glow { 50% { box-shadow: 0 0 0 4px rgba(34,197,94,0), 0 0 12px 3px rgba(34,197,94,.8); } }
-@media (prefers-reduced-motion: reduce) { .chip-live .dot { animation: none; } }
+/* current job: a typing agent sits at the top right of the entry */
+.now-bot { width: auto; overflow: visible; display: flex; align-items: center; gap: 8px; margin-left: 28px; margin-bottom: 2px; }
+.job.current .logos { align-items: flex-end; }
+.now-bot .prop-sheet { display: none; }
+.now-bot .ap-bubble { font-size: 12px; color: #3d3a2e; background: rgba(10,10,10,.06); padding: 5px 9px; }
+.now-bot .ap-bubble::before { content: ''; position: absolute; left: -3px; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: inherit; transform: rotate(45deg); }
+.now-bot .bot-legs rect, .now-bot .bot-body, .now-bot .bot-armL rect, .now-bot .bot-armR rect, .now-bot .bot-antenna rect { fill: #2f9fb0; }
+.now-bot .bot-pupils rect { fill: #0f3a42; }
+.now-bot .bot-stool rect { fill: #b9c9c8; }
 .tl { position: relative; }
 .tl::before { content: ""; position: absolute; left: -38px; top: 0; bottom: -80px; border-left: 1px dashed rgba(10,10,10,.28); }
 .job { position: relative; padding-bottom: 104px; }

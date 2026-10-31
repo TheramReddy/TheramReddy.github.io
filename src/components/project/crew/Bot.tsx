@@ -31,7 +31,7 @@ export function Bot({ act, dir = 'r', look, size = 37.2 }: { act: Act; dir?: Dir
             <rect x="10" y="5" width="1" height="3" />
           </g>
           <g className="bot-pupils">
-            <rect x="4" y="5" width="1" height="1" />
+            <rect x="3" y="5" width="1" height="1" />
             <rect x="8" y="5" width="1" height="1" />
           </g>
 
@@ -88,7 +88,7 @@ const BOSS_BODY: Px[] = [
   ['#8d96ec', 2, 2, 2, 1], ['#8d96ec', 1, 3, 1, 1],
 ]
 const BOSS_EYE: Px[] = [['#ffffff', 3, 4, 4, 1], ['#ffffff', 2, 5, 6, 2], ['#ffffff', 3, 7, 4, 1]]
-const BOSS_PUPIL: Px[] = [['#1f1e1b', 5, 5, 2, 2], ['#ffffff', 5.25, 5.25, 0.5, 0.5]]
+const BOSS_PUPIL: Px[] = [['#1f1e1b', 4, 5, 2, 2], ['#ffffff', 4.25, 5.25, 0.5, 0.5]]
 const BOSS_CHEEKS: Px[] = [['#f2a7a0', 1, 7, 1, 1], ['#f2a7a0', 8, 7, 1, 1]]
 const px = ([fill, x, y, w, h]: Px, i: number) => <rect key={i} fill={fill} x={x} y={y} width={w} height={h} />
 
