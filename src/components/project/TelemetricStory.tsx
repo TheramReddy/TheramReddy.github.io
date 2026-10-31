@@ -157,7 +157,7 @@ const chapters: Chapter[] = [
     title: 'One task for each agent',
     body: [
       'Every question in the workspace is split into tasks by an orchestrator. Each agent owns one task and has its own model. Each agent also has its own connector (MCP), and connectors can be separated per agent.',
-      'The panel shows each agent working and what it produced. This was my application of visibility of system status, one of Nielsen’s usability heuristics. Users shouldn’t have to guess whether something is happening or what the system is doing.',
+      'The panel shows each agent working and what it produced. Users never have to guess whether something is happening or what the system is doing.',
       'Specialized models handle the tasks they are good at, so a large model is not used for everything. Smaller, focused prompts use fewer tokens, and each output is refined by the agent that owns it. Telemetric works with cloud models and with local AI.',
     ],
     art: <Crew />,
@@ -167,7 +167,7 @@ const chapters: Chapter[] = [
     title: 'Change an output, and the work runs again',
     body: [
       'You can edit an output or change an instruction. The agents run again from that point. If your change touches a different domain, the agents in that domain re-run too.',
-      'Nielsen calls the underlying principle user control and freedom. In this product, it meant something practical: you could hand over work without surrendering control of it.',
+      'In this product, that meant something practical: you could hand over work without surrendering control of it.',
     ],
     art: <Control />,
     flip: true,
@@ -177,7 +177,7 @@ const chapters: Chapter[] = [
     title: 'Let people see the value first',
     body: [
       'Telemetric starts with onboarding and then opens the Atlas Migration demo workspace. Someone can look around, understand the workflow, and make setup decisions when they are ready.',
-      'Rather than making people remember unfamiliar choices up front, the interface lets them recognize what is available as they explore. That connects to Nielsen’s recognition rather than recall, and to the broader idea of progressive disclosure.',
+      'Rather than making people remember unfamiliar choices up front, the interface lets them recognize what is available as they explore, and reveals more only when they need it.',
     ],
     art: <Onboarding />,
   },

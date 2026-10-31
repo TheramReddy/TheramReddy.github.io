@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowUpRight, Check, CircleAlert, FileText, Gauge, Play, type LucideIcon } from 'lucide-react'
-import { Banner } from '@/components/arc/banner/banner'
+import { ArrowUpRight, Check, CircleAlert, FileText, BookOpen, Gauge, Info, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { CONFETTI } from '@/components/layout/confetti'
 import { projects, type Project } from '@/data/projects'
 import { tools, type ToolId } from '@/data/tools'
 import { cn } from '@/lib/utils'
-import { ActionSlider } from './ActionSlider'
+import { Approach } from './Approach'
+import { Gallery } from './Gallery'
 import { Diagrams } from './Diagrams'
 import { PixelDesk } from './PixelDesk'
 import { Mission } from './crew/Mission'
@@ -56,8 +56,8 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
 const sections: { id: string; label: string; Icon: LucideIcon }[] = [
   { id: 'cs-overview', label: 'Overview', Icon: FileText },
   { id: 'cs-glance', label: 'What changed', Icon: Gauge },
-  { id: 'cs-problems', label: 'The problems', Icon: CircleAlert },
-  { id: 'cs-action', label: 'In action', Icon: Play },
+  { id: 'cs-problems', label: 'Problems', Icon: CircleAlert },
+  { id: 'cs-action', label: 'Approach', Icon: BookOpen },
 ]
 
 /** Side menu that stays in view and jumps between the case study sections. */
@@ -159,24 +159,6 @@ function SheetScrollbar({ root }: { root: RefObject<HTMLDivElement | null> }) {
   )
 }
 
-/** Note at the top of a case study saying the screens are recreated, not the real product. */
-function Disclaimer() {
-  return (
-    <div className="disclaimer">
-      <Banner
-        restoreLabel="Show disclaimer"
-        more={<>
-          This case study is a fictional recreation made for portfolio purposes only. It does not show, copy, or disclose any real system, software, data, or confidential information belonging to a past employer or client.
-          <br /><br />
-          Menus, option names, field labels, workflows, and all data (names, records, amounts) have been changed or invented.
-        </>}
-      >
-        These screens are not the real product.<br />Every screen, menu option, label, and piece of data has been changed or made up.
-      </Banner>
-    </div>
-  )
-}
-
 /** Popup sheet with description, gallery and a scroll-progress ring. */
 export function ProjectDetail({ project, open }: { project?: Project; open: boolean }) {
   const navigate = useNavigate()
@@ -216,7 +198,6 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       </div>
       <div className="sheet" ref={sheet} onScroll={progress}>
         <SheetScrollbar root={sheet} />
-        {p?.features && <Disclaimer />}
         <div className="close-rail">
           <button className="close" aria-label="Close project" onClick={() => navigate('/projects')}>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
@@ -241,6 +222,17 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                     <small>Every component, token and sample screen</small>
                   </span>
                   <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              )}
+              {p.link && (
+                <a className="figma-link page-link" href={p.link.href} target="_blank" rel="noopener noreferrer">
+                  <Info size={20} strokeWidth={1.6} className="link-info" aria-hidden="true" />
+                  <span>
+                    {p.link.title}
+                    <small>{p.link.note}</small>
+                  </span>
+                  <ArrowUpRight size={18} strokeWidth={1.8} className="link-arrow" aria-hidden="true" />
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               )}
@@ -272,7 +264,8 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                 </section>
               )}
               {p.features && <Diagrams />}
-              {p.features && <ActionSlider features={p.features} />}
+              {p.features && <Approach />}
+              {p.features && <Gallery features={p.features} />}
               {p.story && (p.slug === 'telemetric' ? <TelemetricStory /> : <ScobinStory />)}
               {!p.features && !p.story && (
                 <div className="coming-soon">

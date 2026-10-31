@@ -34,7 +34,7 @@ const Doc = ({ x, y, w = 110, rot = 0, children }: { x: number; y: number; w?: n
 function Wall() {
   const m = 'url(#arr-wall)'
   return (
-    <svg viewBox="0 0 640 380" role="img" aria-label="A person blocked by menus from the taxpayer they need; one search box goes around the wall">
+    <svg viewBox="0 0 640 380" role="img" aria-label="A person blocked by menus from the profile they need; one search box goes around the wall">
       <Defs id="arr-wall" />
       <text x="96" y="58" className="d-label">Menus</text>
       <path d="M172 52 Q206 58 240 50" className="d-line" markerEnd={m} />
@@ -42,7 +42,7 @@ function Wall() {
       <path d="M100 250 L540 250" className="d-line" strokeWidth="2" />
       <Person x={190} y={250} />
       <ellipse cx="420" cy="120" rx="80" ry="44" transform="rotate(-8 420 120)" className="d-box" />
-      <text x="420" y="127" textAnchor="middle" className="d-label">Taxpayer</text>
+      <text x="420" y="127" textAnchor="middle" className="d-label">Profile</text>
       <path d="M420 206 L407 242 L433 242 Z" fill="currentColor" />
       <path d="M196 270 Q300 320 414 270" className="d-line d-dash" markerEnd={m} />
       <Box x={185} y={322} w={270}>One search, Ctrl K</Box>
@@ -157,14 +157,14 @@ function Story() {
 function Picture() {
   const m = 'url(#arr-picture)'
   return (
-    <svg viewBox="0 0 640 380" role="img" aria-label="Claim, hearing, refund and payment records all connect to one taxpayer">
+    <svg viewBox="0 0 640 380" role="img" aria-label="Claim, hearing, refund and payment records all connect to one profile">
       <Defs id="arr-picture" />
       <Doc x={60} y={20} rot={-6}>Claim</Doc>
       <Doc x={440} y={20} rot={5}>Hearing</Doc>
       <Doc x={30} y={170} rot={-6}>Refund</Doc>
       <Doc x={470} y={170} rot={6}>Payment</Doc>
       <ellipse cx="320" cy="205" rx="90" ry="42" className="d-box" strokeWidth="1.6" />
-      <text x="320" y="214" textAnchor="middle" className="d-label">Taxpayer</text>
+      <text x="320" y="214" textAnchor="middle" className="d-label">Profile</text>
       <g className="d-line d-dash">
         <path d="M175 85 Q250 100 280 165" markerEnd={m} />
         <path d="M455 80 Q380 100 360 163" markerEnd={m} />
@@ -252,20 +252,20 @@ function Unmatched() {
 }
 
 const items = [
-  { tag: 'Wall', title: 'Finding a taxpayer should take one search.', body: 'Menus put a wall between staff and the taxpayer they need. One search box goes around it: results as you type, from any screen.', art: <Wall /> },
-  { tag: 'Hold', title: 'A hold should explain itself.', body: 'When funds are held, the page says why, which step it is waiting on, and who acts next.', art: <Hold /> },
-  { tag: 'Maze', title: 'A claim shouldn’t be a maze.', body: 'Claims, cases, hearings and decisions are linked. Staff get one clear path through them instead of hunting between screens.', art: <Maze /> },
-  { tag: 'Trail', title: 'Every dollar needs a trail.', body: 'Money moves through steps such as intercepted, on hold and distributed. Each one is shown, so nobody has to ask where it went.', art: <Trail /> },
-  { tag: 'Story', title: 'A status should tell a story.', body: 'A status shows what is done, what is happening now and what comes next.', art: <Story /> },
-  { tag: 'Picture', title: 'One taxpayer. One complete picture.', body: 'Claims, hearings, refunds and payments for one person are connected in a single view.', art: <Picture /> },
-  { tag: 'Queue', title: 'Approvals shouldn’t disappear into a queue.', body: 'An approval shows who has it and where it stands: assigned, pending or decided.', art: <Queue /> },
-  { tag: 'Signal', title: 'Make exceptions stand out.', body: 'In long lists, the few rows that need a person are highlighted so staff can review what matters.', art: <Exceptions /> },
-  { tag: 'Hidden', title: 'Unmatched doesn’t mean invisible.', body: 'Records that did not match are surfaced and easy to find, not buried among the ones that did.', art: <Unmatched /> },
+  { tag: 'Wall', title: 'Finding a profile should take one search.', body: 'Menus put a wall between staff and the profile they need. I replaced the walk through menus with one search box: results as you type, from any screen.', more: 'Staff look people up all day, often with someone waiting on the phone. Every extra click costs time they do not have, so the fastest route had to be the obvious one.', art: <Wall /> },
+  { tag: 'Hold', title: 'A hold should explain itself.', body: 'When funds are held, the page says why, which step it is waiting on, and who acts next. I wrote it in the words staff already use, not system codes.', more: 'A hold affects real money for a real person, and staff get asked about it constantly. If the page cannot answer the question, staff have to dig or escalate, and the person waits longer.', art: <Hold /> },
+  { tag: 'Maze', title: 'A claim shouldn’t be a maze.', body: 'Claims, cases, hearings and decisions are linked. I gave staff one clear path through them, so nobody has to stop and work out where to go next.', more: 'One claim can pass through several teams over weeks. People return to it cold, so each step had to make sense without remembering what came before.', art: <Maze /> },
+  { tag: 'Trail', title: 'Every dollar needs a trail.', body: 'Money moves through steps such as intercepted, on hold and distributed. I show each one, so staff can picture the whole flow and nobody has to ask where it went.', more: 'Public money has to be accounted for to the cent, and audits ask where it went. Showing every stage keeps answers on the page, not in someone’s memory.', art: <Trail /> },
+  { tag: 'Story', title: 'A status should tell a story.', body: 'A status shows what is done, what is happening now and what comes next, so the state of a case is clear at a glance.', more: 'Many people touch the same case and hand it on. A status that only names a state forces them to guess the rest. One that shows past, present and next lets anyone pick it up.', art: <Story /> },
+  { tag: 'Picture', title: 'One profile. One complete picture.', body: 'Claims, hearings, refunds and payments for one person sit together in a single view, so related records read as related.', more: 'Needing three screens to understand one person invites mistakes, like acting on a claim without seeing the hearing that changes it. Putting them together protects against that.', art: <Picture /> },
+  { tag: 'Queue', title: 'Approvals shouldn’t disappear into a queue.', body: 'An approval shows who has it and where it stands: assigned, pending or decided, so nobody has to chase it.', more: 'Work stalls when nobody knows whose turn it is. Making ownership visible turns a vague wait into a clear next action for a named person.', art: <Queue /> },
+  { tag: 'Signal', title: 'Make exceptions stand out.', body: 'In long lists, I highlighted the few rows that need a person, so they are the first thing staff see.', more: 'When every row looks the same, the one that matters gets missed. Quiet by default and loud only for exceptions means attention goes where it is needed, even on a busy day.', art: <Exceptions /> },
+  { tag: 'Hidden', title: 'Unmatched doesn’t mean invisible.', body: 'Records that did not match are surfaced and easy to find, so staff never have to remember to go looking for them.', more: 'What falls through the cracks is the costliest part of any process. Putting the leftovers in plain sight means nothing depends on someone remembering to check.', art: <Unmatched /> },
 ]
 
 export function Diagrams() {
   return (
-    <Carousel id="cs-problems" title="The problems" noun="problem" labels={items.map((d) => d.tag)}>
+    <Carousel id="cs-problems" title="Problems and decisions" noun="problem" labels={items.map((d) => d.tag)}>
       {(active, go) => items.map((d, i) => {
         const o = Math.max(-2, Math.min(2, i - active))
         return (
@@ -280,6 +280,7 @@ export function Diagrams() {
             <div className="d-copy">
               <h4>{d.title}</h4>
               <p>{d.body}</p>
+              <p className="d-more">{d.more}</p>
             </div>
           </article>
         )

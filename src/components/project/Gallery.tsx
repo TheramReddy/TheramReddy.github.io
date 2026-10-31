@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import type { Feature } from '@/data/projects'
 
 const DISCLAIMER =
-  'These screens are not the real product. All screens, menus, labels, and data have been altered or fabricated for illustration.'
+  'These screens are not the real product. This is a fictional recreation made for portfolio purposes. Every screen, menu, label and piece of data has been changed or made up, and nothing shows a real system or confidential information.'
 
 /** Disclaimer icon. Hover/focus on desktop; tap to toggle on touch, where Radix tooltips never open on their own. */
 function InfoTip() {
@@ -29,27 +29,18 @@ function InfoTip() {
   )
 }
 
-/** The GIF walkthrough as a plain vertical list: one clip and its note per row. */
-export function ActionSlider({ features }: { features: Feature[] }) {
+/** Every clip in one grid at the end. Plain tiles: no zoom, and the images resist dragging and right-click saving. */
+export function Gallery({ features }: { features: Feature[] }) {
   return (
-    <section className="action" id="cs-action" aria-label="See it in action">
-      <h3 className="in-action-title">See it in action</h3>
-      <ol className="action-list">
+    <section className="shots" id="cs-gallery" aria-label="Gallery">
+      <h3 className="in-action-title">Gallery<InfoTip /></h3>
+      <ul className="shots-grid">
         {features.map((f) => (
-          <li className="action-item" key={f.gif}>
-            <div className="action-shot">
-              <img loading="lazy" decoding="async" src={f.gif} alt={f.alt} />
-            </div>
-            <div className="action-copy">
-              <h4>
-                {f.title}
-                <InfoTip />
-              </h4>
-              <p>{f.body}</p>
-            </div>
+          <li key={f.gif} className="shots-tile" onContextMenu={(e) => e.preventDefault()}>
+            <img loading="lazy" decoding="async" draggable={false} src={f.gif} alt={f.alt} />
           </li>
         ))}
-      </ol>
+      </ul>
     </section>
   )
 }
