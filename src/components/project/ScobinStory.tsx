@@ -25,6 +25,8 @@ export type Chapter = {
   wide?: boolean
   /** put the art on the right */
   flip?: boolean
+  /** the approach principle this chapter belongs to, shown above the title */
+  principle?: string
 }
 
 const Chev = ({ x, y }: { x: number; y: number }) => (
@@ -188,6 +190,7 @@ function Ladder() {
 const chapters: Chapter[] = [
   {
     id: 'sc-audit',
+    principle: '01 Understand the existing experience',
     title: 'Five dropdowns. One product. Five different experiences.',
     body: [
       'Before creating anything new, I went through the existing interface screen by screen.',
@@ -200,11 +203,12 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-research',
+    principle: '02 Listen to the people using and building it',
     title: 'I wanted to know where the inconsistencies were slowing people down.',
     body: [
       'I spoke with designers, front end developers, and employees who used the interface regularly.',
       'Instead of asking what features they wanted in a design system, I asked them to walk me through their actual work: what they had recently designed, built, or used, and where they needed to stop and figure something out.',
-      'A few questions kept coming up. Which version of this component should I use? What happens when there’s no data or something goes wrong? How should this interaction work with a keyboard?',
+      'Three questions kept coming up. Which one should I use? What if there’s no data, or something goes wrong? Can everyone reach it, including with a keyboard?',
       'These weren’t isolated UI questions. They revealed a larger problem: the team lacked a shared reference for making consistent decisions.',
     ],
     decision: 'That became the foundation of the design system: every reusable component should answer the questions people would otherwise have to ask.',
@@ -213,10 +217,11 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-flow',
+    principle: '02 Listen to the people using and building it',
     title: 'Small unanswered questions were creating unnecessary back and forth.',
     body: [
       'I followed the journey of a screen from its initial design through development and review. The friction often came from details that seemed small but had to be resolved repeatedly.',
-      'Which variant was correct? Was that color approved? How should an empty state behave? What should happen when the user presses Tab? Without shared guidance, those decisions depended on individual interpretation or another conversation.',
+      'Those same three questions came back at every handoff. Without shared guidance, each one was settled by individual judgment or another conversation, and then settled again on the next screen.',
       'I wanted the library to carry that context. By documenting component behavior, states, and usage rules directly in Figma, I could make important design decisions available at the moment someone needed them.',
     ],
     decision: 'The goal was to spend less time clarifying the same details and more time solving meaningful design problems.',
@@ -224,6 +229,7 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-wireframe',
+    principle: '03 Establish foundations before components',
     title: 'Before choosing colors, I needed to understand the layout.',
     body: [
       'I began by wireframing the application shell in grayscale.',
@@ -236,11 +242,12 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-tokens',
+    principle: '03 Establish foundations before components',
     title: 'Three layers. One clear system.',
     body: [
       'I organized the variables into three layers: Primitives, Routing, and Applied. Each layer has a distinct responsibility.',
       'Primitives define the raw values. Routing determines how those values adapt to different contexts. Applied tokens give them meaningful roles in the interface.',
-      'This separation was intentional. I didn’t want designers or developers to memorize which shade of blue belonged to an information message or which raw value should be used for a specific surface. Instead, components reference semantic tokens that describe their purpose.',
+      'This separation was intentional. I didn’t want designers or developers to memorize which shade of blue belonged to an information message or which raw value should be used for a specific surface. Instead, components reference Applied tokens, which are named for their purpose.',
     ],
     decision: 'The component asks for the meaning of a value, not a hardcoded color.',
     art: <Ladder />,
@@ -248,9 +255,10 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-semantic',
+    principle: '03 Establish foundations before components',
     title: 'A color name should tell you what it does.',
     body: [
-      'The semantic layer contains 216 variables organized around their roles in the interface, including intent, text, links, and surfaces. I documented these tokens in structured tables so designers and developers could understand their intended use without guessing.',
+      'The Applied layer holds 216 semantic variables, organized around their roles in the interface: intent, text, links and surfaces. I documented these tokens in structured tables so designers and developers could understand their intended use without guessing.',
       'This approach separates a component’s meaning from its raw visual value. For example, an information state uses a semantic intent token rather than referencing a particular blue directly.',
       'The current Theme collection has one mode, Scobin. The structure also leaves room for future themes or brand variations without requiring components to be redesigned from scratch.',
     ],
@@ -260,6 +268,7 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-type',
+    principle: '03 Establish foundations before components',
     title: 'Typography should adapt without losing its hierarchy.',
     body: [
       'I created 95 text styles across five categories: Display, Heading, Body, UI, and Mono. Rather than treating typography as a collection of fixed font sizes, I organized the styles around their role in the interface.',
@@ -271,6 +280,7 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-contrast',
+    principle: '03 Establish foundations before components',
     title: 'Contrast shouldn’t be something we remember to check at the end.',
     body: [
       'I created a contrast reference board to make accessibility decisions visible inside the design system. Each color pairing displays its contrast ratio, with failing combinations clearly identified.',
@@ -283,10 +293,11 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-button',
+    principle: '04 Design for every meaningful interaction state',
     title: 'A component isn’t finished when it looks good in its default state.',
     body: [
       'A button might look simple, but its behavior changes depending on context. I built the Button component around 4 types, 3 sizes, and 5 states, which together create 60 defined variants.',
-      'Users need to recognize when a button is interactive, when it’s being pressed, when it has keyboard focus, and when an action is unavailable. I designed those states as part of the component rather than treating them as separate exceptions.',
+      'Each state answers a question the user has. Default and Hover say it’s interactive, Pressed confirms the click, Focus shows where the keyboard is, and Disabled says the action isn’t available yet.',
       'Hover and Pressed states are connected through Figma prototype interactions, allowing the team to experience the intended behavior during reviews. Focus uses a shared Focus Ring style, with explicit guidance to preserve visible keyboard focus.',
     ],
     decision: 'If an interaction matters in the browser, it deserves attention in the design system.',
@@ -295,6 +306,7 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-scaffold',
+    principle: '05 Document decisions so others can use the system confidently',
     title: 'The components needed a system of their own.',
     body: [
       'One of the less visible parts of my work was creating the structure used to document the library. I built reusable documentation elements: a heading system with four levels, seven component status labels from Stable to Deprecated, five annotation note colors, variant headings, and reusable token table rows and color swatches.',
@@ -306,11 +318,12 @@ const chapters: Chapter[] = [
   },
   {
     id: 'sc-components',
+    principle: '05 Document decisions so others can use the system confidently',
     title: 'Good documentation explains behavior, not just appearance.',
     body: [
       'Across 41 documented components, I followed a consistent page structure covering available variants and properties, interaction states, when to use the component, when to avoid it, and accessibility considerations. I wanted someone opening the library for the first time to find answers without needing me to explain every page.',
       'The Accordion is one example. Its guidelines describe the expected keyboard and focus behavior, the relevant ARIA attributes, and the interaction rules developers need to preserve. The documentation also explains when the pattern shouldn’t be used, including guidance against nesting accordions.',
-      'I wanted each component page to help someone answer three questions: Is this the right component for the situation? How should it behave? What do I need to consider to make it accessible?',
+      'I wanted each component page to answer the same three questions from the interviews: Which one should I use? What if something unexpected happens? Can everyone reach it?',
     ],
     decision: 'A component wasn’t complete simply because its variants were drawn. It needed enough guidance for another designer or developer to use it correctly.',
     art: (
@@ -327,7 +340,7 @@ const chapters: Chapter[] = [
     body: [
       'Building the Scobin Design System changed how I think about UI consistency. A design system isn’t just a collection of polished components or neatly organized tokens. It’s a shared language that helps people make decisions.',
       'What mattered most to me was creating something the team could continue using and maintaining, not something that depended on me being available to explain every detail.',
-      'The biggest lesson was that consistency comes from clarity: clear foundations, intentional component behavior, and documentation that makes the reasoning accessible to everyone.',
+      'The biggest lesson was that consistency comes from clarity. Foundations make a decision easier to understand, defined states make it easier to implement, and documentation makes it easier to maintain long after I’ve stepped away.',
     ],
     decision: 'That’s the kind of design system I wanted to build: one that makes good design easier to repeat.',
     wide: true,
@@ -355,6 +368,7 @@ export function ChapterBlock({ c }: { c: Chapter }) {
     <section className={`chapter${c.wide ? ' wide' : ''}${c.flip ? ' flip' : ''}`} id={c.id} ref={ref} aria-labelledby={`${c.id}-h`}>
       {c.art && <div className="chapter-art">{c.art}</div>}
       <div className="chapter-copy">
+        {c.principle && <p className="chapter-principle">{c.principle}</p>}
         <h3 id={`${c.id}-h`}>{c.title}</h3>
         <div className="chapter-text">
           {c.body.map((t) => <p key={t}>{t}</p>)}

@@ -212,7 +212,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               {p.slug === 'telemetric' && <Mission className="info-crew" away={null} />}
               {p.logo && <img className="proj-logo" src={p.logo} alt={p.client} />}
               <h2>{p.title}</h2>
-              <p className="about-title">About project</p>
+              <p className="about-title">About the project</p>
               <p className="desc">{p.description}</p>
               {p.figma && (
                 <a className="figma-link" href={p.figma} target="_blank" rel="noopener noreferrer">
@@ -252,9 +252,11 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               {p.metrics && !p.story && (
                 <section className="metrics" id="cs-glance" aria-label="What changed for users">
                   <h3>What changed for the people using it</h3>
+                  {p.slug === 'dso-modernization' && <p className="metrics-lead">Each change answers one of the three goals.</p>}
                   <dl>
                     {p.metrics.map((m) => (
                       <div className="metric" key={m.label}>
+                        {m.group && <span className="metric-group">{m.group}</span>}
                         <dt>{m.label}</dt>
                         <dd>{m.value}</dd>
                         <p>{m.note}</p>

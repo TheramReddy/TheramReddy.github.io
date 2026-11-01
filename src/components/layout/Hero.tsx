@@ -135,7 +135,7 @@ function BetaComment() {
         <span className="ap-trail"><span className="ap-trail-fill" /></span>
       </span>
       <span className="comment-bubble">
-        <span className="comment-text">I’m building something new: <em>Telemetric</em>. It’s coming to beta soon.</span>
+        <span className="comment-text">I’m building <em>Telemetric</em>: AI you can see and steer. It’s coming to beta soon.</span>
         <span className="comment-go">Read the case study<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></span>
       </span>
     </Link>

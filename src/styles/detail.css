@@ -262,3 +262,6 @@
 .figma-link.page-link { gap: 16px; }
 .figma-link.page-link > span:not(.sr-only) { flex: 1; }
 .figma-link.page-link .link-info { flex: none; margin: 0; color: var(--muted); }
+.ap-intro, .metrics-lead { margin: 12px 0 0; font-size: 16px; line-height: 1.6; letter-spacing: -.01em; color: var(--muted); max-width: 640px; }
+.metric-group { order: -1; margin: 0 0 8px; font: 500 11px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.chapter-principle { margin: 0 0 10px; font: 500 12px/1 var(--font-mono); letter-spacing: .06em; color: var(--muted); }

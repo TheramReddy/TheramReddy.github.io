@@ -2,11 +2,11 @@ import { BossBot } from './crew/Bot'
 import { Defs } from './Diagrams'
 import { ChapterBlock, type Chapter } from './ScobinStory'
 
-/** Files go through the agents into a vault, which you access, search, explore and edit. */
+/** Files go through the agents into a map, which you access, search, explore and edit. */
 function Vault() {
   const uses = ['Access', 'Search', 'Explore', 'See outputs']
   return (
-    <svg viewBox="0 0 640 330" role="img" aria-label="Files go through the agents into a vault of Markdown notes and a graph, which you can access, search, explore and see outputs from, and edit to send changes back">
+    <svg viewBox="0 0 640 330" role="img" aria-label="Files go through the agents into a map of connected notes, which you can access, search, explore and see outputs from, and edit to send changes back">
       <Defs id="arr-vault" />
       {['PDF', 'notes', 'docs'].map((t, i) => (
         <g key={t}>
@@ -22,8 +22,8 @@ function Vault() {
       <rect x="404" y="52" width="100" height="46" rx="3" className="d-box" />
       <text x="454" y="80" textAnchor="middle" className="d-dim">Markdown</text>
       <rect x="516" y="52" width="100" height="46" rx="3" className="d-box" />
-      <text x="566" y="80" textAnchor="middle" className="d-dim">Graph</text>
-      <text x="510" y="42" textAnchor="middle" className="d-small">the vault</text>
+      <text x="566" y="80" textAnchor="middle" className="d-dim">Map</text>
+      <text x="510" y="42" textAnchor="middle" className="d-small">the map</text>
       <path d="M510 114 V150" className="d-line d-dash" markerEnd="url(#arr-vault)" />
       {uses.map((t, i) => (
         <g key={t}>
@@ -134,19 +134,18 @@ const chapters: Chapter[] = [
     id: 'tl-idea',
     title: 'A different way to work with AI',
     body: [
-      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric organizes the folder into connected nodes first, so both you and the AI can move through it quickly.',
-      'The idea began after a conversation with a friend who was using multiple AI models to build a game. Each model had a specific job, but the whole setup lived in a terminal. I was interested in what the system could do. As a designer, though, I became more interested in the person trying to use it.',
-      'I worked with two engineers who built the underlying agent system. My role was to turn that capability into a product experience.',
+      'The idea began with a friend who was using several AI models to build a game. Each model had a specific job, but the whole setup lived in a terminal. I was interested in what the system could do. As a designer, though, I became more interested in the person trying to use it.',
+      'The engineers built the agent system. My job was to give that person a way in.',
     ],
     decision: 'How could someone who doesn’t live in a terminal see what several agents are doing, and feel comfortable letting them work?',
     wide: true,
   },
   {
     id: 'tl-problem',
-    title: 'Files become nodes',
+    title: 'Files become a map',
     body: [
-      'All the folder’s data is organized into nodes (notes in .md format) that link to each other. You get a graph you can scan at a glance instead of a file tree.',
-      'The AI walks the same connections when it searches, so you can follow the path it took.',
+      'All the folder’s data becomes notes (.md files) that link to each other. Together they form a map you can scan at a glance, instead of a file tree.',
+      'The AI walks the same map when it searches, so you can follow the path it took.',
     ],
     decision: 'The interface needed to make the work understandable, and let people open, search and change it.',
     art: <Vault />,
@@ -185,7 +184,7 @@ const chapters: Chapter[] = [
     id: 'tl-search',
     title: 'Finding a note should lead somewhere',
     body: [
-      'Search walks the connected nodes and returns result cards, so you search the vault instead of asking a chat to remember it.',
+      'Search walks the map and returns result cards, so you search the map instead of asking a chat to remember it.',
       'You can add a card to the chat as a removable chip, and the composer switches to “Ask about these notes”. There is no need to copy text, remember a filename, or start the search again.',
     ],
     decision: 'I wanted the experience to feel like one continuous task: find something, understand it, then ask about it only if you need to.',
@@ -228,9 +227,10 @@ export function TelemetricStory() {
       <ul className="story-principles" aria-label="My approach">
         {[
           'Turn files into a map you can scan at a glance.',
-          'Split every question into tasks, one agent each.',
+          'Give every task its own agent and the right model.',
           'Show each agent’s work, and let people change it.',
-          'Use the right model for each task.',
+          'Let people see the value before they set anything up.',
+          'Make finding a note lead straight to asking about it.',
           'Tell people when the workspace changes, and ask first.',
         ].map((x) => <li key={x}>{x}</li>)}
       </ul>

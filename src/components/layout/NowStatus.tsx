@@ -5,7 +5,7 @@ import { PixelLife, type Activity } from './PixelLife'
 type Thought = { text: string; tag: string; act: Activity }
 
 const workThoughts: Thought[] = [
-  { text: 'Shipping the LIHEAP portals for Georgia DHS', tag: 'ship it', act: 'work' },
+  { text: 'Shipping the next set of portals for Georgia DHS', tag: 'ship it', act: 'work' },
   { text: 'Building the design system behind three connected portals', tag: 'tokens on', act: 'work' },
   { text: 'Leading a junior UX designer through design reviews', tag: 'mentor mode', act: 'work' },
   { text: 'Auditing screens against WCAG 2.1 AA with axe and WAVE', tag: 'contrast ok', act: 'work' },

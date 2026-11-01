@@ -17,18 +17,18 @@ export type Job = {
 export const jobs: Job[] = [
   {
     when: '2025',
-    where: 'GEORGIA>CONTRACT',
+    where: 'GEORGIA>GOVERNMENT',
     company: 'Georgia Department of Human Services',
     current: true,
     role: 'UX Designer',
-    about: 'Moved legacy mainframe systems to cloud-native web platforms for state caseworkers, 40% faster task completion.',
+    about: 'Moved legacy mainframe systems onto cloud web platforms for agency staff, cutting the steps to finish a task by 40%.',
     logos: [{ label: 'GA', color: '#fff', src: '/logos/georgia-dhs.png' }],
     projects: [{ slug: 'dso-modernization' }],
     tools: ['figma', 'sketch', 'storybook', 'claude', 'rust', 'angular', 'bootstrap', 'photoshop'],
   },
   {
-    when: '2023',
-    where: 'SCOBIN>UX',
+    when: '2023–24',
+    where: 'SCOBIN>PRODUCT',
     company: 'Scobin',
     role: 'Product Designer',
     about: 'Built the design system from scratch: 548 variables, 41 documented components, used by more than 120 employees.',

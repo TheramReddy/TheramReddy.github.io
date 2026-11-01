@@ -43,8 +43,8 @@ export function ContactPanel({ open }: { open: boolean }) {
     <Dialog open={open} onOpenChange={onModalChange}>
       <DialogContent
         className="kit contact-modal"
-        title={sent ? 'Message received' : 'Let’s talk'}
-        description={sent ? undefined : 'Tell me who you are, pick a day for a call, and attach anything about your design idea.'}
+        title={sent ? 'Demo complete' : 'Let’s talk'}
+        description={sent ? undefined : 'This form is a demo of my component library. Nothing is sent.'}
       >
         {sent ? (
           <div className="contact-done">
@@ -52,7 +52,7 @@ export function ContactPanel({ open }: { open: boolean }) {
               {CONFETTI.map((st, i) => <i key={i} style={st} />)}
             </div>
             <span className="contact-done-icon"><Check size={22} strokeWidth={2} aria-hidden="true" /></span>
-            <p>Thanks, I’ll be in touch{date ? ` around ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}` : ''}.</p>
+            <p>That’s the demo. Nothing was sent, but you can reach me at [email or LinkedIn].</p>
             <Button variant="secondary" onClick={() => onModalChange(false)}>Close</Button>
           </div>
         ) : (
@@ -73,7 +73,7 @@ export function ContactPanel({ open }: { open: boolean }) {
             </div>
             <DatePicker label="Preferred date" placeholder="Pick a date" value={date} onChange={setDate} minDate={new Date()} />
             <FileDropzone
-              label="Design ideas & documents"
+              label="Design ideas and documents"
               description="Drop files here or choose from your device"
               maxFiles={5}
               onFilesChange={setFiles}

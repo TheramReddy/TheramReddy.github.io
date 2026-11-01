@@ -33,7 +33,7 @@ export type Project = {
   link?: { href: string; title: string; note: string }
 }
 
-type Metric = { value: string; label: string; note: string }
+type Metric = { value: string; label: string; group?: string; note: string }
 
 export type Feature = { title: string; body: string; gif: string; alt: string }
 
@@ -50,9 +50,9 @@ export const projects: Project[] = [
     stack: ['Figma'],
     url: '#',
     client: 'Telemetric',
-    summary: 'A workspace where AI agents work on your files as a map. Coming soon to beta.',
+    summary: 'A workspace where your files become a map, and AI agents work on it with you. Coming soon to beta.',
     description:
-      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric organizes the folder into connected nodes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
+      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
     story: true,
@@ -69,7 +69,7 @@ export const projects: Project[] = [
     client: 'Georgia DHS',
     summary: 'Moving Georgia DHS debt recovery off a legacy mainframe onto three connected cloud portals.',
     description:
-      'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization moves that work to a cloud platform with three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
+      'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization replaces that mainframe with a cloud platform and three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
     gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
     link: {
       href: 'https://dor.georgia.gov/state-refund-offsets-other-agencies',
@@ -77,10 +77,10 @@ export const projects: Project[] = [
       note: 'How the state explains refund offsets to residents',
     },
     metrics: [
-      { value: '1 search', label: 'Find a profile from any screen', note: 'Before, staff worked through menus to reach a profile. Now one search finds it, with results as you type.' },
-      { value: '1 view', label: 'Everything about a person, together', note: 'Before, claims, hearings and payments sat on separate screens. Now they sit on one page.' },
-      { value: 'AA', label: 'Built to WCAG 2.1 AA', note: 'Keyboard use and screen-reader labels were part of the design from the start.' },
-      { value: 'Fewer steps', label: 'Processes take far less effort', note: 'Claims, hearings, payments and reconciliation now link to each other, so the steps to finish a process are significantly cut down.' },
+      { value: '1 search', label: 'Find a profile from any screen', group: 'Easier to handle', note: 'Before, staff worked through menus to reach a profile. Now one search finds it, with results as you type.' },
+      { value: '1 view', label: 'Everything about a person, together', group: 'Easier to handle', note: 'Before, claims, hearings and payments sat on separate screens. Now they sit on one page.' },
+      { value: '40% fewer steps', label: 'Processes take far less effort', group: 'Faster to finish', note: 'Claims, hearings, payments and reconciliation now link to each other, so finishing a process takes 40% fewer steps.' },
+      { value: 'AA', label: 'Built to WCAG 2.1 AA', group: 'Accessible to everyone', note: 'Keyboard use and screen-reader labels were part of the design from the start.' },
     ],
     features: [
       { title: "Real-time status tracking", body: "A checklist shows which step each file is on, so nobody guesses whether a transfer is stuck.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
@@ -99,7 +99,7 @@ export const projects: Project[] = [
     title: 'Scobin Design System',
     logo: '/logos/scobin.svg',
     cover: '/projects/scobin/cover.png',
-    year: '2024',
+    year: '2023–24',
     role: 'Product Designer',
     stack: ['Figma', 'Storybook'],
     url: '#',

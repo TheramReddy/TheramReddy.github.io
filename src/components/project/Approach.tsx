@@ -5,7 +5,7 @@ const chapters = [
     aim: 'Fewer choices, so the right one is obvious.',
     body: [
       'The old system had grown one request at a time for years. Each addition made sense alone, but together they asked staff to learn the system’s way of working instead of the other way round.',
-      'Before drawing anything, I wrote down what a person is actually trying to do in a day. Everything that did not serve one of those jobs became quieter or went away, and the rest was ordered by how often it is needed.',
+      'Before drawing anything, I wrote down the jobs a person is trying to get done in a day. Everything that did not serve one of those jobs became quieter or went away, and the rest was ordered by how often it is needed.',
     ],
   },
   {
@@ -31,8 +31,8 @@ const chapters = [
     title: 'Keeping the risky things hard and the common things easy',
     aim: 'Effort should match the stakes.',
     body: [
-      'Most of the day is repetition, so the frequent paths are short and need no thought. A few actions cannot be undone. There I added a pause, a plain warning or a second pair of eyes, so an honest slip does not become a costly one.',
-      'Sensitive details stay out of sight until they are needed, which also keeps busy pages calm.',
+      'Most of the day is repetition, so the common paths are short and need no thought. A few actions cannot be undone, and those are the risky ones. There I added a pause, a plain warning or a second pair of eyes, so an honest slip does not become a costly one.',
+      'Sensitive details are treated as risky too. They stay out of sight until they are needed, which also keeps busy pages calm.',
     ],
   },
   {
@@ -40,7 +40,7 @@ const chapters = [
     title: 'One system, different people',
     aim: 'Show each person only what is theirs.',
     body: [
-      'The public, agency staff and outside vendors all use the platform, and they need very different things from it. Rather than one crowded interface for everyone, each group sees only what applies to them.',
+      'The public, agency staff and outside vendors all use the platform, and they need very different things from it. Rather than one crowded interface for everyone, each group sees only what is theirs.',
       'The same care went into who can use it at all. It was built to meet WCAG 2.1 AA, with keyboard use and screen-reader support designed in from the start, not added at the end. Experienced staff get fast routes, and newcomers are never forced to learn them.',
     ],
   },
@@ -49,7 +49,7 @@ const chapters = [
     title: 'What I would want you to take from it',
     aim: 'Rethink the work, not just the look.',
     body: [
-      'The old workflows were not restyled, they were rethought, and the steps needed to finish a process are far fewer than before. The screens below are recreated, but the problems and the thinking behind them are real.',
+      'The old workflows were not restyled, they were rethought, and a process now takes 40% fewer steps to finish. The screens below are recreated, but the problems and the thinking behind them are real.',
     ],
   },
 ]
@@ -59,6 +59,7 @@ export function Approach() {
   return (
     <section className="approach" id="cs-action" aria-label="How I approached it">
       <h3 className="in-action-title">How I approached it</h3>
+      <p className="ap-intro">Five principles shaped every decision, from what a screen shows to who gets to see it. The last is what I’d want you to take from it.</p>
       {chapters.map((c, i) => (
         <div className="approach-chapter" key={c.id}>
           <span className="ap-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
