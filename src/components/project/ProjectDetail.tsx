@@ -252,7 +252,6 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               {p.metrics && !p.story && (
                 <section className="metrics" id="cs-glance" aria-label="What changed for users">
                   <h3>What changed for the people using it</h3>
-                  {p.slug === 'dso-modernization' && <p className="metrics-lead">Each change answers one of the three goals.</p>}
                   <dl>
                     {p.metrics.map((m) => (
                       <div className="metric" key={m.label}>
