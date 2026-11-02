@@ -16,7 +16,7 @@ export type Job = {
 
 export const jobs: Job[] = [
   {
-    when: '2025',
+    when: 'Present',
     where: 'GEORGIA>GOVERNMENT',
     company: 'Georgia Department of Human Services',
     current: true,
@@ -27,7 +27,7 @@ export const jobs: Job[] = [
     tools: ['figma', 'sketch', 'storybook', 'claude', 'rust', 'angular', 'bootstrap', 'photoshop'],
   },
   {
-    when: '2023–24',
+    when: '2024',
     where: 'SCOBIN>PRODUCT',
     company: 'Scobin',
     role: 'Product Designer',
