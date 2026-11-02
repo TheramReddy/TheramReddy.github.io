@@ -4,8 +4,6 @@
   /* content fades out under the fixed nav instead of colliding with it */
   -webkit-mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
   mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
-  /* each screen settles into place, so a reviewer looks at one section at a time */
-  scroll-snap-type: y mandatory;
 }
 .panel.me::-webkit-scrollbar { display: none; }
 .me { --ink: #1d1d1b; --ink-line: rgba(29,29,27,.22); --seal: #c8432e; --hatch: repeating-linear-gradient(-45deg, rgba(29,29,27,.55) 0 .6px, transparent .6px 5px); }
@@ -22,7 +20,6 @@
 
 /* everything below sits in the hero's column, one full screen per section */
 .me-more { width: 100%; display: flex; flex-direction: column; }
-.me-first, .me-more > section { scroll-snap-align: start; }
 .me-more > section { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; min-height: 100svh; padding: calc(var(--pad-y) + 72px) 0 calc(var(--pad-y) + 48px); box-sizing: border-box; }
 /* section titles sit one step under the hero line and a clear step over the card and case titles (1.5rem) */
 .me-more h2 { font-size: clamp(1.75rem, 2.4vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.015em; text-wrap: balance; }
@@ -132,12 +129,31 @@
   .me-cue, .me-cue svg { animation: none; }
 }
 
+/* ---------- section transitions: the screens stack ----------
+   On desktop each screen pins when it reaches the top and the next one slides up over it, like sheets laid on a pile.
+   Lenis smooths the wheel, and stackSheets (lib/sheets.ts) moves the content with the scroll: a pinned sheet's content
+   sinks back as the next covers it, and the new sheet's content rises in a beat behind its paper. */
+@media (min-width: 761px) {
+  .me-more { position: relative; }
+  /* a sheet taller than the screen pins once its bottom reaches the bottom (--stick is set by stackSheets) */
+  .me-first, .me-more > section { position: sticky; top: var(--stick, 0px); }
+  .me-more > section { isolation: isolate; }
+  /* the paper runs the full width of the window and casts a soft edge onto the sheet it covers */
+  .me-more > section::before {
+    content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; margin-left: -50vw;
+    background: var(--bg); box-shadow: 0 -28px 56px -28px rgba(29, 29, 27, .14);
+  }
+}
+/* the scroll drives these blocks directly, so the one-time reveal stands down */
+@media (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+  .me-more [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
 /* ---------- phones: the scene sits above its steps ---------- */
 @media (max-width: 760px) {
   .panel.me { -webkit-mask-image: none; mask-image: none; }
   .me-first { min-height: auto; padding: 112px 0 96px; }
   .me-cue { position: static; margin-top: 40px; }
-  .panel.me { scroll-snap-type: none; }
   .me-more > section { min-height: auto; padding: 72px 0; }
   .me-more h2 { font-size: 1.875rem; }
   .ap { grid-template-columns: 1fr; gap: 1.75rem; }

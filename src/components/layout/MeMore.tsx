@@ -44,7 +44,10 @@ function useReveal() {
       const fold = innerHeight * 0.88
       el.querySelectorAll<HTMLElement>('[data-reveal], [data-watch]').forEach((t) => {
         const r = t.getBoundingClientRect()
-        const seen = r.top < fold && r.bottom > 0
+        // a pinned section stays put under the one covering it: once the next section reaches the top, it is hidden
+        const next = t.matches('section') ? t.nextElementSibling : null
+        const covered = !!next && next.getBoundingClientRect().top <= 0
+        const seen = r.top < fold && r.bottom > 0 && !covered
         if (seen) t.setAttribute(t.hasAttribute('data-reveal') ? 'data-reveal' : 'data-watch', 'in')
         t.toggleAttribute('data-live', seen)
       })
