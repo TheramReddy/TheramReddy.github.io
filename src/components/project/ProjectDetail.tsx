@@ -174,7 +174,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
     const s = sheet.current
     if (!s || !ring.current) return
     const m = s.scrollHeight - s.clientHeight
-    ring.current.style.strokeDashoffset = String(100 - (m > 0 ? s.scrollTop / m : 0) * 100)
+    ring.current.style.strokeDashoffset = String(100 - (m > 0 ? Math.min(s.scrollTop / m, 1) : 0) * 100)
   }
 
   useEffect(() => {

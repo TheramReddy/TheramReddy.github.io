@@ -2,8 +2,6 @@ import { lazy, Suspense, useEffect } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { Chrome } from '@/components/layout/Chrome'
 import { MePanel } from '@/components/panels/MePanel'
-import { ProjectsPanel } from '@/components/panels/ProjectsPanel'
-import { WorkPanel } from '@/components/panels/WorkPanel'
 import { getProject } from '@/data/projects'
 // design tokens for the arc components (tooltip, buttons)
 import '@/components/arc/foundation.css'
@@ -14,8 +12,8 @@ const ProjectDetail = lazy(() => import('@/components/project/ProjectDetail').th
 const ROUTES = ['/', '/me', '/work', '/projects']
 
 /**
- * Me, Work, Projects and project popups are route-driven overlays
- * (/me, /work, /projects, /project/:slug) so every view is deep-linkable.
+ * One page: /, /me, /work and /projects are places on it (the page scrolls to them), and a case study opens over
+ * it at /project/:slug, so every view is deep-linkable.
  */
 export default function App() {
   const { pathname } = useLocation()
@@ -33,7 +31,8 @@ export default function App() {
   }, [pathname, project, navigate])
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && navigate(pathname.startsWith('/project/') ? '/projects' : '/')
+    // Escape closes an open case study, back to the case studies on the page
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && pathname.startsWith('/project/') && navigate('/projects')
     addEventListener('keydown', onKey)
     return () => removeEventListener('keydown', onKey)
   }, [navigate, pathname])
@@ -41,9 +40,7 @@ export default function App() {
   return (
     <>
       <Chrome />
-      <MePanel open={pathname === '/' || pathname === '/me'} />
-      <WorkPanel open={pathname === '/work'} />
-      <ProjectsPanel open={pathname === '/projects'} />
+      <MePanel covered={!!project} />
       <Suspense fallback={null}>
         <ProjectDetail project={project} open={!!project} />
       </Suspense>

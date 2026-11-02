@@ -1,0 +1,145 @@
+/* ---------- Me: the hero holds the first screen, the longer version scrolls in below ---------- */
+.panel.me {
+  align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  /* content fades out under the fixed nav instead of colliding with it */
+  -webkit-mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
+  mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
+  /* each screen settles into place, so a reviewer looks at one section at a time */
+  scroll-snap-type: y mandatory;
+}
+.panel.me::-webkit-scrollbar { display: none; }
+.me { --ink: #1d1d1b; --ink-line: rgba(29,29,27,.22); --seal: #c8432e; --hatch: repeating-linear-gradient(-45deg, rgba(29,29,27,.55) 0 .6px, transparent .6px 5px); }
+.me-first { position: relative; display: flex; flex-direction: column; justify-content: center; width: 100%; min-height: 100vh; min-height: 100svh; }
+.me-first .hero { margin-bottom: 0; }
+
+.me-cue {
+  position: absolute; left: 0; bottom: calc(var(--pad-y) + 8px);
+  display: inline-flex; align-items: center; gap: 10px; margin: 0;
+  font-size: 0.8125rem; color: #6e6a5c; animation: hero-in .8s var(--ease) 2.4s both;
+}
+.me-cue svg { width: 10px; height: 24px; fill: none; stroke: var(--seal); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; animation: cue-nudge 2.4s var(--ease) 3.4s infinite; }
+@keyframes cue-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(5px); } }
+
+/* everything below sits in the hero's column, one full screen per section */
+.me-more { width: 100%; display: flex; flex-direction: column; }
+.me-first, .me-more > section { scroll-snap-align: start; }
+.me-more > section { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; min-height: 100svh; padding: calc(var(--pad-y) + 72px) 0 calc(var(--pad-y) + 48px); box-sizing: border-box; }
+/* section titles sit one step under the hero line and a clear step over the card and case titles (1.5rem) */
+.me-more h2 { font-size: clamp(1.75rem, 2.4vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.015em; text-wrap: balance; }
+.me-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+/* work: the Work page's wind and card entrance, played when the section scrolls in */
+.me-work { position: relative; }
+.me-work > :not(.leaves) { position: relative; z-index: 1; }
+.me-work .leaves { position: absolute; inset: 0 auto; left: 50%; width: 100vw; margin-left: -50vw; }
+.me-work:not([data-live]) .leaves *, .me:not(.open) .leaves * { animation-play-state: paused; }
+
+/* case studies: the village scene, its motion running only while the section is on screen */
+.me-cases { position: relative; }
+/* the heading sits up in the open sky, well clear of the hills, so the painting starts beneath it */
+.me-cases .me-head { margin-bottom: clamp(4.5rem, 9vw, 8rem); }
+@media (max-width: 760px) { .me-cases .me-head { margin-bottom: 2rem; } }
+.me-cases:not([data-live]) .vl *, .me:not(.open) .vl * { animation-play-state: paused; }
+.me-work .job { opacity: 0; }
+.me-work .job .card { transform: translate(-10px, -12px); }
+.me-work .logos i { transform: scale(.5); transition: transform .6s var(--ease); }
+.me-work[data-watch="in"] .job { opacity: 1; transition: opacity .6s var(--ease); transition-delay: calc(.2s + var(--i) * .14s); }
+.me-work[data-watch="in"] .job .card { transform: none; transition: transform .8s var(--ease) calc(.25s + var(--i) * .14s); }
+.me-work[data-watch="in"] .logos i { transform: none; transition-delay: calc(.4s + var(--i) * .14s); }
+@media (hover: hover) and (pointer: fine) { .me-work[data-watch="in"] .job.linked:hover .card { transform: translate(-4px, -4px); transition: transform .45s var(--ease); } }
+@media (prefers-reduced-motion: reduce) { .me-work .job, .me-work .job .card, .me-work .logos i { opacity: 1; transform: none; transition: none; } }
+
+/* approach: the steps on the left, one framed scene on the right */
+.ap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.ap-list { margin: 0; padding: 0; list-style: none; }
+.ap-list li + li { border-top: .8px dashed var(--ink-line); }
+.ap-item { position: relative; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); align-items: baseline; width: 100%; padding: 16px 0; text-align: left; color: #6e6a5c; transition: color .3s var(--ease); }
+/* the number carries the order; the current step grows and takes the seal, the rest stay small and quiet */
+.ap-num { grid-row: 1 / span 2; font-size: .8125rem; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: #6e6a5c; transition: color .3s var(--ease); }
+.ap-verb { grid-column: 2; font-family: var(--font-passenger); font-size: 1.25rem; line-height: 1.15; letter-spacing: -.015em; transition: font-size .4s var(--ease); }
+.ap-line { grid-column: 2; display: block; overflow: hidden; max-height: 0; opacity: 0; font-family: var(--font-text); font-size: .9375rem; line-height: 1.55; color: #3d3b35; transition: max-height .5s var(--ease), opacity .4s var(--ease), margin .5s var(--ease); }
+.ap-item[aria-pressed="true"] { color: var(--fg); }
+.ap-item[aria-pressed="true"] .ap-num { color: var(--seal); }
+.ap-item[aria-pressed="true"] .ap-verb { font-size: 1.625rem; }
+.ap-item[aria-pressed="true"] .ap-line { max-height: 3em; margin-top: 8px; opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .ap-item:hover { color: var(--fg); } }
+.ap-item:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+/* while it walks on its own, a hairline under the current step fills until the next one */
+.ap-timer { position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--seal); transform-origin: left; transform: scaleX(0); opacity: 0; }
+.is-auto .ap-timer { opacity: 1; animation: ap-timer var(--step-ms) linear forwards; }
+@keyframes ap-timer { to { transform: scaleX(1); } }
+
+/* the stage: the scene sits straight on the page, no frame */
+.ap-stage { position: relative; aspect-ratio: 345 / 250; }
+.ap-scene { position: absolute; inset: 0; opacity: 0; filter: blur(4px); transform: translateY(6px); transition: opacity .6s var(--ease), filter .6s var(--ease), transform .7s var(--ease); }
+.ap-scene[data-on] { opacity: 1; filter: none; transform: none; }
+.ap-svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #1d1d1b; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+.ap-svg .paper { fill: #fff; }
+.ap-svg .f { stroke-width: .55; }
+.ap-svg .h { stroke-width: .4; stroke: #8a887f; }
+.ap-svg .ap-foot { stroke-width: 2.2; }
+.ap-svg .ap-hinge { stroke-width: 2.4; stroke-linecap: butt; }
+.ap-svg .ap-hand { font-family: var(--font-passenger); font-style: italic; font-size: 10px; fill: #1d1d1b; stroke: none; }
+
+/* reveal: each block rises in the first time it is seen */
+.me-more [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .9s var(--ease), transform 1s var(--ease); }
+.me-more [data-reveal="in"] { opacity: 1; transform: none; }
+
+/* ---------- the live details: each runs only while its scene is on screen ---------- */
+.ap-steam path { stroke-width: .8; stroke-dasharray: 24 6; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; animation: ap-steam 3.3s linear var(--d, 0s) infinite, ap-curl 3.3s linear var(--d, 0s) infinite; }
+@keyframes ap-steam { 0% { opacity: 0; transform: translateY(6px) scaleX(.85); } 30% { opacity: .8; } 100% { opacity: 0; transform: translateY(-16px) scaleX(1.2); } }
+@keyframes ap-curl { to { stroke-dashoffset: -48; } }
+
+.ap-draw path { stroke-width: .9; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
+.ap-draw .ap-thin { stroke-width: .5; }
+.ap-draw .ap-strike { stroke: #1d1d1b; stroke-width: .9; animation-name: ap-strike; }
+.ap-circle { fill: none; stroke: #c8432e; stroke-width: 1.3; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
+@keyframes ap-draw { 0% { stroke-dashoffset: 1; opacity: 1; } 12%, 88% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 1; opacity: 0; } }
+@keyframes ap-strike { 0%, 20% { stroke-dashoffset: 1; opacity: 1; } 32%, 88% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 1; opacity: 0; } }
+.ap-pencil { animation: ap-write 2.2s ease-in-out infinite; }
+@keyframes ap-write { 0%, 100% { transform: translate(0, 0); } 40% { transform: translate(-12px, 1px); } 50% { transform: translate(-12px, -2px); } 90% { transform: translate(0, -2px); } }
+
+.ap-module { stroke: none; opacity: 0; transform: translateY(-8px); animation: ap-settle 8s var(--ease) var(--d, 0s) infinite; }
+@keyframes ap-settle { 0% { opacity: 0; transform: translateY(-8px); } 8%, 86% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: none; } }
+.ap-sun { transform-box: fill-box; transform-origin: center; transform: scale(0); animation: ap-sun 8s cubic-bezier(.34, 1.56, .64, 1) 3s infinite; }
+@keyframes ap-sun { 0% { transform: scale(0); } 6%, 80% { transform: scale(1); } 88%, 100% { transform: scale(0); } }
+
+.ap-crane { animation: ap-lift 3.2s ease-in-out infinite alternate; }
+@keyframes ap-lift { from { transform: translateY(4px); } to { transform: translateY(-8px); } }
+.ap-wing { transform-box: fill-box; transform-origin: 50% 100%; animation: ap-flap 1.6s ease-in-out infinite; }
+.ap-wing-back { animation-delay: -.1s; }
+@keyframes ap-flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(-.35); } }
+.ap-shadow { transform-box: fill-box; transform-origin: center; animation: ap-shade 3.2s ease-in-out infinite alternate; }
+@keyframes ap-shade { from { transform: scaleX(1); opacity: .9; } to { transform: scaleX(.7); opacity: .5; } }
+.ap-dash { stroke-dasharray: 3 2.5; }
+.ap-trail { stroke-dasharray: .5 4; stroke-width: 1.1; animation: ap-trail 1.4s linear infinite; }
+@keyframes ap-trail { to { stroke-dashoffset: -4.5; } }
+.ap-wind path { stroke-dasharray: .3 .7; animation: ap-gust 4.5s linear var(--d, 0s) infinite; }
+@keyframes ap-gust { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.ap-far path { animation: ap-glide 6s ease-in-out var(--d, 0s) infinite alternate; }
+@keyframes ap-glide { from { transform: translate(0, 0); } to { transform: translate(-10px, -6px); } }
+
+/* only the current scene moves, and only while it is on screen and the panel is open */
+.ap-scene:not([data-live]) .ap-svg *, .me:not(.open) .ap-svg *, .me:not(.open) .me-cue svg { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .me-more [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .ap-svg * { animation: none !important; }
+  .ap-steam path { opacity: .55; }
+  .ap-draw path, .ap-circle { stroke-dashoffset: 0; }
+  .ap-module, .ap-sun { opacity: 1; transform: none; }
+  .ap-scene { filter: none; transform: none; transition: opacity .2s linear; }
+  .me-cue, .me-cue svg { animation: none; }
+}
+
+/* ---------- phones: the scene sits above its steps ---------- */
+@media (max-width: 760px) {
+  .panel.me { -webkit-mask-image: none; mask-image: none; }
+  .me-first { min-height: auto; padding: 112px 0 96px; }
+  .me-cue { position: static; margin-top: 40px; }
+  .panel.me { scroll-snap-type: none; }
+  .me-more > section { min-height: auto; padding: 72px 0; }
+  .me-more h2 { font-size: 1.875rem; }
+  .ap { grid-template-columns: 1fr; gap: 1.75rem; }
+  .ap-stage { order: -1; }
+}

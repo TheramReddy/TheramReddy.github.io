@@ -4,8 +4,8 @@
 @import 'tw-animate-css';
 @import './ui.css';
 @import './panels.css';
+@import './me.css';
 @import './detail.css';
-@import './loader.css';
 @import './responsive.css';
 
 @custom-variant dark (&:is(.dark *));
@@ -121,8 +121,6 @@ h2,
 h3,
 .job .title,
 .job .when,
-.fun-label,
-.cs-title,
 .story-principles li {
   font-family: var(--font-passenger);
   font-weight: 400;
