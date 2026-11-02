@@ -6,7 +6,8 @@ export type Job = {
   company: string
   current?: boolean
   role: string
-  about: string
+  /** creative headline, the card's main line */
+  title: string
   /** Drop an image in /public/logos and set `src` to use a real logo instead of the monogram. */
   logos: { label: string; color: string; src?: string }[]
   /** Project pages the job links to (see data/projects.ts). */
@@ -21,7 +22,7 @@ export const jobs: Job[] = [
     company: 'Georgia Department of Human Services',
     current: true,
     role: 'UX Designer',
-    about: 'Moved legacy mainframe systems onto cloud web platforms for agency staff, cutting the steps to finish a task by 40%.',
+    title: 'Clarity is the kindest thing a screen can offer',
     logos: [{ label: 'GA', color: '#fff', src: '/logos/georgia-dhs.png' }],
     projects: [{ slug: 'dso-modernization' }],
     tools: ['figma', 'sketch', 'storybook', 'claude', 'rust', 'angular', 'bootstrap', 'photoshop'],
@@ -31,7 +32,7 @@ export const jobs: Job[] = [
     where: 'SCOBIN>PRODUCT',
     company: 'Scobin',
     role: 'Product Designer',
-    about: 'Built the design system from scratch: 548 variables, 41 documented components, used by more than 120 employees.',
+    title: 'Decide once, then create freely',
     logos: [{ label: 'S', color: '#fff', src: '/logos/scobin.svg' }],
     projects: [{ slug: 'scobin-design-system' }],
     tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
@@ -41,7 +42,7 @@ export const jobs: Job[] = [
     where: 'WIPRO>ENTERPRISE',
     company: 'Wipro',
     role: 'UI Developer',
-    about: 'Built accessible enterprise portals, A/B tested for +15% engagement and +10% conversions.',
+    title: 'Made for everyone, from the first line',
     logos: [{ label: 'W', color: '#fff', src: '/logos/wipro.webp' }],
     projects: [],
     tools: ['angular', 'typescript', 'javascript', 'html', 'css', 'bootstrap', 'git'],

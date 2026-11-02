@@ -1,160 +1,49 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { Link } from 'react-router-dom'
-import { site } from '@/data/site'
-import { Bot } from '@/components/project/crew/Bot'
-import '@/components/project/crew/crew.css'
 
-const CYCLE_MS = 4200
-const COLORS = ['#3b8fe8', '#2fa37a', '#e0793a', '#8b5cf6', '#d9467a', '#c99a1c', '#1fa5b8']
-// what the bot says while Telemetric is in the works: the roles I play on a small founding team
-const BOT_WORDS = ['building', 'designing', 'co-founding', 'prototyping', 'shipping', 'testing']
-const { stagger, blur, duration, ease } = motionTokens
-// the frame glides to the next phrase's width: slower and softer than the UI springs, no overshoot
-const frameSpring = { type: 'spring', visualDuration: 0.7, bounce: 0 } as const
+// the card sits tilted inside its 275×291 artwork; the wind lifts its right corner. The crease runs from A to B,
+// 58 units back along each edge from the corner, and the flap swings about that line onto the card.
+const STAMP = '/brand/post-card.svg'
+const CREASE_SIDE = '246.71,128.36 212.41,245.48 269.99,262.35 304.29,145.23'
+const CARD_SIDE = '353.55,-236.35 105.57,610.19 -278.31,497.75 -30.33,-348.79'
+// the paper's back is drawn where the flap lands and pre-turned onto the corner, so it only faces you once folded
+const BACK = '190.20,175.39 241.09,147.56 218.03,226.28'
+const SHADOW = '241.09,147.56 218.03,226.28 186.2,181.4'
 
-/** Figma-style selection frame whose text keeps swapping; the frame springs to fit the current phrase. */
-function SelectionFrame({ phrases }: { phrases: string[] }) {
-  const [i, setI] = useState(0)
-  const [widths, setWidths] = useState<number[]>([])
-  const refs = useRef<(HTMLSpanElement | null)[]>([])
-  const reduce = useReducedMotion()
-
-  // the first load plays an intro: the cursor drags the frame open from a tiny box, then the first phrase types in
-  const [grab, setGrab] = useState(!reduce)
-  const intro = useRef(!reduce)
-  const frameRef = useRef<HTMLSpanElement>(null)
-
-  // Each cycle: a cursor flies to the corner handle, drags the frame to the next phrase's size, then drifts off.
-  useEffect(() => {
-    const timers: number[] = []
-    if (intro.current) timers.push(window.setTimeout(() => setGrab(false), 1500))
-    const tick = () => {
-      intro.current = false
-      setGrab(true)
-      timers.push(window.setTimeout(() => setI((n) => (n + 1) % phrases.length), 800))
-      timers.push(window.setTimeout(() => setGrab(false), 2000))
-    }
-    const loop = window.setInterval(tick, CYCLE_MS)
-    timers.push(window.setTimeout(tick, 3400))
-    return () => { clearInterval(loop); timers.forEach(clearTimeout) }
-  }, [phrases.length])
-
-  useLayoutEffect(() => {
-    const measure = () => setWidths(refs.current.map((el) => el?.offsetWidth ?? 0))
-    measure()
-    document.fonts?.ready.then(measure)
-    addEventListener('resize', measure)
-    return () => removeEventListener('resize', measure)
-  }, [])
-
-  const phrase = phrases[i]
-  const color = COLORS[i % COLORS.length]
-  const rest = { x: 64, y: 44, opacity: 0 }
-  return (
-    <motion.span
-      ref={frameRef}
-      className="frame"
-      style={{ ['--c' as string]: color }}
-      initial={reduce ? false : { width: 28, opacity: 0 }}
-      animate={{ width: widths[i] || 'auto', opacity: 1 }}
-      transition={reduce ? { duration: 0 } : { ...frameSpring, opacity: { duration: 0.35, ease: ease.enter } }}
-    >
-      {phrases.map((t, n) => (
-        <span key={t} ref={(el) => { refs.current[n] = el }} className="frame-measure" aria-hidden="true">
-          {[...t].map((ch, k) => <span key={k}>{ch === ' ' ? ' ' : ch}</span>)}
-        </span>
-      ))}
-      <AnimatePresence>
-        <span key={phrase} className="frame-text" aria-label={phrase}>
-          {[...phrase].map((ch, n) => (
-            <motion.span
-              key={n}
-              aria-hidden="true"
-              initial={reduce ? false : { opacity: 0, y: '0.5em', filter: `blur(${blur.soft}px)` }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: n * stagger.char + (intro.current ? 0.7 : 0.16), duration: duration.considered, ease: ease.enter } }}
-              exit={{ opacity: 0, y: '-0.4em', filter: `blur(${blur.subtle}px)`, transition: { delay: n * stagger.char * 0.4, duration: duration.standard, ease: ease.standard } }}
-            >
-              {ch === ' ' ? ' ' : ch}
-            </motion.span>
-          ))}
-        </span>
-      </AnimatePresence>
-      <i className="handle tl-h" /><i className="handle tr-h" /><i className="handle bl-h" /><i className="handle br-h" />
-      {!reduce && (
-        <motion.span
-          className="cursor"
-          aria-hidden="true"
-          initial={rest}
-          animate={grab ? { x: 0, y: 0, opacity: 1, scale: 1 } : rest}
-          transition={grab ? { type: 'spring', visualDuration: 0.7, bounce: 0.1 } : { type: 'spring', visualDuration: 0.8, bounce: 0 }}
-        >
-          <svg viewBox="0 0 16 20" width="18" height="22"><path d="M1 1v15l4.2-3.8L8 19l2.6-1.1-2.8-6.2H14z" /></svg>
-          <b>{Math.round(widths[i] || 0)} × {frameRef.current?.offsetHeight ?? 0}</b>
-        </motion.span>
-      )}
-    </motion.span>
-  )
-}
-
-/** Headline lead-in: each character rises out of a blur, one after the other. */
-function Lead({ text }: { text: string }) {
-  const reduce = useReducedMotion()
-  return (
-    <span aria-label={text}>
-      {[...text].map((ch, n) => (
-        <motion.span
-          key={n}
-          aria-hidden="true"
-          style={{ display: 'inline-block', whiteSpace: 'pre' }}
-          initial={reduce ? false : { opacity: 0, y: '0.6em', filter: `blur(${blur.soft}px)` }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: 0.05 + n * stagger.char * 1.4, duration: duration.considered, ease: ease.enter } }}
-        >
-          {ch}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
-
-/** Beta teaser: an announcement pill with a typing bot linking to the Telemetric case study. */
-function BetaComment() {
-  const reduce = useReducedMotion()
-  const [w, setW] = useState(0)
-  useEffect(() => {
-    if (reduce) return
-    const id = window.setInterval(() => setW((n) => (n + 1) % BOT_WORDS.length), 2600)
-    return () => clearInterval(id)
-  }, [reduce])
-  return (
-    <Link to="/project/telemetric" className="comment">
-      <span className="comment-pin crew" data-working="true" aria-hidden="true">
-        <span className="ap-bubble" key={BOT_WORDS[w]} data-say="d">{BOT_WORDS[w]}</span>
-        <Bot act="type" size={40} />
-        <span className="ap-trail"><span className="ap-trail-fill" /></span>
-      </span>
-      <span className="comment-bubble">
-        <span className="comment-text">I’m building <em>Telemetric</em>: AI you can see and steer. It’s coming to beta soon.</span>
-        <span className="comment-go">Read the case study<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></span>
-      </span>
-    </Link>
-  )
-}
-
-/** Landing intro: a headline with a cycling selection frame, and a link to the work. */
+/** Landing intro: a headline, a quiet subline, a link to the work, and the Portfolio Post stamp. */
 export function Hero() {
   return (
     <header className="hero">
-      <h1>
-        <Lead text="I make" /> <SelectionFrame phrases={site.disciplines} />
-      </h1>
+      <h1>Notice how you read this before anything else?</h1>
+      <p className="hero-sub">That’s the job.</p>
       <p>
         <Link to="/work" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>
       </p>
-      <p className="beta-wrap">
-        <BetaComment />
-      </p>
+      <div className="hero-stamp" aria-hidden="true">
+        <svg className="stamp-card" viewBox="0 0 275 291">
+          <defs>
+            <clipPath id="stamp-card-side"><polygon points={CARD_SIDE} /></clipPath>
+            <clipPath id="stamp-crease-side"><polygon points={CREASE_SIDE} /></clipPath>
+            <pattern id="stamp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+              <rect width=".6" height="5" fill="#1d1d1b" fillOpacity=".55" />
+            </pattern>
+          </defs>
+          <image href={STAMP} width="275" height="291" clipPath="url(#stamp-card-side)" />
+          <polygon className="stamp-shadow" points={SHADOW} fill="url(#stamp-hatch)" />
+        </svg>
+        <svg className="stamp-wind" viewBox="0 0 275 291">
+          <path pathLength="1" d="M440 168c-46-6-88 10-130 4s-70-16-104-6c-20 6-24 22-10 26 12 3 18-8 10-14" />
+          <path pathLength="1" d="M470 212c-52 2-94-12-142-6s-82 18-126 10" />
+          <path pathLength="1" d="M455 246c-40-8-80 6-118 2-30-3-52-14-80-6-16 5-18 19-6 22 10 2 15-7 8-12" />
+        </svg>
+        <div className="stamp-flap">
+          <svg className="stamp-back" viewBox="0 0 275 291">
+            <polygon points={BACK} fill="#f4f1e8" stroke="#1d1d1b" strokeWidth=".8" strokeLinejoin="round" />
+          </svg>
+          <svg className="stamp-front" viewBox="0 0 275 291">
+            <image href={STAMP} width="275" height="291" clipPath="url(#stamp-crease-side)" />
+          </svg>
+        </div>
+      </div>
     </header>
   )
 }

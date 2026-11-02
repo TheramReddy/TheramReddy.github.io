@@ -1,13 +1,12 @@
 import { createPortal } from 'react-dom'
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import { Briefcase, FolderOpen, Mail, User, X } from 'lucide-react'
+import { Briefcase, FolderOpen, User, X } from 'lucide-react'
 import '@/styles/tour.css'
 
 const steps = [
   { id: 'me', Icon: User, title: "Hi, I'm Dasavanth", body: "A short intro, and what I'm working on right now." },
   { id: 'work', Icon: Briefcase, title: "Where I've worked", body: 'My past roles and what I built in each.' },
   { id: 'projects', Icon: FolderOpen, title: "What I've built", body: 'Open a project to see how it looks and how I put it together.' },
-  { id: 'contact', Icon: Mail, title: 'Get in touch', body: 'Got an idea or a role in mind? Send me a message here.' },
 ]
 
 type Box = { x: number; y: number; w: number; h: number; text: string }

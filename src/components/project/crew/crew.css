@@ -143,7 +143,7 @@
 @keyframes ap-trail { from { transform: scaleX(0); } }
 
 /* speech: same bubble, with a tail toward whoever it is talking to */
-.crew .ap-bubble { position: relative; display: block; white-space: nowrap; padding: 4px 7px; border-radius: 6px; background: var(--neutral-100); font: 400 9.5px/normal var(--font-geist, system-ui, sans-serif); animation: ap-rise 200ms var(--ds-ease-out); }
+.crew .ap-bubble { position: relative; display: block; white-space: nowrap; padding: 4px 7px; border-radius: 6px; background: var(--neutral-100); font: 400 9.5px/normal var(--font-text); animation: ap-rise 200ms var(--ds-ease-out); }
 .crew .ap-bubble[data-say]::after { content: ''; position: absolute; bottom: -3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; background: var(--neutral-100); transform: rotate(45deg); }
 .crew .ap-bubble[data-say='l']::after { left: 24%; }
 .crew .ap-bubble[data-say='r']::after { left: 76%; }

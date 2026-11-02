@@ -1,20 +1,21 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { Chrome } from '@/components/layout/Chrome'
-import { ContactPanel } from '@/components/panels/ContactPanel'
 import { MePanel } from '@/components/panels/MePanel'
 import { ProjectsPanel } from '@/components/panels/ProjectsPanel'
 import { WorkPanel } from '@/components/panels/WorkPanel'
 import { getProject } from '@/data/projects'
+// design tokens for the arc components (tooltip, buttons)
+import '@/components/arc/foundation.css'
 
 // case study code (diagrams, carousels) loads after the first paint
 const ProjectDetail = lazy(() => import('@/components/project/ProjectDetail').then((m) => ({ default: m.ProjectDetail })))
 
-const ROUTES = ['/', '/me', '/work', '/projects', '/contact']
+const ROUTES = ['/', '/me', '/work', '/projects']
 
 /**
- * Me, Work, Projects, Contact and project popups are route-driven overlays
- * (/me, /work, /projects, /contact, /project/:slug) so every view is deep-linkable.
+ * Me, Work, Projects and project popups are route-driven overlays
+ * (/me, /work, /projects, /project/:slug) so every view is deep-linkable.
  */
 export default function App() {
   const { pathname } = useLocation()
@@ -43,7 +44,6 @@ export default function App() {
       <MePanel open={pathname === '/' || pathname === '/me'} />
       <WorkPanel open={pathname === '/work'} />
       <ProjectsPanel open={pathname === '/projects'} />
-      <ContactPanel open={pathname === '/contact'} />
       <Suspense fallback={null}>
         <ProjectDetail project={project} open={!!project} />
       </Suspense>

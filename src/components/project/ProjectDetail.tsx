@@ -200,7 +200,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
         <SheetScrollbar root={sheet} />
         <div className="close-rail">
           <button className="close" aria-label="Close project" onClick={() => navigate('/projects')}>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
               <path d="M3 3l12 12M15 3L3 15" />
             </svg>
           </button>

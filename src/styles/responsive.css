@@ -1,55 +1,41 @@
 /* ---------- mobile: vertical stack ---------- */
 @media (max-width: 760px) {
+  .hero-stamp { width: min(240px, 62vw); margin: 16px auto 0; }
+  .ui .logo { width: 80px; }
   :root:root { --pad-x: 20px; --pad-y: 20px; }
   body { overflow: auto; }
 
-  /* work timeline: date sits above each entry, rail on the left */
+  /* work: cards stack in one column */
   .work .inner { width: 100%; padding: 96px 20px 112px; }
-  .tl { padding-left: 24px; }
-  .tl::before { left: 4px; bottom: -40px; }
-  .job { padding-bottom: 64px; }
-  .job::before { left: -26px; top: 3px; }
-  .job .when { position: static; flex-direction: row-reverse; justify-content: flex-end; gap: 12px; align-items: baseline; text-align: left; margin-bottom: 14px; font-size: 17px; }
-  .job .when .yr { flex-direction: row; gap: 8px; }
-  .job h4 { font-size: 21px; flex-wrap: wrap; row-gap: 4px; }
-  .job .role { margin-top: 8px; font-size: 15px; }
-  .job .about { font-size: 15px; line-height: 1.5; }
-  .job .proj { margin-left: 0; margin-top: 20px; }
-  .job .tools-wrap { margin-left: 0; }
+  .jobs { grid-template-columns: 1fr; gap: 24px; }
 
   /* projects: case studies stack image above text */
   .projects .inner { width: 100%; padding: 96px 20px 112px; }
-  .cs { padding: 24px 0; }
-  .cs-title { font-size: 26px; }
-  .cs-summary { font-size: 15px; }
+  .cs-title { font-size: 1.625rem; }
 
-  /* fixed overlay must track the *visible* viewport so Contact never falls below the fold */
+  /* fixed overlay must track the *visible* viewport so the nav stays pinned on mobile */
   .ui { inset: auto; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh; box-sizing: border-box; }
   .ui .row { position: relative; align-items: center; }
   .ui .row.top { gap: 12px; }
   .ui .row.top .nav { gap: 18px; margin-left: auto; }
-  .ui .row.bottom { align-items: flex-end; }
 
   /* fixed nav fades into the page (backdrop bleeds past the padding without shifting content) */
   .ui .row::after { content: ""; position: absolute; z-index: -1; left: calc(var(--pad-x) * -1); right: calc(var(--pad-x) * -1); pointer-events: none; }
-  .ui .row.top::after { top: calc(var(--pad-y) * -1); bottom: -22px; background: linear-gradient(var(--bg) 70%, transparent); }
-  .ui .row.bottom::after { bottom: calc(var(--pad-y) * -1); top: -14px; background: linear-gradient(transparent, var(--bg) 60%); }
+  .ui .row.top::after { top: calc(var(--pad-y) * -1); bottom: -40px; background: linear-gradient(var(--bg) 60%, transparent); }
 
   /* project popup */
-  .sheet { inset: 10px; border-radius: 20px; }
   .sheet .cols { padding: 96px 20px 88px; gap: 56px; }
   .gallery, .d-art { min-width: 0; max-width: 100%; }
-  .sheet h2 { font-size: 34px; }
-  .sheet .desc { margin-top: 16px; font-size: 16px; line-height: 1.45; }
+  .sheet h2 { font-size: 2.125rem; }
+  .sheet .desc { margin-top: 16px; font-size: 1rem; line-height: 1.45; }
   .sheet .stack { margin-top: 24px; }
-  .chip { height: 36px; font-size: 14px; }
+  .chip { height: 36px; font-size: 0.875rem; }
   .sheet { overflow-x: hidden; }
   .sheet .cols > *, .diagram > * { min-width: 0; }
-  .stack-title, .about-title { font-size: 14px; }
-  .in-action-title { font-size: 24px; }
-  .coverflow { --w: 270px; --step: 285px; height: 720px; }
-  .cf-dots { margin-top: 40px; }
-  .diagram p { font-size: 16px; }
+  .stack-title, .about-title { font-size: 0.875rem; }
+  .in-action-title { font-size: 1.5rem; }
+  .coverflow { --w: 270px; --step: 285px; }
+  .diagram p { font-size: 1rem; }
   .gallery { gap: 80px; padding-top: 0; }
   .gallery > .problems::before { top: -42px !important; }
   /* unfinished case study: keep the scene on the first screen, so skip the tools list and size it to fit */
@@ -57,9 +43,12 @@
   .sheet .cols:has(.coming-soon) .stack { display: none; }
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
-  .coming-marquee { height: 180px; font-size: 12px; padding: 0 12px; }
+  .coming-marquee { height: 180px; font-size: 0.75rem; padding: 0 12px; }
   .detail .close { top: 12px; right: 10px; width: 44px; height: 44px; }
-  .progress { left: 22px; bottom: 22px; }
+  /* no room in the margin on a phone: the ring joins the close button in the top bar */
+  .progress { left: 20px; top: 27px; bottom: auto; z-index: 11; }
+  /* and, like the site nav, that bar fades the page out beneath it */
+  .close-rail::before { content: ""; position: absolute; top: -12px; left: 0; right: 0; height: 104px; background: linear-gradient(var(--bg) 60%, transparent); pointer-events: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition-duration: .01ms !important; animation-duration: .01ms !important; }

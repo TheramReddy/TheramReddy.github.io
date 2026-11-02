@@ -1,7 +1,7 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/geist';
+@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/instrument-sans';
 @import 'tw-animate-css';
-@import '@fontsource/pixelify-sans/500.css';
 @import './ui.css';
 @import './panels.css';
 @import './detail.css';
@@ -12,20 +12,25 @@
 
 /* Site tokens (light theme). The UI components read the semantic ones below. */
 :root {
-  --bg: #f4f3ef;
+  --bg: #ffffff;
   --fg: #0a0a0a;
   --muted: rgba(10, 10, 10, 0.72);
   --card: #e4e2dc;
   --line: rgba(10, 10, 10, 0.14);
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
-  --font-pixel: 'Pixelify Sans', var(--font-mono);
-  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  /* Passenger Display stand-in: Playfair Display is the closest free high-contrast serif. */
+  --font-passenger: 'Playfair Display Variable', Georgia, serif;
+  /* Playfair is a display face: its hairlines break up below ~20px, so body, labels and UI use a sturdy text sans. */
+  --font-text: 'Instrument Sans Variable', system-ui, sans-serif;
+  --font-pixel: var(--font-passenger);
+  --font-mono: var(--font-text);
+  --seal: #c8432e;
   --underline-offset: 3px;
   --pad-x: 80px;
   --pad-y: 40px;
 
   --radius: 0.625rem;
-  --background: #f4f3ef;
+  --background: #ffffff;
   --foreground: #0a0a0a;
   --primary: #0a0a0a;
   --primary-foreground: #ffffff;
@@ -43,7 +48,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --font-sans: 'Instrument Sans Variable', system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: #ffffff;
@@ -79,13 +84,23 @@ body,
 #root {
   height: 100%;
 }
+/* Fluid root: every rem on the site rides this one dial, so type and text columns keep the
+   proportions tuned at ~1536px. 15.2px on a 1280 laptop, 16px at 1536, 17.2px at 1920, 19.2px at 2560. */
+html {
+  font-size: clamp(15px, calc(0.3125vw + 11.2px), 19.5px);
+}
+@media (max-width: 760px) {
+  html { font-size: 16px; }
+}
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: 'Geist Variable', system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 1.4;
-  letter-spacing: -0.02em;
+  font-family: var(--font-text);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+  font-variant-numeric: lining-nums;
+  font-kerning: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
@@ -98,13 +113,26 @@ h2,
 h3,
 h4 {
   text-wrap: balance;
+  letter-spacing: -0.01em;
+}
+/* display voice: headings and the few large lines that act like them */
+h1,
+h2,
+h3,
+.job .title,
+.job .when,
+.fun-label,
+.cs-title,
+.story-principles li {
+  font-family: var(--font-passenger);
+  font-weight: 400;
 }
 p {
   text-wrap: pretty;
 }
 ::selection {
-  background: var(--fg);
-  color: var(--bg);
+  background: var(--seal);
+  color: #fff;
 }
 :focus-visible {
   outline: 2px solid var(--fg);
@@ -133,6 +161,6 @@ ul {
   list-style: none;
 }
 .label {
-  font-size: 15px;
-  letter-spacing: -0.01em;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
 }
