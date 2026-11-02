@@ -42,21 +42,7 @@ const shot = (name: string) => `/projects/dso-modernization/${name}.gif`
 
 /** Add a project: append an entry here and drop images in /public/projects/<slug>/. */
 export const projects: Project[] = [
-  {
-    slug: 'telemetric',
-    title: 'Telemetric',
-    year: '2026',
-    role: 'Product Designer',
-    stack: ['Figma'],
-    url: '#',
-    client: 'Telemetric',
-    summary: 'A workspace where your files become a map, and AI agents work on it with you. Coming soon to beta.',
-    description:
-      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
-    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
-    tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
-    story: true,
-  },
+
   {
     slug: 'dso-modernization',
     title: 'DSO Modernization',
@@ -112,6 +98,21 @@ export const projects: Project[] = [
     story: true,
     figma: 'https://www.figma.com/design/aQDljAL3G6oGoaenWvq81E/Scobin-Design-System?node-id=6-9',
   },
+  {
+    slug: 'telemetric',
+    title: 'Telemetric',
+    year: '2026',
+    role: 'Product Designer',
+    stack: ['Figma'],
+    url: '#',
+    client: 'Telemetric',
+    summary: 'A workspace where your files become a map, and AI agents work on it with you. Coming soon to beta.',
+    description:
+      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
+    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
+    story: true,
+  }
 ]
 
 export const getProject = (slug?: string) => projects.find((p) => p.slug === slug)
