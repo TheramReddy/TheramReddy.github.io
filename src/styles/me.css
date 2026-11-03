@@ -32,42 +32,32 @@
 @media (max-width: 760px) { .me-cases .me-head { margin-bottom: 2rem; } }
 .me-cases:not([data-live]) .vl *, .me:not(.open) .vl * { animation-play-state: paused; }
 /*
- * approach strip: one column per step, spanning the grid above the steps. Each sits on its own hairline; the current
- * step's column turns to ink, its line goes solid and the seal timer runs along it, the rest fade back.
+ * approach: the steps run across the top as one strip, the scene sits beneath. Each step stands on its own hairline;
+ * the current one turns to ink, its line goes solid and the seal timer runs along it, the rest stay muted.
  */
-.ap-facets { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2rem); margin: 0 0 clamp(.5rem, 2vw, 1.5rem); }
-.ap-facets > div { position: relative; padding-top: 14px; border-top: .8px dashed var(--ink-line); opacity: .55; transition: opacity .4s var(--ease), border-color .4s var(--ease); }
-.ap-facets > div[data-on] { opacity: 1; border-top: 1px solid var(--fg); }
-.ap-facets .ap-timer { top: -1px; bottom: auto; height: 1px; }
-.ap-facets dt { font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--fg); transition: color .4s var(--ease); }
-.ap-facets > div[data-on] dt { color: var(--seal); }
-.ap-facets dd { margin: 8px 0 0; }
-.ap-facets ul { margin: 0; padding: 0; list-style: none; font-family: var(--font-text); font-size: .875rem; line-height: 1.6; color: #3d3b35; }
-@media (max-width: 760px) { .ap-facets { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1.25rem; } }
-@media (prefers-reduced-motion: reduce) { .ap-facets > div { transition: none; } }
-
-/* approach: the steps on the left, one framed scene on the right */
-.ap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
-.ap-list { margin: 0; padding: 0; list-style: none; }
-.ap-list li + li { border-top: .8px dashed var(--ink-line); }
-.ap-item { position: relative; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); align-items: baseline; width: 100%; padding: 16px 0; text-align: left; color: #6e6a5c; transition: color .3s var(--ease); }
-/* the number carries the order; the current step grows and takes the seal, the rest stay small and quiet */
-.ap-num { grid-row: 1 / span 2; font-size: .8125rem; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: #6e6a5c; transition: color .3s var(--ease); }
-.ap-verb { grid-column: 2; font-family: var(--font-passenger); font-size: 1.25rem; line-height: 1.15; letter-spacing: -.015em; transition: font-size .4s var(--ease); }
-.ap-line { grid-column: 2; display: block; overflow: hidden; max-height: 0; opacity: 0; font-family: var(--font-text); font-size: .9375rem; line-height: 1.55; color: #3d3b35; transition: max-height .5s var(--ease), opacity .4s var(--ease), margin .5s var(--ease); }
-.ap-item[aria-pressed="true"] { color: var(--fg); }
+.ap { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); }
+.ap-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2rem); margin: 0; padding: 0; list-style: none; }
+.ap-item { position: relative; display: block; width: 100%; height: 100%; padding: 14px 0 4px; border-top: .8px dashed var(--ink-line); text-align: left; color: #6e6a5c; transition: color .3s var(--ease), border-color .3s var(--ease); }
+.ap-num { display: block; font-size: .75rem; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: #6e6a5c; transition: color .3s var(--ease); }
+.ap-verb { display: block; margin-top: 6px; font-family: var(--font-passenger); font-size: 1.5rem; line-height: 1.15; letter-spacing: -.015em; }
+.ap-line { display: block; margin-top: 6px; font-family: var(--font-text); font-size: .875rem; line-height: 1.55; color: #6e6a5c; transition: color .3s var(--ease); }
+.ap-item[aria-pressed="true"] { color: var(--fg); border-top: 1px solid var(--fg); }
+.ap-item[aria-pressed="true"] .ap-line { color: #3d3b35; }
 .ap-item[aria-pressed="true"] .ap-num { color: var(--seal); }
-.ap-item[aria-pressed="true"] .ap-verb { font-size: 1.625rem; }
-.ap-item[aria-pressed="true"] .ap-line { max-height: 3em; margin-top: 8px; opacity: 1; }
 @media (hover: hover) and (pointer: fine) { .ap-item:hover { color: var(--fg); } }
 .ap-item:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
-/* while it walks on its own, a hairline under the current step fills until the next one */
-.ap-timer { position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--seal); transform-origin: left; transform: scaleX(0); opacity: 0; }
+@media (max-width: 760px) { .ap-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1.25rem; } }
+@media (prefers-reduced-motion: reduce) { .ap-item, .ap-line { transition: none; } }
+/* while it walks on its own, the current step's top hairline fills in seal until the next one */
+.ap-timer { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--seal); transform-origin: left; transform: scaleX(0); opacity: 0; }
 .is-auto .ap-timer { opacity: 1; animation: ap-timer var(--step-ms) linear forwards; }
 @keyframes ap-timer { to { transform: scaleX(1); } }
 
 /* the stage: the scene sits straight on the page, no frame */
-.ap-stage { position: relative; aspect-ratio: 345 / 250; }
+.ap-stage { position: relative; width: min(100%, 38rem, max(16rem, calc((100svh - 28rem) * 345 / 250))); margin-inline: auto; aspect-ratio: 345 / 250; animation: ap-float 7s ease-in-out infinite; }
+/* the scene drifts, a few pixels up and back, like paper on still air */
+@keyframes ap-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.me:not(.open) .ap-stage, .ap-stage:not(:has([data-live])) { animation-play-state: paused; }
 .ap-scene { position: absolute; inset: 0; opacity: 0; filter: blur(4px); transform: translateY(6px); transition: opacity .6s var(--ease), filter .6s var(--ease), transform .7s var(--ease); }
 .ap-scene[data-on] { opacity: 1; filter: none; transform: none; }
 .ap-svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #1d1d1b; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
@@ -126,6 +116,7 @@
   .ap-draw path, .ap-circle { stroke-dashoffset: 0; }
   .ap-module, .ap-sun { opacity: 1; transform: none; }
   .ap-scene { filter: none; transform: none; transition: opacity .2s linear; }
+  .ap-stage { animation: none; }
   .me-cue, .me-cue svg { animation: none; }
 }
 
@@ -156,6 +147,5 @@
   .me-cue { position: static; margin-top: 40px; }
   .me-more > section { min-height: auto; padding: 72px 0; }
   .me-more h2 { font-size: 1.875rem; }
-  .ap { grid-template-columns: 1fr; gap: 1.75rem; }
-  .ap-stage { order: -1; }
+  .ap { gap: 1.75rem; }
 }

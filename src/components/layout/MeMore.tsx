@@ -65,20 +65,12 @@ function useReveal() {
   return root
 }
 
-/** What goes into each step, in step order: the strip over the steps lights the one that is current. */
-const facets: { label: string; items: string[] }[] = [
-  { label: 'Research', items: ['Interviews', 'Observation', 'Usability testing'] },
-  { label: 'I deliver', items: ['User flows', 'Wireframes', 'Prototypes', 'Specs'] },
-  { label: 'Built in', items: ['Accessibility', 'Empty, loading, error states'] },
-  { label: 'I work with', items: ['Product', 'Engineering', 'Real users, from day one'] },
-]
-
 const STEP_MS = 5200
 
 /**
- * One scene at a time, like the hero's single stamp: the steps list on the left, the current scene framed on the
- * right. It walks through the steps on its own whenever it is on screen; pointing at, focusing or clicking a step
- * jumps there, and the walk waits until the pointer or focus leaves the list, then carries on from it.
+ * One scene at a time, like the hero's single stamp: the steps run across the top, the current scene sits beneath
+ * them. It walks through the steps on its own whenever it is on screen; pointing at, focusing or clicking a step jumps
+ * there, and the walk waits until the pointer or focus leaves the list, then carries on from it.
  */
 function Approach() {
   const [active, setActive] = useState(0)
@@ -108,30 +100,6 @@ function Approach() {
 
   return (
     <div className={`ap${running ? ' is-auto' : ''}`} ref={box} style={{ '--step-ms': `${STEP_MS}ms` } as CSSProperties}>
-      {/* the strip follows the walk; pointing at a column jumps there too (keyboard users have the step buttons) */}
-      <dl
-        className="ap-facets"
-        onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
-      >
-        {facets.map((f, i) => (
-          <div
-            key={f.label}
-            data-on={i === active || undefined}
-            onPointerEnter={(e) => e.pointerType === 'mouse' && pick(i)}
-          >
-            <dt>{f.label}</dt>
-            <dd>
-              <ul>
-                {f.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </dd>
-            {i === active && <span className="ap-timer" key={active} aria-hidden="true" />}
-          </div>
-        ))}
-      </dl>
       <ol
         className="ap-list"
         onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(true)}
