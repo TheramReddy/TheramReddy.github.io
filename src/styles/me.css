@@ -6,7 +6,7 @@
   mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
 }
 .panel.me::-webkit-scrollbar { display: none; }
-.me { --ink: #1d1d1b; --ink-line: rgba(29,29,27,.22); --seal: #c8432e; --hatch: repeating-linear-gradient(-45deg, rgba(29,29,27,.55) 0 .6px, transparent .6px 5px); }
+.me { --ink: #1d1d1b; --ink-line: rgba(29,29,27,.22); --seal: #c8432e; --art-ink: #55524a; --hatch: repeating-linear-gradient(-45deg, rgba(29,29,27,.55) 0 .6px, transparent .6px 5px); }
 .me-first { position: relative; display: flex; flex-direction: column; justify-content: center; width: 100%; min-height: 100vh; min-height: 100svh; }
 .me-first .hero { margin-bottom: 0; }
 
@@ -43,7 +43,7 @@
 .ap-line { display: block; margin-top: 6px; font-family: var(--font-text); font-size: .875rem; line-height: 1.55; color: #6e6a5c; transition: color .3s var(--ease); }
 .ap-item[aria-pressed="true"] { color: var(--fg); border-top: 1px solid var(--fg); }
 .ap-item[aria-pressed="true"] .ap-line { color: #3d3b35; }
-.ap-item[aria-pressed="true"] .ap-num { color: var(--seal); }
+.ap-item[aria-pressed="true"] .ap-num { color: var(--seal); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) { .ap-item:hover { color: var(--fg); } }
 .ap-item:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 @media (max-width: 760px) { .ap-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1.25rem; } }
@@ -60,13 +60,13 @@
 .me:not(.open) .ap-stage, .ap-stage:not(:has([data-live])) { animation-play-state: paused; }
 .ap-scene { position: absolute; inset: 0; opacity: 0; filter: blur(4px); transform: translateY(6px); transition: opacity .6s var(--ease), filter .6s var(--ease), transform .7s var(--ease); }
 .ap-scene[data-on] { opacity: 1; filter: none; transform: none; }
-.ap-svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #1d1d1b; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+.ap-svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--art-ink); stroke-width: .9; stroke-linecap: round; stroke-linejoin: round; }
 .ap-svg .paper { fill: #fff; }
 .ap-svg .f { stroke-width: .55; }
-.ap-svg .h { stroke-width: .4; stroke: #8a887f; }
+.ap-svg .h { stroke-width: .4; stroke: #a8a49a; }
 .ap-svg .ap-foot { stroke-width: 2.2; }
 .ap-svg .ap-hinge { stroke-width: 2.4; stroke-linecap: butt; }
-.ap-svg .ap-hand { font-family: var(--font-passenger); font-style: italic; font-size: 10px; fill: #1d1d1b; stroke: none; }
+.ap-svg .ap-hand { font-family: var(--font-passenger); font-style: italic; font-size: 10px; fill: var(--art-ink); stroke: none; }
 
 /* reveal: each block rises in the first time it is seen */
 .me-more [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .9s var(--ease), transform 1s var(--ease); }
@@ -79,8 +79,8 @@
 
 .ap-draw path { stroke-width: .9; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
 .ap-draw .ap-thin { stroke-width: .5; }
-.ap-draw .ap-strike { stroke: #1d1d1b; stroke-width: .9; animation-name: ap-strike; }
-.ap-circle { fill: none; stroke: #c8432e; stroke-width: 1.3; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
+.ap-draw .ap-strike { stroke: var(--art-ink); stroke-width: .9; animation-name: ap-strike; }
+.ap-circle { fill: none; stroke: var(--seal); stroke-width: 1.3; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
 @keyframes ap-draw { 0% { stroke-dashoffset: 1; opacity: 1; } 12%, 88% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 1; opacity: 0; } }
 @keyframes ap-strike { 0%, 20% { stroke-dashoffset: 1; opacity: 1; } 32%, 88% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 1; opacity: 0; } }
 .ap-pencil { animation: ap-write 2.2s ease-in-out infinite; }

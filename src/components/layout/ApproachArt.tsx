@@ -1,14 +1,18 @@
 import type { CSSProperties } from 'react'
 
 /**
- * The four approach scenes, drawn in the hand of the hero post card and the case-study still-lifes: a 1px contour,
+ * The four approach scenes, drawn in the hand of the hero post card and the case-study still-lifes: a .9px contour,
  * .55px interior lines, hatching and stipple for shade with the light from the upper left, a stippled cast shadow
  * under everything that stands, and one seal-red accent each. Every scene shares one frame (345 x 247, the stage's
  * shape) so the four sit at the same scale. Each has one live detail (steam, a pencil at work, modules settling, a
  * crane taking off) that only runs while the scene is on screen.
  */
 
+/* the scenes sit behind the words: a warm graphite instead of black (--art-ink in me.css) and shade a step lighter;
+   the seal keeps its red */
 const RED = '#C8432E'
+const INK = '#55524A'
+const SHADE = '#8C887E'
 const d = (s: number) => ({ '--d': `${s}s` }) as CSSProperties
 
 /* Shapes that are both drawn and used as clips. Clips resolve in the user space of the element using them, so one
@@ -21,20 +25,20 @@ export const ApproachDefs = () => (
   <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false">
     <defs>
       <pattern id="ap-hatch" patternUnits="userSpaceOnUse" width="3.6" height="3.6" patternTransform="rotate(45)">
-        <line x1="0" y1="0" x2="0" y2="3.6" stroke="#1D1D1B" strokeWidth=".5" />
+        <line x1="0" y1="0" x2="0" y2="3.6" stroke={SHADE} strokeWidth=".5" />
       </pattern>
       <pattern id="ap-dense" patternUnits="userSpaceOnUse" width="2.2" height="2.2" patternTransform="rotate(45)">
-        <line x1="0" y1="0" x2="0" y2="2.2" stroke="#1D1D1B" strokeWidth=".5" />
+        <line x1="0" y1="0" x2="0" y2="2.2" stroke={SHADE} strokeWidth=".5" />
       </pattern>
       <pattern id="ap-cross" patternUnits="userSpaceOnUse" width="3.2" height="3.2" patternTransform="rotate(-45)">
-        <line x1="0" y1="0" x2="0" y2="3.2" stroke="#1D1D1B" strokeWidth=".42" />
-        <line x1="0" y1="0" x2="3.2" y2="0" stroke="#1D1D1B" strokeWidth=".42" />
+        <line x1="0" y1="0" x2="0" y2="3.2" stroke={SHADE} strokeWidth=".42" />
+        <line x1="0" y1="0" x2="3.2" y2="0" stroke={SHADE} strokeWidth=".42" />
       </pattern>
       <pattern id="ap-dots" patternUnits="userSpaceOnUse" width="2.6" height="2.6">
-        <circle cx="1.3" cy="1.3" r=".48" fill="#1D1D1B" />
+        <circle cx="1.3" cy="1.3" r=".48" fill={SHADE} />
       </pattern>
       <pattern id="ap-grey" patternUnits="userSpaceOnUse" width="3" height="3" patternTransform="rotate(45)">
-        <line x1="0" y1="0" x2="0" y2="3" stroke="#a3a29b" strokeWidth=".5" />
+        <line x1="0" y1="0" x2="0" y2="3" stroke="#bdb9af" strokeWidth=".5" />
       </pattern>
       <clipPath id="ap-pot-clip"><path d={POT} /></clipPath>
       <clipPath id="ap-cup-clip"><path d={CUP} /></clipPath>
@@ -151,7 +155,7 @@ const Pencil = () => (
     <path className="paper" d="M86 -3.4 H90.5 C92.8 -3.4 92.8 3.4 90.5 3.4 H86 Z" />
     <path className="paper" d="M0 0 L12 -3.5 C10.6 -2.2 10.6 -1.2 12 0 C10.6 1.2 10.6 2.2 12 3.5 Z" />
     <path d="M6 0 L12 3.5 L11.2 1.4 Z" fill="url(#ap-grey)" stroke="none" />
-    <path d="M0 0 L4 -1.2 V1.2 Z" fill="#1D1D1B" />
+    <path d="M0 0 L4 -1.2 V1.2 Z" fill={INK} />
   </g>
 )
 
@@ -212,7 +216,7 @@ export const SketchArt = () => (
       const x = 72 + i * 11
       return (
         <g key={x}>
-          <circle cx={x} cy="50" r="1.3" fill="#1D1D1B" />
+          <circle cx={x} cy="50" r="1.3" fill={INK} />
           <path d={`M${x} 50 C${x - 1.6} 45 ${x} 38.6 ${x + 3} 38.6 C${x + 5.2} 38.6 ${x + 5.4} 42 ${x + 4.2} 44.4`} />
         </g>
       )
