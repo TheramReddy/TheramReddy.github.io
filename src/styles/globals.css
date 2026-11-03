@@ -10,6 +10,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom arrow everywhere, clickables included; text fields keep the I-beam. Hotspot is the arrow tip. */
+html, html *:not(input, textarea, [contenteditable="true"]) { cursor: url('/cursor.svg') 11 10, auto !important; }
+
 /* Site tokens (light theme). The UI components read the semantic ones below. */
 :root {
   --bg: #ffffff;
@@ -119,8 +122,6 @@ h4 {
 h1,
 h2,
 h3,
-.job .title,
-.job .when,
 .story-principles li {
   font-family: var(--font-passenger);
   font-weight: 400;

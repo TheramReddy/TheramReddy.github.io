@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { ApproachDefs, ListenArt, SketchArt, ShapeArt, ShipArt } from './ApproachArt'
-import { JobList } from '@/components/panels/JobList'
 import { CaseList } from '@/components/panels/CaseList'
-import { Leaves } from '@/components/panels/Leaves'
 
 const steps: { verb: string; line: string; art: ReactNode }[] = [
   {
@@ -67,6 +65,14 @@ function useReveal() {
   return root
 }
 
+/** What goes into each step, in step order: the strip over the steps lights the one that is current. */
+const facets: { label: string; items: string[] }[] = [
+  { label: 'Research', items: ['Interviews', 'Observation', 'Usability testing'] },
+  { label: 'I deliver', items: ['User flows', 'Wireframes', 'Prototypes', 'Specs'] },
+  { label: 'Built in', items: ['Accessibility', 'Empty, loading, error states'] },
+  { label: 'I work with', items: ['Product', 'Engineering', 'Real users, from day one'] },
+]
+
 const STEP_MS = 5200
 
 /**
@@ -102,6 +108,30 @@ function Approach() {
 
   return (
     <div className={`ap${running ? ' is-auto' : ''}`} ref={box} style={{ '--step-ms': `${STEP_MS}ms` } as CSSProperties}>
+      {/* the strip follows the walk; pointing at a column jumps there too (keyboard users have the step buttons) */}
+      <dl
+        className="ap-facets"
+        onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        {facets.map((f, i) => (
+          <div
+            key={f.label}
+            data-on={i === active || undefined}
+            onPointerEnter={(e) => e.pointerType === 'mouse' && pick(i)}
+          >
+            <dt>{f.label}</dt>
+            <dd>
+              <ul>
+                {f.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </dd>
+            {i === active && <span className="ap-timer" key={active} aria-hidden="true" />}
+          </div>
+        ))}
+      </dl>
       <ol
         className="ap-list"
         onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(true)}
@@ -138,7 +168,7 @@ function Approach() {
   )
 }
 
-/** The rest of the page below the hero, one full screen each: how I work, where I've worked, the case studies. */
+/** The rest of the page below the hero, one full screen each: how I work, then the case studies. */
 export function MeMore() {
   const root = useReveal()
   return (
@@ -152,14 +182,6 @@ export function MeMore() {
         <div data-reveal="">
           <Approach />
         </div>
-      </section>
-
-      <section className="me-work" aria-labelledby="me-work-h" data-nav="work" data-watch="">
-        <Leaves />
-        <header className="me-head" data-reveal="">
-          <h2 id="me-work-h">Where I’ve worked</h2>
-        </header>
-        <JobList heading="h3" />
       </section>
 
       <section className="me-cases" aria-labelledby="me-cases-h" data-nav="projects" data-watch="">

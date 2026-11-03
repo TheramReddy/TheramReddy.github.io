@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { site } from '@/data/site'
 import { scrollToSection, useMeSection, type MeSection } from '@/lib/me-section'
 
-/** Fixed corner navigation: name, Me / Work / Projects. Each item scrolls the page to its section; the mark follows
+/** Fixed corner navigation: name, Me / Projects. Each item scrolls the page to its section; the mark follows
  * the section on screen. */
 export function Chrome() {
   const { pathname } = useLocation()
@@ -20,10 +20,6 @@ export function Chrome() {
         <nav className="nav" aria-label="Primary">
           <button className="label" data-tour="me" aria-current={section === 'me'} onClick={go('/', 'me')}>
             Me
-            <Ink />
-          </button>
-          <button className="label" data-tour="work" aria-current={section === 'work'} onClick={go('/work', 'work')}>
-            Work
             <Ink />
           </button>
           <button className="label" data-tour="projects" aria-current={section === 'projects'} onClick={go('/projects', 'projects')}>

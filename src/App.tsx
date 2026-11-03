@@ -12,8 +12,8 @@ const ProjectDetail = lazy(() => import('@/components/project/ProjectDetail').th
 const ROUTES = ['/', '/me', '/work', '/projects']
 
 /**
- * One page: /, /me, /work and /projects are places on it (the page scrolls to them), and a case study opens over
- * it at /project/:slug, so every view is deep-linkable.
+ * One page: /, /me and /projects are places on it (the page scrolls to them; old /work links land on /projects), and
+ * a case study opens over it at /project/:slug, so every view is deep-linkable.
  */
 export default function App() {
   const { pathname } = useLocation()

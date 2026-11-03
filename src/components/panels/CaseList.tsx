@@ -180,7 +180,7 @@ export function CaseList() {
     let clock = 0
     // the painting inks itself in the first time the scene is seen; the traveller sets off once it has dried
     let painted = false
-    let wait = still ? 0 : 3.6
+    let wait = still ? 0 : 1.2
     const panel = el.closest('.panel')
     // the cranes cross now and then: the first a few seconds after the painting dries, then every 30 to 40 seconds
     let flying = -1

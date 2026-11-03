@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react'
 import type Lenis from 'lenis'
 
 /** Which nav item the section on screen in the Me page belongs to, so the nav can mark it while you scroll. */
-export type MeSection = 'me' | 'work' | 'projects'
+export type MeSection = 'me' | 'projects'
 
 let current: MeSection = 'me'
 const listeners = new Set<() => void>()
@@ -23,11 +23,10 @@ export function useMeSection() {
   )
 }
 
-/** The section a path points at: the whole site is one page, and /work and /projects are places on it. */
+/** The section a path points at: the whole site is one page, and /projects is a place on it (old /work links land there too). */
 export function sectionOf(pathname: string): MeSection | null {
   if (pathname === '/' || pathname === '/me') return 'me'
-  if (pathname === '/work') return 'work'
-  if (pathname === '/projects') return 'projects'
+  if (pathname === '/projects' || pathname === '/work') return 'projects'
   return null
 }
 
