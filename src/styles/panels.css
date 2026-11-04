@@ -73,7 +73,7 @@
 @media (hover: hover) and (pointer: fine) { .vl-stop:hover .vl-pennant svg { transform: translate(2px, -2px); } .vl-stop:hover .vl-pennant { filter: brightness(1.08); } }
 /* the peek: a slip of washi tied on a cord under the pennant, telling what kind of work the flag opens, under the
    company's logo. It unrolls downward and its ink settles out of a blur, the same way the painting inks in */
-.vl-peek { --paper: #f6f1e4; position: absolute; top: 31px; left: 6px; width: 256px; white-space: normal; opacity: 0; pointer-events: none; filter: drop-shadow(0 10px 14px rgba(29,29,27,.16)) drop-shadow(0 1px 1px rgba(29,29,27,.12)); transition: opacity .3s var(--ease) .1s; }
+.vl-peek { --paper: #fff; position: absolute; top: 31px; left: 6px; width: 256px; white-space: normal; opacity: 0; pointer-events: none; filter: drop-shadow(0 10px 14px rgba(29,29,27,.16)) drop-shadow(0 1px 1px rgba(29,29,27,.12)); transition: opacity .3s var(--ease) .1s; }
 /* the cord: a hair of ink from the pennant down to the slip's top edge, with a knot where it ties on */
 .vl-peek::before { content: ""; position: absolute; left: 16px; top: -10px; width: 1px; height: 13px; background: var(--ink); opacity: .7; }
 .vl-peek::after { content: ""; position: absolute; left: 14px; top: 1px; width: 5px; height: 3px; border-radius: 50%; background: var(--ink); opacity: .7; }
@@ -91,7 +91,7 @@
    that thins out to the right */
 .vl-peek-tag { margin-bottom: 8px; font: 400 1.375rem/1.12 var(--font-passenger); letter-spacing: -.015em; text-wrap: balance; }
 .vl-peek-logo + .vl-peek-tag { margin-top: 12px; padding-top: 14px; background: linear-gradient(90deg, rgba(29,29,27,.32), rgba(29,29,27,0) 90%) top left / 100% 1px no-repeat; }
-.vl-peek-sum { font: .75rem/1.6 var(--font-text); color: #6b6658; }
+.vl-peek-sum { font: .75rem/1.6 var(--font-text); color: rgba(29,29,27,.66); }
 /* the company's logo heads the slip, pressed into the paper and inked in once it has unrolled */
 .vl-peek-logo { display: block; height: 24px; width: auto; max-width: 170px; justify-self: start; mix-blend-mode: multiply; opacity: 0; transition: opacity .3s var(--ease); }
 .vl-stops li:nth-child(3) .vl-peek { left: auto; right: -6px; }

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scobin Design System: one screen from design to use</title>
+<style>
+  :root {
+    --bg: #efeeea; --canvas: #efeeea; --ribbon: #d6d3ca; --card: #ffffff;
+    --ink: #0a0a0a; --muted: #5c5a55; --coral: #c8432e; --violet: #0a0a0a; --blue: #0a0a0a; --line: #e4e2dc;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 "Karla", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  .edge { fill: none; stroke: #958f82; stroke-linejoin: round; stroke-linecap: round; transition: opacity .2s, stroke .2s; }
+  .edge.hot { stroke: var(--ink); }
+  .edge.dim { opacity: .25; }
+  .viewport { position: relative; overflow: auto; cursor: grab; padding: 0 32px 40px; scrollbar-width: thin; }
+  .viewport.drag { cursor: grabbing; user-select: none; }
+  .canvas { position: relative; background: var(--canvas); }
+  .canvas > svg { position: absolute; inset: 0; overflow: visible; }
+  .phase { position: absolute; top: 0; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #6b6862; }
+  .lane { position: absolute; left: 0; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #6b6862; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .card { position: absolute; background: var(--card); border-radius: 14px; padding: 16px 18px; cursor: pointer; z-index: 2;
+    box-shadow: 0 1px 2px rgba(28,27,51,.03); transition: box-shadow .2s, transform .2s; overflow: hidden; }
+  .card:hover { box-shadow: 0 8px 28px rgba(28,27,51,.08); transform: translateY(-1px); }
+  .card.on { box-shadow: 0 0 0 1.5px var(--ink), 0 10px 30px rgba(28,27,51,.10); }
+  .card b { display: block; font-size: 13px; font-weight: 500; letter-spacing: -.005em; max-width: 85%; }
+  .card .bars { position: absolute; right: 14px; bottom: 14px; display: flex; flex-direction: column-reverse; gap: 4px; }
+  .card .bars i { display: block; width: 18px; height: 6px; border-radius: 3px; background: var(--coral); }
+  .stripe { position: absolute; left: 96px; right: 0; border-radius: 16px; background: rgba(255,255,255,.55); }
+  .stripe.alt { background: rgba(255,255,255,.28); }
+  .panel { position: absolute; z-index: 20; left: 0; top: 0; width: 360px; background: var(--card); border-radius: 18px; padding: 24px 26px 18px;
+    box-shadow: 0 24px 60px rgba(28,27,51,.16), 0 2px 6px rgba(28,27,51,.06); cursor: default; display: none; }
+  .panel .anchor { position: absolute; top: 34px; width: 12px; height: 12px; background: var(--card); transform: rotate(45deg); }
+  .panel .path { font-size: 11.5px; color: var(--muted); margin: 0 0 4px; }
+  .panel h3 { margin: 0 0 18px; font-size: 19px; font-weight: 600; letter-spacing: -.015em; }
+  .panel h4 { margin: 18px 0 6px; font-size: 14px; font-weight: 700; }
+  .panel .x { position: absolute; top: 18px; right: 18px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: #f1f0ed; color: var(--muted); font-size: 16px; cursor: pointer; }
+  .item { display: grid; grid-template-columns: 1fr 30px; align-items: center; gap: 4px 14px; padding: 12px 0; }
+  .item + .item { border-top: 1px solid var(--line); }
+  .item .name { font-size: 15px; }
+  .item .fix { grid-column: 1; font-size: 12.5px; color: var(--violet); }
+  .play { grid-row: 1 / span 2; grid-column: 2; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); border: 0; cursor: pointer; display: grid; place-items: center; }
+  .play::before { content: ""; border-left: 8px solid #fff; border-top: 5px solid transparent; border-bottom: 5px solid transparent; margin-left: 2px; }
+  .play.open::before { border: 0; width: 8px; height: 8px; background: #fff; border-radius: 1px; margin: 0; }
+  .gif { grid-column: 1 / -1; margin-top: 8px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #fff; }
+  .gif img { display: block; width: 100%; }
+  .none { color: var(--muted); font-size: 13.5px; margin: 0; }
+  /* panel additions: intent, hand-offs, rule */
+  .panel .goal { margin: -10px 0 0; font-size: 14px; color: #4a4943; }
+  .panel .goal i { display: block; font-style: normal; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #6b6862; margin-bottom: 3px; }
+  .hand { display: grid; grid-template-columns: 52px 1fr; gap: 6px 10px; align-items: start; font-size: 12.5px; margin-top: 4px; }
+  .hand > em { font-style: normal; color: #6b6862; padding-top: 4px; }
+  .hand > div { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hand button { font: inherit; font-size: 12px; border: 1px solid #dcd9d2; background: #fff; border-radius: 99px; padding: 2px 10px; cursor: pointer; color: var(--ink); }
+  .hand button:hover { border-color: var(--ink); }
+  /* ---- clean pass: quieter, Apple-like ---- */
+  html, body { font: 15px/1.47 "Instrument Sans", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; letter-spacing: -.011em; }
+  .stripe, .stripe.alt { background: #fff; border-radius: 18px; box-shadow: none; }
+  .stripe.alt { background: #faf9f6; }
+  .phase, .lane { font-size: 11px; letter-spacing: .04em; text-transform: none; font-weight: 500; color: #6b6862; }
+  .card { border-radius: 12px; padding: 14px 16px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04); }
+  .card:hover { transform: none; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 6px 20px rgba(0,0,0,.08); }
+  .card.on { box-shadow: 0 0 0 2px var(--blue), 0 8px 24px rgba(10,10,10,.12); }
+  .card b { font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+  .card .bars i { background: var(--coral); width: 14px; height: 4px; }
+  .card .bars { gap: 3px; right: 14px; bottom: 14px; }
+  .card .ci { display: block; width: 18px; height: 18px; margin-bottom: 8px; color: #6b6862; }
+  .card.on .ci { color: var(--blue); }
+  .ci svg, .ico svg, .panel h4 svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .edge { stroke: #c4c0b6; }
+  .edge.hot { stroke: var(--blue); }
+  .canvas > svg { z-index: 1; pointer-events: none; }
+  .stripe { z-index: 0; }
+  /* popover */
+  .panel { width: 340px; padding: 20px 20px 16px; border-radius: 16px; background: rgba(255,255,255,.88); -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 12px 40px rgba(0,0,0,.16); }
+  .panel .anchor { background: rgba(255,255,255,.95); box-shadow: -1px 1px 0 rgba(0,0,0,.05); }
+  .panel .x { top: 14px; right: 14px; width: 24px; height: 24px; background: rgba(0,0,0,.06); color: #6e6e73; font-size: 14px; line-height: 1; }
+  .panel .x:hover { background: rgba(0,0,0,.1); }
+  .ph { display: flex; gap: 12px; align-items: center; margin: 0 28px 14px 0; }
+  .ico { flex: none; width: 36px; height: 36px; border-radius: 9px; background: var(--blue); color: #fff; padding: 8px; }
+  .panel .path { font-size: 12px; color: var(--muted); margin: 0 0 1px; }
+  .panel h3 { font-size: 17px; font-weight: 650; letter-spacing: -.02em; margin: 0; line-height: 1.2; }
+  .panel .goal { margin: 0 0 4px; font-size: 14px; color: #3a3936; line-height: 1.45; }
+  .panel h4 { display: flex; align-items: center; gap: 6px; margin: 16px 0 4px; font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .panel h4 svg { width: 14px; height: 14px; flex: none; }
+  .panel h4 span { width: 14px; height: 14px; display: inline-block; }
+  .item { grid-template-columns: 1fr 26px; padding: 9px 0; gap: 1px 12px; }
+  .item + .item { border-top: 1px solid rgba(0,0,0,.07); }
+  .item .name { font-size: 14px; font-weight: 500; }
+  .item .fix { font-size: 13px; color: var(--muted); }
+  .play { width: 26px; height: 26px; background: var(--blue); }
+  .play::before { border-left-width: 7px; border-top-width: 4.5px; border-bottom-width: 4.5px; }
+  .gif { border-radius: 10px; border: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  .none { font-size: 13px; }
+  .hand { grid-template-columns: 56px 1fr; font-size: 13px; }
+  .hand > em { color: var(--muted); padding-top: 1px; }
+  .hand button { border: 0; background: none; padding: 0; color: var(--blue); font-size: 13px; text-align: left; }
+  .hand button:hover { text-decoration: underline; }
+  .hand > div { gap: 2px 12px; }
+  .viewport { padding: 36px 32px 48px; height: 100vh; }
+  /* ---- polish: brand font, browser surfaces, focus, phone layout ---- */
+  @font-face { font-family: "Instrument Sans"; src: url("/fonts/instrument-sans-latin-wght-normal.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+  ::selection { background: rgba(200,67,46,.18); }
+  .viewport, .panel { scrollbar-width: thin; scrollbar-color: #c4c0b6 transparent; }
+  .viewport::-webkit-scrollbar { width: 8px; height: 8px; }
+  .viewport::-webkit-scrollbar-thumb { background: #c4c0b6; border-radius: 8px; }
+  .viewport::-webkit-scrollbar-track { background: transparent; }
+  .card:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .panel button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .panel .x { display: grid; place-items: center; padding: 0; }
+  .panel .x svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  @media (max-width: 600px) {
+  .viewport { padding: 16px 12px 24px; }
+  .panel.sheet { position: fixed; left: 8px !important; right: 8px; top: auto !important; bottom: 8px; width: auto; max-height: 70vh; overflow-y: auto; overscroll-behavior: contain; }
+  .panel.sheet .anchor { display: none; }
+  
+  }
+
+</style>
+</head>
+<body>
+
+<div class="viewport" id="vp"><div id="outer"><div class="canvas" id="canvas"></div></div></div>
+
+<script>
+const IMG = n => `/projects/scobin/${n}.png`;
+
+/* grid */
+const X0 = 150, COLW = 222, CW = 176, CH = 108, TOP = 70;
+const LANES = [
+  { id: 'lib', t: 'Figma library',       rows: 1 },
+  { id: 'des', t: 'Designer',            rows: 2 },
+  { id: 'dev', t: 'Front end developer', rows: 1 },
+  { id: 'rev', t: 'Review',              rows: 1 },
+  { id: 'emp', t: 'Employee using it',   rows: 1 },
+];
+const ROWH = 140, LANEGAP = 40;
+let y = TOP; const laneY = {};
+const laneH = l => (l.rows - 1) * ROWH + CH;
+LANES.forEach(l => { laneY[l.id] = y; y += laneH(l) + LANEGAP; });
+const H = y + 20, W = X0 + 8 * COLW + 60;
+const PHASES = [['Design', 0], ['Build', 4], ['Review', 6], ['In use', 7]];
+
+/* steps a screen goes through, from the first layout to the people using it */
+const S = [
+  { id: 'pages', t: 'Component pages', st: [],
+    goal: 'Give all 41 components the same page: variants, properties, states, when to use it, when to avoid it, and accessibility.' },
+  { id: 'tokens', t: 'Primitives, Routing, Applied', st: [],
+    goal: 'Keep raw values, how they adapt, and the role they play in three separate layers.' },
+  { id: 'start', t: 'Lay out the screen', st: [],
+    goal: 'Start from the shared layout pieces: header, navigation, breadcrumbs, page title and content cards.' },
+  { id: 'pick', t: 'Pick a component',
+    goal: 'Find the one component meant for the job.',
+    st: [{ n: 'Five dropdowns, three primary buttons, four ways to show an error', f: 'One documented component where several competed', g: 'button-states' },
+         { n: '“Which one should I use?”', f: 'Each page says when to use it and when to avoid it', g: 'button-docs' }] },
+  { id: 'color', t: 'Choose colors',
+    goal: 'Ask for what a color means, not for a hex value.',
+    st: [{ n: 'Remembering which blue means information', f: 'Components use 216 Applied tokens named for their role', g: 'semantic' }] },
+  { id: 'contrast', t: 'Check contrast',
+    goal: 'Know a pairing is readable while choosing it.',
+    st: [{ n: 'Contrast checked at the end, if at all', f: 'Every pairing shows its ratio; failing ones are outlined', g: 'contrast' }] },
+  { id: 'type', t: 'Set the type', st: [],
+    goal: 'Keep the same hierarchy from Mobile to Desktop Large: 95 text styles across five responsive modes.' },
+  { id: 'build', t: 'Build the screen',
+    goal: 'Build it once, with every state accounted for.',
+    st: [{ n: '“What if there’s no data, or something goes wrong?”', f: 'Properties and states documented on each component', g: 'properties' }] },
+  { id: 'keys', t: 'Keyboard and focus',
+    goal: 'Make sure everyone can reach it.',
+    st: [{ n: '“Can everyone reach it, including with a keyboard?”', f: 'Keyboard, focus and ARIA rules on each page, plus a shared Focus Ring', g: 'accordion' }] },
+  { id: 'review', t: 'Review the screen',
+    goal: 'Spend the review on the design problem, not on settled details.',
+    st: [{ n: 'Each answer settled in another conversation, then again on the next screen', f: 'Behavior, states and usage rules documented in Figma', g: 'button-docs' },
+         { n: 'Judging how a button behaves from a still frame', f: 'Hover and Pressed wired up as Figma prototype interactions', g: 'button-states' }] },
+  { id: 'use', t: 'Use the product',
+    goal: 'Have the same control behave the same way on every screen.',
+    st: [{ n: 'Similar components look and behave differently across screens', f: 'One defined component per pattern across the product', g: 'dashboard' }] },
+];
+const POS = {
+  pages: [1, 'lib', 0], tokens: [2, 'lib', 0],
+  start: [0, 'des', 0], pick: [1, 'des', 0], color: [2, 'des', 0], contrast: [2, 'des', 1], type: [3, 'des', 0],
+  build: [4, 'dev', 0], keys: [5, 'dev', 0], review: [6, 'rev', 0], use: [7, 'emp', 0],
+};
+S.forEach(v => { const [c, l, r] = POS[v.id]; v.col = c; v.lane = l; v.row = r; });
+
+/* connectors: [from, to, weight]; 'L' enters from the left edge, 'R' leaves to the right edge */
+const R = [
+  ['L', 'start', 30], ['start', 'pick', 30], ['pages', 'pick', 18], ['pick', 'color', 30], ['tokens', 'color', 18],
+  ['color', 'contrast', 18], ['color', 'type', 30], ['type', 'build', 30], ['pages', 'build', 14],
+  ['build', 'keys', 30], ['keys', 'review', 30], ['review', 'use', 30], ['use', 'R', 30],
+];
+
+const IC = {
+  doc: '<path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/>',
+  layers: '<path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/>',
+  layout: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/>',
+  list: '<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
+  drop: '<path d="M12 3c3.5 4.5 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.5-6.5 6-11z"/>',
+  contrast: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>',
+  type: '<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
+  code: '<path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/>',
+  key: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/>',
+  eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  person: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  alert: '<path d="M12 4l9 16H3zM12 10v4M12 17h.01"/>', check: '<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+  target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>', arrows: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+};
+const svgI = k => `<svg viewBox="0 0 24 24">${IC[k] || IC.doc}</svg>`;
+const SCR_IC = { pages: 'doc', tokens: 'layers', start: 'layout', pick: 'list', color: 'drop', contrast: 'contrast', type: 'type',
+  build: 'code', keys: 'key', review: 'eye', use: 'person' };
+
+/* build */
+const canvas = document.getElementById('canvas');
+canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('width', W); svg.setAttribute('height', H);
+canvas.append(svg);
+const ribbons = document.createElementNS(NS, 'g');
+svg.append(ribbons);
+const el = (cls, html, css, parent = canvas) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; Object.assign(d.style, css); parent.append(d); return d; };
+
+PHASES.forEach(([t, col]) => el('phase', t, { left: X0 + col * COLW + 'px', top: '30px' }));
+LANES.forEach((l, i) => {
+  el('stripe' + (i % 2 ? ' alt' : ''), '', { top: laneY[l.id] - 14 + 'px', height: laneH(l) + 28 + 'px' });
+  el('lane', l.t, { top: laneY[l.id] + 'px', height: laneH(l) + 'px', left: '44px', textAlign: 'center', lineHeight: '1' });
+});
+
+const box = {};
+S.forEach(s => {
+  const x = X0 + s.col * COLW, yy = laneY[s.lane] + (s.row || 0) * ROWH;
+  box[s.id] = { x, y: yy, w: CW, h: CH };
+  const n = (s.st || []).length;
+  const c = el('card',
+    `<span class="ci">${svgI(SCR_IC[s.id])}</span><b>${s.t}</b>${n ? `<span class="bars">${'<i></i>'.repeat(n)}</span>` : ''}`,
+    { left: x + 'px', top: yy + 'px', width: CW + 'px', height: CH + 'px' });
+  c.id = 'c-' + s.id; c.onclick = e => { e.stopPropagation(); select(s.id); };
+  c.tabIndex = 0; c.setAttribute('role', 'button'); c.setAttribute('aria-label', s.t);
+  c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(s.id); } };
+});
+
+/* connectors: elbow lines routed through the gaps between cards, with arrowheads */
+const defs = document.createElementNS(NS, 'defs');
+defs.innerHTML = '<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="context-stroke"/></marker>';
+svg.prepend(defs);
+function rounded(pts, r) {
+  const q = pts.filter((p, i) => !i || p[0] !== pts[i - 1][0] || p[1] !== pts[i - 1][1]);
+  let d = 'M' + q[0].join(',');
+  for (let i = 1; i < q.length - 1; i++) {
+    const a = q[i - 1], c = q[i], b = q[i + 1];
+    const l1 = Math.hypot(a[0] - c[0], a[1] - c[1]), l2 = Math.hypot(b[0] - c[0], b[1] - c[1]);
+    const r1 = Math.min(r, l1 / 2), r2 = Math.min(r, l2 / 2);
+    d += `L${c[0] + (a[0] - c[0]) / l1 * r1},${c[1] + (a[1] - c[1]) / l1 * r1}Q${c[0]},${c[1]} ${c[0] + (b[0] - c[0]) / l2 * r2},${c[1] + (b[1] - c[1]) / l2 * r2}`;
+  }
+  return d + 'L' + q[q.length - 1].join(',');
+}
+const edges = [];
+R.forEach(([a, b, t], idx) => {
+  const A = box[a], B = box[b]; let pts;
+  if (a === 'L') { const m = B.y + CH / 2; pts = [[0, m], [B.x - 4, m]]; }
+  else if (b === 'R') { const m = A.y + CH / 2; pts = [[A.x + CW, m], [W - 14, m]]; }
+  else if (A.x === B.x) { const dn = B.y > A.y, cx = A.x + CW / 2; pts = [[cx, dn ? A.y + CH : A.y], [cx, dn ? B.y - 4 : B.y + CH + 4]]; }
+  else if (A.y === B.y && B.x - A.x <= COLW + 1) { const m = A.y + CH / 2; pts = [[A.x + CW, m], [B.x - 4, m]]; }
+  else {
+    const dn = B.y > A.y, off = (idx % 4) * 5, k = (idx % 3) * 4;
+    const ty = dn ? A.y + CH + 14 + off : A.y - 14 - off;
+    const am = A.y + CH / 2, bm = B.y + CH / 2, x1 = A.x + CW + 12 + k, x2 = B.x - 12 - k;
+    pts = [[A.x + CW, am], [x1, am], [x1, ty], [x2, ty], [x2, bm], [B.x - 4, bm]];
+  }
+  const path = document.createElementNS(NS, 'path');
+  path.setAttribute('d', rounded(pts, 10)); path.setAttribute('class', 'edge');
+  path.setAttribute('stroke-width', (1.4 + t / 22).toFixed(1)); path.setAttribute('marker-end', 'url(#arr)');
+  ribbons.append(path); edges.push({ a, b, el: path });
+});
+function lit(id) { edges.forEach(e => { const on = id && (e.a === id || e.b === id); e.el.classList.toggle('hot', !!on); e.el.classList.toggle('dim', !!id && !on); }); }
+
+/* panel */
+const panel = el('panel', '', {}); panel.onclick = e => e.stopPropagation();
+let current;
+const title = id => S.find(v => v.id === id).t;
+function hand(id) {
+  const from = R.filter(r => r[1] === id && r[0] !== 'L').map(r => r[0]);
+  const to = R.filter(r => r[0] === id && r[1] !== 'R').map(r => r[1]);
+  const row = (lbl, ids) => ids.length ? `<em>${lbl}</em><div>${ids.map(i => `<button data-id="${i}">${title(i)}</button>`).join('')}</div>` : '';
+  const h = row('From', from) + row('Leads to', to);
+  return h ? `<h4>${svgI('arrows')}Hand-offs</h4><div class="hand">${h}</div>` : '';
+}
+function select(id) {
+  const s = S.find(v => v.id === id); current = id; lit(id);
+  document.querySelectorAll('.card.on').forEach(c => c.classList.remove('on'));
+  document.getElementById('c-' + id).classList.add('on');
+  const items = (s.st || []).map((v, i) => `<div class="item"><span class="name">${v.n}</span><button class="play" data-i="${i}" aria-label="Show the board"></button><span class="fix">${v.f}</span></div>`).join('');
+  const phase = PHASES.filter(p => p[1] <= s.col).pop()[0];
+  panel.innerHTML = `<i class="anchor"></i><button class="x" aria-label="Close"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
+    <div class="ph"><span class="ico">${svgI(SCR_IC[id])}</span><div><p class="path">${phase}</p><h3>${s.t}</h3></div></div>
+    ${s.goal ? `<h4>${svgI('target')}Intent</h4><p class="goal">${s.goal}</p>` : ''}
+    ${items ? `<h4>${svgI('alert')}Problem and response</h4>${items}` : `<h4>${svgI('check')}Friction</h4><p class="none">Nothing flagged at this step.</p>`}
+    ${hand(id)}`;
+  panel.querySelector('.x').onclick = close;
+  panel.querySelectorAll('.hand button').forEach(b => b.onclick = () => select(b.dataset.id));
+  panel.querySelectorAll('.play').forEach(b => b.onclick = () => {
+    const item = b.parentElement, open = item.querySelector('.gif');
+    panel.querySelectorAll('.gif').forEach(g => g.remove()); panel.querySelectorAll('.play').forEach(p => p.classList.remove('open'));
+    if (!open) { b.classList.add('open'); el('gif', `<img src="${IMG(s.st[b.dataset.i].g)}" alt="Figma board: ${s.st[b.dataset.i].f}">`, {}, item); }
+    requestAnimationFrame(place);
+  });
+  const narrow = matchMedia('(max-width: 600px)').matches;   // phones: the panel becomes a bottom sheet
+  panel.classList.toggle('sheet', narrow); (narrow ? document.body : canvas).append(panel);
+  panel.style.display = 'block';
+  place();
+  const bx = box[id], c = document.getElementById('vp'), k = 1;
+  c.scrollTo({ left: Math.max(0, (bx.x - c.clientWidth * .22 / k) * k), top: Math.max(0, (bx.y - 60) * k), behavior: 'smooth' });
+}
+function place() {
+  if (!current || panel.classList.contains('sheet')) return;
+  const B = box[current], pw = panel.offsetWidth, ph = panel.offsetHeight, gap = 18;
+  const right = B.x + CW + gap + pw <= W;
+  const px = right ? B.x + CW + gap : B.x - gap - pw;
+  const py = Math.max(0, Math.min(B.y - 6, H - ph - 10));
+  panel.style.left = px + 'px'; panel.style.top = py + 'px';
+  const a = panel.querySelector('.anchor');
+  if (a) { a.style.left = right ? '-6px' : ''; a.style.right = right ? '' : '-6px'; a.style.top = Math.max(18, Math.min(ph - 30, B.y + CH / 2 - py - 6)) + 'px'; }
+}
+function close() { const was = current && document.getElementById('c-' + current); if (was && panel.contains(document.activeElement)) was.focus(); current = null; lit(null); panel.style.display = 'none'; document.querySelectorAll('.card.on').forEach(c => c.classList.remove('on')); }
+canvas.addEventListener('click', close);
+addEventListener('keydown', e => { if (e.key === 'Escape' && current) close(); });
+
+/* view: actual size with drag-to-pan, or fit */
+const vp = document.getElementById('vp'), outer = document.getElementById('outer');
+outer.style.width = W + 'px'; outer.style.height = H + 'px';
+let drag = null;
+vp.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.target.closest('.panel')) return;   // touch keeps native scrolling
+ drag = { x: e.clientX, y: e.clientY, l: vp.scrollLeft, t: vp.scrollTop, moved: false }; });
+addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 3) { drag.moved = true; vp.classList.add('drag'); } vp.scrollLeft = drag.l - dx; vp.scrollTop = drag.t - dy; });
+addEventListener('pointerup', () => { if (drag && drag.moved) addEventListener('click', e => e.stopPropagation(), { capture: true, once: true }); drag = null; vp.classList.remove('drag'); });
+
+</script>
+</body>
+</html>

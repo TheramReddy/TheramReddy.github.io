@@ -268,7 +268,13 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                 </section>
               )}
               {p.features && <Diagrams />}
-              {p.slug === 'dso-modernization' && <JourneyMap />}
+              {p.slug === 'dso-modernization' && (
+                <JourneyMap
+                  src="/projects/dso-modernization/journey.html"
+                  title="DSO debt setoff journey map"
+                  lede="Getting a clearer view before stepping in gives the full picture."
+                />
+              )}
               {p.features && <Approach />}
               {p.features && <Gallery features={p.features} />}
               {p.story && (p.slug === 'telemetric' ? <TelemetricStory /> : <ScobinStory />)}

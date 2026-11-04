@@ -16,13 +16,10 @@
 }
 .sheet::-webkit-scrollbar { display: none; }
 #cs-overview, #cs-glance, #cs-problems, #cs-journey, #cs-action { scroll-margin-top: 96px; }
-/* DSO journey map: the standalone map in a pannable frame */
+/* journey maps: the standalone map in a pannable frame */
 .journey-lede { margin: 12px 0 0; max-width: 40rem; font-size: 0.9375rem; line-height: 1.55; color: var(--muted); }
 .journey-frame { margin-top: 28px; height: min(720px, 78vh); border-radius: 20px; overflow: hidden; background: #efeeea; box-shadow: 0 0 0 1px rgba(10,10,10,.06); }
 .journey-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
-.journey-open { margin-top: 16px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9375rem; color: var(--fg); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(10,10,10,.25); }
-@media (hover: hover) and (pointer: fine) { .journey-open:hover { text-decoration-color: currentColor; } }
-.journey-open:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; border-radius: 4px; }
 /* phones: leave room above and below so the page can still be scrolled past the map */
 @media (max-width: 768px) { .journey-frame { height: min(520px, 64vh); border-radius: 16px; } }
 .detail.open .sheet { transform: none; }

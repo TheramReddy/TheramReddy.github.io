@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, type ReactNode } from 'react'
 import { InkDefs } from './InkArt'
+import { JourneyMap } from './JourneyMap'
 import { AuditArt, FlowArt, LayersArt, NotesArt, WireArt } from './ScobinArt'
 
 const img = (name: string) => `/projects/scobin/${name}.png`
@@ -255,6 +256,14 @@ export function ScobinStory() {
             <h3 className="story-part"><span className="story-num">{num(c.part)}</span>{principles[c.part - 1]}</h3>
           )}
           <ChapterBlock c={c} level={c.part ? 4 : 3} />
+          {c.id === 'sc-flow' && (
+            <JourneyMap
+              src="/projects/scobin/journey.html"
+              title="Scobin journey map: one screen from design to use"
+              lede="One screen, followed from the first layout through build and review to the people using it, with the question that stopped each step and the part of the system that answers it."
+              level={4}
+            />
+          )}
         </Fragment>
       ))}
     </div>

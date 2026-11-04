@@ -6,3 +6,6 @@ tsconfig.tsbuildinfo
 .claude
 .impeccable
 skills-lock.json
+.github/agents
+.github/hooks
+.github/skills
