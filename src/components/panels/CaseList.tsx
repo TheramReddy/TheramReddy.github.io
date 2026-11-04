@@ -449,6 +449,15 @@ export function CaseList() {
                         <path d="M7 17 17 7M8 7h9v9" />
                       </svg>
                     </span>
+                    {/* a washi slip tied under the pennant: the company's logo, what kind of work it is, and the summary;
+                        it unrolls on hover, on focus, and where the traveller rests */}
+                    <span className="vl-peek" aria-hidden="true">
+                      <span className="vl-peek-paper">
+                        {p.logo && <img className="vl-peek-logo" src={p.logo} alt="" />}
+                        <span className="vl-peek-tag">{p.tag}</span>
+                        <span className="vl-peek-sum">{p.summary}</span>
+                      </span>
+                    </span>
                   </span>
                   <span className="sr-only">: {p.title}</span>
                 </Link>

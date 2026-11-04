@@ -10,6 +10,8 @@ export type Project = {
   description: string
   /** one-line pitch shown on the case-study card in Work */
   summary: string
+  /** short label on the slip that hangs from the case study's flag in the village, e.g. "Modernization" */
+  tag: string
   /** where the work happened, e.g. "Georgia DHS" */
   client: string
   /** path under /public, e.g. "/projects/one/cover.jpg"; falls back to `gradient` */
@@ -45,6 +47,7 @@ export const projects: Project[] = [
 
   {
     slug: 'dso-modernization',
+    tag: 'Modernization',
     title: 'DSO Modernization',
     logo: '/logos/georgia-dhs.png',
     cover: gif('command_palette_search'),
@@ -82,6 +85,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'scobin-design-system',
+    tag: 'Design system',
     title: 'Scobin Design System',
     logo: '/logos/scobin.svg',
     cover: '/projects/scobin/cover.png',
@@ -100,6 +104,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'telemetric',
+    tag: 'Agentic AI',
     title: 'Telemetric',
     year: '2026',
     role: 'Product Designer',

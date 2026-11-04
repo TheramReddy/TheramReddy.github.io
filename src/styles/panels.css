@@ -71,6 +71,45 @@
 /* where the traveller rests, that flag stands a little taller */
 .vl[data-at="0"] li:nth-child(1) .vl-flag, .vl[data-at="1"] li:nth-child(2) .vl-flag, .vl[data-at="2"] li:nth-child(3) .vl-flag { height: 50px; }
 @media (hover: hover) and (pointer: fine) { .vl-stop:hover .vl-pennant svg { transform: translate(2px, -2px); } .vl-stop:hover .vl-pennant { filter: brightness(1.08); } }
+/* the peek: a slip of washi tied on a cord under the pennant, telling what kind of work the flag opens, under the
+   company's logo. It unrolls downward and its ink settles out of a blur, the same way the painting inks in */
+.vl-peek { --paper: #f6f1e4; position: absolute; top: 31px; left: 6px; width: 256px; white-space: normal; opacity: 0; pointer-events: none; filter: drop-shadow(0 10px 14px rgba(29,29,27,.16)) drop-shadow(0 1px 1px rgba(29,29,27,.12)); transition: opacity .3s var(--ease) .1s; }
+/* the cord: a hair of ink from the pennant down to the slip's top edge, with a knot where it ties on */
+.vl-peek::before { content: ""; position: absolute; left: 16px; top: -10px; width: 1px; height: 13px; background: var(--ink); opacity: .7; }
+.vl-peek::after { content: ""; position: absolute; left: 14px; top: 1px; width: 5px; height: 3px; border-radius: 50%; background: var(--ink); opacity: .7; }
+.vl-peek-paper {
+  display: grid; padding: 16px 20px 22px; color: var(--ink);
+  /* a faint wash of ink pooled in the paper's corners */
+  background: radial-gradient(120% 70% at 100% 0, rgba(29,29,27,.04), transparent 55%), radial-gradient(90% 60% at 0 100%, rgba(29,29,27,.05), transparent 70%), var(--paper);
+  /* a deckled bottom edge, torn rather than cut */
+  --deckle: linear-gradient(#000 0 0) top / 100% calc(100% - 5px) no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6' preserveAspectRatio='none'%3E%3Cpath d='M0 0h60v3c-4 2-7-1-12 1s-8 2-13-1-9 0-14 2-9 1-13-1S2 2 0 3z'/%3E%3C/svg%3E") bottom / 60px 6px repeat-x;
+  -webkit-mask: var(--deckle); mask: var(--deckle);
+  clip-path: inset(0 0 100% 0); filter: blur(3px);
+  transition: clip-path .7s cubic-bezier(.16, 1, .3, 1), filter .7s var(--ease);
+}
+/* hierarchy: the tag leads, the summary supports it, and the logo above is a quiet byline set off by a hairline
+   that thins out to the right */
+.vl-peek-tag { margin-bottom: 8px; font: 400 1.375rem/1.12 var(--font-passenger); letter-spacing: -.015em; text-wrap: balance; }
+.vl-peek-logo + .vl-peek-tag { margin-top: 12px; padding-top: 14px; background: linear-gradient(90deg, rgba(29,29,27,.32), rgba(29,29,27,0) 90%) top left / 100% 1px no-repeat; }
+.vl-peek-sum { font: .75rem/1.6 var(--font-text); color: #6b6658; }
+/* the company's logo heads the slip, pressed into the paper and inked in once it has unrolled */
+.vl-peek-logo { display: block; height: 24px; width: auto; max-width: 170px; justify-self: start; mix-blend-mode: multiply; opacity: 0; transition: opacity .3s var(--ease); }
+.vl-stops li:nth-child(3) .vl-peek { left: auto; right: -6px; }
+.vl-stops li:nth-child(3) .vl-peek::before { left: auto; right: 16px; }
+.vl-stops li:nth-child(3) .vl-peek::after { left: auto; right: 14px; }
+.vl-stops li:hover, .vl-stops li:focus-within { z-index: 2; }
+.vl-stop:hover .vl-peek, .vl-stop:focus-visible .vl-peek,
+.vl[data-painted][data-at="0"] li:nth-child(1) .vl-peek, .vl[data-painted][data-at="1"] li:nth-child(2) .vl-peek, .vl[data-painted][data-at="2"] li:nth-child(3) .vl-peek { opacity: 1; pointer-events: auto; transition-delay: 0s; }
+.vl-stop:hover .vl-peek-paper, .vl-stop:focus-visible .vl-peek-paper,
+.vl[data-painted][data-at="0"] li:nth-child(1) .vl-peek-paper, .vl[data-painted][data-at="1"] li:nth-child(2) .vl-peek-paper, .vl[data-painted][data-at="2"] li:nth-child(3) .vl-peek-paper { clip-path: inset(0 0 -2px 0); filter: none; }
+.vl-stop:hover .vl-peek-logo, .vl-stop:focus-visible .vl-peek-logo,
+.vl[data-painted][data-at="0"] li:nth-child(1) .vl-peek-logo, .vl[data-painted][data-at="1"] li:nth-child(2) .vl-peek-logo, .vl[data-painted][data-at="2"] li:nth-child(3) .vl-peek-logo { opacity: 1; transition: opacity .4s var(--ease) .3s; }
+/* while one is hovered or focused, the resting one rolls back up so only one slip shows */
+.vl-stops:has(.vl-stop:hover, .vl-stop:focus-visible) li:not(:hover):not(:focus-within) .vl-peek { opacity: 0; pointer-events: none; }
+.vl-stops:has(.vl-stop:hover, .vl-stop:focus-visible) li:not(:hover):not(:focus-within) .vl-peek-paper { clip-path: inset(0 0 100% 0); }
+/* phones and touch screens: no slip; the pennant alone leads into the case study */
+@media (max-width: 719px), (hover: none) { .vl-peek { display: none; } }
+@media (prefers-reduced-motion: reduce) { .vl-peek-paper, .vl-peek-logo { transition: none !important; } .vl-peek-paper { clip-path: none !important; filter: none !important; } }
 .vl-stop:focus-visible { outline: none; }
 .vl-stop:focus-visible .vl-pennant { outline: 2px solid var(--fg); outline-offset: 3px; }
 .vl-stop:focus-visible .vl-pennant svg { transform: translate(2px, -2px); }
