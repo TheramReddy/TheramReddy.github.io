@@ -10,8 +10,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Custom arrow everywhere, clickables included; text fields keep the I-beam. Hotspot is the arrow tip. */
+/* Custom arrow everywhere; text fields keep the I-beam. Clickables swap to the arrow with the click burst.
+   Both carry a light outline so they read on dark panels. Hotspot is the arrow tip. */
 html, html *:not(input, textarea, [contenteditable="true"]) { cursor: url('/cursor.svg') 11 10, auto !important; }
+html :is(a[href], button, [role="button"], [role="tab"], [role="link"], label[for], summary, select, .flap, .prompt, .diagram:not(.is-active), .sheet-bar),
+html :is(a[href], button, [role="button"], [role="tab"], [role="link"], label[for], summary, .flap, .prompt, .diagram:not(.is-active)) * { cursor: url('/cursor-click.svg') 11 10, pointer !important; }
+html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [aria-disabled="true"]) * { cursor: url('/cursor.svg') 11 10, auto !important; }
 
 /* Site tokens (light theme). The UI components read the semantic ones below. */
 :root {
