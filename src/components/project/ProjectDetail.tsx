@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowUpRight, Check, CircleAlert, FileText, BookOpen, Gauge, Info, type LucideIcon } from 'lucide-react'
+import { ArrowUpRight, Check, CircleAlert, FileText, BookOpen, Gauge, Info, Route, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { CONFETTI } from '@/components/layout/confetti'
 import { projects, type Project } from '@/data/projects'
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { Approach } from './Approach'
 import { Gallery } from './Gallery'
 import { Diagrams } from './Diagrams'
+import { JourneyMap } from './JourneyMap'
 import { PixelDesk } from './PixelDesk'
 import { Mission } from './crew/Mission'
 import { ScobinStory } from './ScobinStory'
@@ -57,6 +58,7 @@ const sections: { id: string; label: string; Icon: LucideIcon }[] = [
   { id: 'cs-overview', label: 'Overview', Icon: FileText },
   { id: 'cs-glance', label: 'What changed', Icon: Gauge },
   { id: 'cs-problems', label: 'Problems', Icon: CircleAlert },
+  { id: 'cs-journey', label: 'Journey', Icon: Route },
   { id: 'cs-action', label: 'Approach', Icon: BookOpen },
 ]
 
@@ -266,6 +268,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                 </section>
               )}
               {p.features && <Diagrams />}
+              {p.slug === 'dso-modernization' && <JourneyMap />}
               {p.features && <Approach />}
               {p.features && <Gallery features={p.features} />}
               {p.story && (p.slug === 'telemetric' ? <TelemetricStory /> : <ScobinStory />)}
