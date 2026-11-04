@@ -23,13 +23,6 @@ export function useMeSection() {
   )
 }
 
-/** The section a path points at: the whole site is one page, and /projects is a place on it (old /work links land there too). */
-export function sectionOf(pathname: string): MeSection | null {
-  if (pathname === '/' || pathname === '/me') return 'me'
-  if (pathname === '/projects' || pathname === '/work') return 'projects'
-  return null
-}
-
 /** The page's smooth scroller (Lenis), while it runs: programmatic scrolls go through it so the two never disagree. */
 let smoother: Lenis | null = null
 export const setSmoother = (l: Lenis | null) => (smoother = l)

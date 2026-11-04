@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { scrollToSection } from '@/lib/me-section'
 import { flapSound, keySound, tick } from '@/lib/sfx'
 
 const still = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -141,7 +141,7 @@ export function Hero() {
         well-crafted experience doesn’t just look good. It makes someone’s day a little easier.
       </h1>
       <p>
-        <Link to="/projects" className="work-link">check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></Link>
+        <button type="button" className="work-link" onClick={() => scrollToSection('projects')}>check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
       </p>
       <div className="hero-stamp" aria-hidden="true">
         <svg className="stamp-card" viewBox="0 0 275 291">

@@ -1,28 +1,15 @@
 import { useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
 import { Hero } from '@/components/layout/Hero'
 import { MeMore } from '@/components/layout/MeMore'
 import { smoothScroll, stackSheets } from '@/lib/sheets'
-import { getSmoother, scrollToSection, sectionOf, setMeSection, type MeSection } from '@/lib/me-section'
+import { getSmoother, setMeSection, type MeSection } from '@/lib/me-section'
 
 /**
  * The whole site on one page: the hero holds the first screen, and scrolling on shows how I work, my jobs and the
- * case studies. /work and /projects land on their sections; `covered` is set while a case study is open over it.
+ * case studies. `covered` is set while a case study is open over it.
  */
 export function MePanel({ covered }: { covered: boolean }) {
   const panel = useRef<HTMLElement>(null)
-  const { pathname } = useLocation()
-  const first = useRef(true)
-
-  // a path names a section: go there, straight away on first load and smoothly after that
-  useEffect(() => {
-    const section = sectionOf(pathname)
-    if (!section) return
-    const smooth = !first.current
-    first.current = false
-    requestAnimationFrame(() => scrollToSection(section, smooth))
-  }, [pathname])
-
   // the wheel glides (reduced motion keeps the scroll 1:1)
   useEffect(() => {
     const root = panel.current

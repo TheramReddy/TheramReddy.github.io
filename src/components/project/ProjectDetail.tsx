@@ -188,7 +188,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
     <article
       className={cn('detail', open && 'open')}
       inert={!open}
-      onClick={(e) => e.target === e.currentTarget && navigate('/projects')}
+      onClick={(e) => e.target === e.currentTarget && navigate('/')}
     >
       <div className="progress" aria-hidden="true">
         <svg viewBox="0 0 38 38">
@@ -199,7 +199,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       <div className="sheet" ref={sheet} onScroll={progress}>
         <SheetScrollbar root={sheet} />
         <div className="close-rail">
-          <button className="close" onClick={() => navigate('/projects')}>
+          <button className="close" onClick={() => navigate('/')}>
             <span>Close</span>
             <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
               <path d="M3 3l12 12M15 3L3 15" />

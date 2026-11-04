@@ -184,11 +184,11 @@
 @media (prefers-reduced-motion: reduce) { .stamp-flap, .stamp-shadow { animation: none; } .stamp-wind { display: none; } }
 @keyframes stamp-in { from { opacity: 0; transform: translateY(12px) rotate(-4deg); } }
 @media (prefers-reduced-motion: reduce) { .hero-stamp { animation: none; } }
-.hero p a.work-link { display: inline-flex; align-items: center; white-space: nowrap; color: var(--hero-ink); font-size: 1rem; font-weight: 500; text-decoration: underline; text-decoration-color: rgba(29,29,27,.28); text-underline-offset: var(--underline-offset); transition: text-decoration-color .2s var(--ease); }
-.hero p a.work-link svg { flex: none; width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
-.hero p a.work-link:hover, .hero p a.work-link:focus-visible { text-decoration-color: var(--seal); }
-@media (hover: hover) and (pointer: fine) { .hero p a.work-link:hover svg { transform: translate(2px, -2px); } }
-.hero p a.work-link:focus-visible svg { transform: translate(2px, -2px); }
+.hero p .work-link { padding: 0; border: 0; background: none; font-family: inherit; display: inline-flex; align-items: center; white-space: nowrap; color: var(--hero-ink); font-size: 1rem; font-weight: 500; text-decoration: underline; text-decoration-color: rgba(29,29,27,.28); text-underline-offset: var(--underline-offset); transition: text-decoration-color .2s var(--ease); }
+.hero p .work-link svg { flex: none; width: 14px; height: 14px; margin-left: 4px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+.hero p .work-link:hover, .hero p .work-link:focus-visible { text-decoration-color: var(--seal); }
+@media (hover: hover) and (pointer: fine) { .hero p .work-link:hover svg { transform: translate(2px, -2px); } }
+.hero p .work-link:focus-visible svg { transform: translate(2px, -2px); }
 
 /* page-load entrance: the lede rises and unblurs, then the link, then the corner chrome */
 .hero p { animation: hero-in .8s var(--ease) 1.25s both; }

@@ -1,28 +1,25 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { site } from '@/data/site'
-import { scrollToSection, useMeSection, type MeSection } from '@/lib/me-section'
+import { scrollToSection, useMeSection } from '@/lib/me-section'
 
 /** Fixed corner navigation: name, Me / Projects. Each item scrolls the page to its section; the mark follows
  * the section on screen. */
 export function Chrome() {
   const { pathname } = useLocation()
-  const navigate = useNavigate()
   const section = useMeSection()
-  // the path changing scrolls the page; clicking the item already in the path scrolls back to it
-  const go = (to: string, s: MeSection) => () => (pathname === to ? scrollToSection(s) : navigate(to))
 
   return (
     <div className={pathname.startsWith('/project/') ? 'ui hidden-ui' : 'ui'}>
       <div className="row top">
-        <Link to="/" className="label" aria-label={site.name}>
+        <button type="button" className="label" aria-label={site.name} onClick={() => scrollToSection('me')}>
           <img className="logo" src="/brand/logo.svg" alt="" width={96} height={25} />
-        </Link>
+        </button>
         <nav className="nav" aria-label="Primary">
-          <button className="label" data-tour="me" aria-current={section === 'me'} onClick={go('/', 'me')}>
+          <button className="label" data-tour="me" aria-current={section === 'me'} onClick={() => scrollToSection('me')}>
             Me
             <Ink />
           </button>
-          <button className="label" data-tour="projects" aria-current={section === 'projects'} onClick={go('/projects', 'projects')}>
+          <button className="label" data-tour="projects" aria-current={section === 'projects'} onClick={() => scrollToSection('projects')}>
             Projects
             <Ink />
           </button>
