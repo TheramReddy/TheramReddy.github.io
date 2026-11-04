@@ -199,8 +199,9 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       <div className="sheet" ref={sheet} onScroll={progress}>
         <SheetScrollbar root={sheet} />
         <div className="close-rail">
-          <button className="close" aria-label="Close project" onClick={() => navigate('/projects')}>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+          <button className="close" onClick={() => navigate('/projects')}>
+            <span>Close</span>
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
               <path d="M3 3l12 12M15 3L3 15" />
             </svg>
           </button>

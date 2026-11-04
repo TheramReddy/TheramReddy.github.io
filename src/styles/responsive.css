@@ -39,7 +39,7 @@
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
   .coming-marquee { height: 180px; font-size: 0.75rem; padding: 0 12px; }
-  .detail .close { top: 12px; right: 10px; width: 44px; height: 44px; }
+  .detail .close { right: 10px; }
   /* no room in the margin on a phone: the ring joins the close button in the top bar */
   .progress { left: 20px; top: 27px; bottom: auto; z-index: 11; }
   /* and, like the site nav, that bar fades the page out beneath it */

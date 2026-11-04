@@ -17,6 +17,12 @@
 .sheet::-webkit-scrollbar { display: none; }
 #cs-overview, #cs-glance, #cs-problems, #cs-action { scroll-margin-top: 96px; }
 .detail.open .sheet { transform: none; }
+/* desktop: a framed popup with the page dimmed around it; clicking the dimmed margin closes it */
+@media (min-width: 769px) {
+  .detail { --gap: clamp(24px, 3.5vw, 48px); background: rgba(10,10,10,.45); }
+  .detail .sheet { inset: var(--gap) var(--gap) 0; border-radius: 20px 20px 0 0; box-shadow: 0 24px 80px rgba(10,10,10,.25); }
+  .detail .progress { left: calc(var(--gap) + 24px); bottom: 24px; }
+}
 .sheet .cols { display: flex; flex-direction: column; align-items: stretch; gap: 96px; width: min(100%, 65rem); margin: 0 auto; padding: 96px 32px 120px; min-height: 100%; box-sizing: border-box; text-align: left; }
 .sheet .info { width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
 .sheet .gallery { width: 100%; }
@@ -88,12 +94,19 @@
 .pixel-desk { width: min(100%, 560px); aspect-ratio: 64 / 48; image-rendering: pixelated; }
 .close-rail { position: sticky; top: 12px; z-index: 10; height: 0; }
 .detail .close {
-  position: absolute; top: 12px; right: 24px; width: 44px; height: 44px;
-  color: var(--fg); display: grid; place-items: center;
-  transition: transform .5s var(--ease);
+  position: absolute; top: 12px; right: 24px; height: 44px; padding: 0 16px 0 18px;
+  display: inline-flex; align-items: center; gap: 10px;
+  border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.92);
+  color: var(--fg); font: 500 0.9375rem/1 var(--font-text);
+  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .2s var(--ease);
 }
-@media (hover: hover) and (pointer: fine) { .detail .close:hover { transform: rotate(90deg); } }
-.detail .close:active { transform: scale(.94); }
+.detail .close svg { transition: transform .5s var(--ease); }
+@media (hover: hover) and (pointer: fine) {
+  .detail .close:hover { background: var(--seal); border-color: var(--seal); color: #fff; }
+  .detail .close:hover svg { transform: rotate(90deg); }
+}
+.detail .close:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
+.detail .close:active { transform: scale(.96); }
 .progress { position: absolute; left: 52px; bottom: 52px; z-index: 3; width: 38px; height: 38px; pointer-events: none; }
 .progress svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .progress circle { fill: rgba(255,255,255,.9); stroke-width: 1.5; }
