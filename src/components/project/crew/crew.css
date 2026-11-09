@@ -1,9 +1,10 @@
 /* The crew: pixel agents. One sprite, one data-act per activity. Everything is scoped to .crew. */
 
 .crew {
-  --neutral-0: #fff; --neutral-100: #ececf0; --neutral-200: #e5e5ea; --neutral-300: #d2d2d7;
-  --neutral-400: #a1a1a6; --neutral-500: #76767b; --neutral-600: #5c5c61; --neutral-900: #1d1d1f;
-  --a-converter: oklch(66% .13 205); --a-structurer: oklch(66% .13 150); --a-organizer: oklch(70% .13 75); --a-linker: oklch(64% .13 330);
+  --neutral-0: #fff; --neutral-100: #ececec; --neutral-200: #e5e5e5; --neutral-300: #d2d2d2;
+  --neutral-400: #a1a1a1; --neutral-500: #767676; --neutral-600: #5c5c5c; --neutral-900: var(--ink);
+  /* with no hue to tell them apart, each agent sits on its own step of lightness */
+  --a-converter: oklch(48% 0 0); --a-structurer: oklch(60% 0 0); --a-linker: oklch(72% 0 0); --a-organizer: oklch(84% 0 0);
   --ds-ease-out: cubic-bezier(.16, 1, .3, 1); --ds-base: 180ms;
   width: 100%; overflow: hidden; color: var(--neutral-900);
 }

@@ -6,11 +6,11 @@ const FRAME_MS = 140 // slow, chunky typing
 const BLINK_MS = 280
 
 export const INK = '#0a0a0a'
-export const SHIRT = '#3d3a2e'
-export const SKIN = '#efeeea'
-export const LIGHT = '#d6d3c8'
-export const MID = '#9a978a'
-export const SCREEN = '#f7f6f2'
+export const SHIRT = '#3a3a3a'
+export const SKIN = '#eeeeee'
+export const LIGHT = '#d3d3d3'
+export const MID = '#979797'
+export const SCREEN = '#f6f6f6'
 
 export function drawDesk(ctx: CanvasRenderingContext2D, tick: number, blink: boolean) {
   const r = (c: string, x: number, y: number, w: number, h: number) => {

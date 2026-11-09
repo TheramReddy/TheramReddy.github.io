@@ -1,8 +1,8 @@
-import { Art, Block, Lines, RED, Shadow, Tag, path, pt, pts } from './InkArt'
+import { ACCENT, Art, Block, INK, Lines, Shadow, Tag, path, pt, pts } from './InkArt'
 
 /** Ink drawings for the Scobin chapters, in the same hand as the DSO problem art. */
 
-const Arrow = ({ x, y }: { x: number; y: number }) => <polygon points={pts([x, y - 4, 0], [x + 9, y, 0], [x, y + 4, 0])} fill="#1D1D1B" />
+const Arrow = ({ x, y }: { x: number; y: number }) => <polygon points={pts([x, y - 4, 0], [x + 9, y, 0], [x, y + 4, 0])} fill={INK} />
 
 /** A small chevron lying on a tile's top face. */
 const Chevron = ({ x, y, z, color }: { x: number; y: number; z: number; color?: string }) => (
@@ -34,7 +34,7 @@ export function AuditArt() {
       <Shadow x={170} y={180} w={96} d={32} s={14} />
       <Block x={170} y={180} w={96} d={32} h={8} />
       <Tag plane="top" x={180} y={200} z={8} size={10}>SELECT</Tag>
-      <Block x={240} y={184} z={8} w={20} d={24} h={3} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={240} y={184} z={8} w={20} d={24} h={3} top="accent" left="accent-hatch" right="accent-hatch" />
       <Chevron x={250} y={199} z={11} color="#fff" />
       <Tag plane="top" x={172} y={230} size={8}>ONE DROPDOWN</Tag>
     </Art>
@@ -53,7 +53,7 @@ export function NotesArt() {
   const face = 8
   const note = (x: number, z: number, w = 76, h = 30) => pts([x, face, z], [x + w, face, z], [x + w, face, z - h], [x, face, z - h])
   return (
-    <Art label="A whiteboard of nine sticky notes from interviews, grouped under three red headings: which one, what if, and can I reach it">
+    <Art label="A whiteboard of nine sticky notes from interviews, grouped under three black headings: which one, what if, and can I reach it">
       <Shadow x={-6} y={0} w={312} d={8} s={50} />
       {[14, 284].map((x) => <Block key={x} x={x} y={1} w={6} d={6} h={26} />)}
       <Block x={-6} y={0} z={26} w={312} d={face} h={190} left="paper" />
@@ -68,7 +68,7 @@ export function NotesArt() {
                 <Tag plane="left" x={x + 6} y={face} z={206 - j * 40 - 20} size={7}>{n}</Tag>
               </g>
             ))}
-            <polygon points={note(x, 78, 76, 22)} fill={RED} />
+            <polygon points={note(x, 78, 76, 22)} fill={ACCENT} />
             <Tag plane="left" x={x + 6} y={face} z={63} size={7.5} fill="#fff">{c.head}</Tag>
           </g>
         )
@@ -94,7 +94,7 @@ export function FlowArt() {
   const row = (items: typeof before, y: number, last?: boolean) => items.map((b, i) => (
     <g key={b.t}>
       <Shadow x={b.x} y={y} w={b.w} d={36} s={12} />
-      <Block x={b.x} y={y} w={b.w} d={36} h={22} left={last && i === items.length - 1 ? 'red' : 'paper'} right={last && i === items.length - 1 ? 'red-hatch' : 'dots'} />
+      <Block x={b.x} y={y} w={b.w} d={36} h={22} left={last && i === items.length - 1 ? 'accent' : 'paper'} right={last && i === items.length - 1 ? 'accent-hatch' : 'dots'} />
       <Tag plane="left" x={b.x + 8} y={y + 36} z={8} size={8} fill={last && i === items.length - 1 ? '#fff' : undefined}>{b.t}</Tag>
       {i < items.length - 1 && (
         <>
@@ -123,7 +123,7 @@ const rect = (x0: number, y0: number, x1: number, y1: number, z: number) => pts(
 export function WireArt() {
   const z = 4
   return (
-    <Art label="Grey-box wireframe of the app shell lying on the desk: header 64, nav 256, main 1024, with one red primary button">
+    <Art label="Grey-box wireframe of the app shell lying on the desk: header 64, nav 256, main 1024, with one black primary button">
       <Shadow x={0} y={0} w={280} d={190} s={20} />
       <Block x={0} y={0} w={280} d={190} h={z} />
       <polygon points={rect(0, 0, 280, 18, z)} fill="url(#ink-hatch)" />
@@ -131,8 +131,8 @@ export function WireArt() {
       <polygon points={rect(0, 18, 64, 190, z)} fill="url(#ink-dots)" />
       <Tag plane="top" x={8} y={110} z={z} size={8}>NAV 256</Tag>
       <path className="ink-fine" d={path([76, 30, z], [140, 30, z])} />
-      <polygon points={rect(76, 36, 150, 44, z)} fill="#1D1D1B" />
-      <polygon points={rect(206, 34, 266, 46, z)} fill={RED} />
+      <polygon points={rect(76, 36, 150, 44, z)} fill={INK} />
+      <polygon points={rect(206, 34, 266, 46, z)} fill={ACCENT} />
       {[76, 124, 172, 220].map((x) => (
         <g key={x}>
           <polygon points={rect(x, 58, x + 42, 92, z)} fill="#fff" />
@@ -156,7 +156,7 @@ const layers = [
 
 export function LayersArt() {
   return (
-    <Art label="Three stacked layers: primitives with 189 variables, routing with 129 and applied with 216, and a red button component resting on the applied layer">
+    <Art label="Three stacked layers: primitives with 189 variables, routing with 129 and applied with 216, and a black button component resting on the applied layer">
       <Shadow x={0} y={0} w={200} d={160} s={28} />
       {layers.map((l, i) => {
         const z = i * 64
@@ -169,7 +169,7 @@ export function LayersArt() {
           </g>
         )
       })}
-      <Block x={70} y={60} z={150} w={64} d={26} h={10} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={70} y={60} z={150} w={64} d={26} h={10} top="accent" left="accent-hatch" right="accent-hatch" />
       <Tag plane="top" x={80} y={77} z={160} size={8} fill="#fff">BUTTON</Tag>
     </Art>
   )

@@ -1,122 +1,46 @@
 /* ---------- Me: the hero holds the first screen, the longer version scrolls in below ---------- */
-.panel.me {
-  align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
-  /* content fades out under the fixed nav instead of colliding with it */
-  -webkit-mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
-  mask-image: linear-gradient(transparent calc(var(--pad-y) + 24px), #000 calc(var(--pad-y) + 88px));
-}
+.panel.me { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .panel.me::-webkit-scrollbar { display: none; }
-.me { --ink: #1d1d1b; --ink-line: rgba(29,29,27,.22); --seal: #c8432e; --art-ink: #55524a; --hatch: repeating-linear-gradient(-45deg, rgba(29,29,27,.55) 0 .6px, transparent .6px 5px); }
-.me-first { position: relative; display: flex; flex-direction: column; justify-content: center; width: 100%; min-height: 100vh; min-height: 100svh; }
-.me-first .hero { margin-bottom: 0; }
+.me { --ink-line: color-mix(in srgb, var(--ink) 22%, transparent); --art-ink: #525252; --hatch: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--ink) 55%, transparent) 0 .6px, transparent .6px 5px); }
+.me-first { position: relative; isolation: isolate; display: flex; flex-direction: column; box-sizing: border-box; width: 100%; min-height: 100vh; min-height: 100svh; padding: calc(var(--bar) + var(--s-8)) var(--gutter) var(--s-8); }
+.me-first .hero { flex: 1; }
+
+/* the frame: two side hairlines behind every screen */
+.me-first::after, .me-more > section::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  border-inline: 1px solid var(--grid);
+}
 
 .me-cue {
-  position: absolute; left: 0; bottom: calc(var(--pad-y) + 8px);
-  display: inline-flex; align-items: center; gap: 10px; margin: 0;
-  font-size: 0.8125rem; color: #6e6a5c; animation: hero-in .8s var(--ease) 2.4s both;
+  position: absolute; left: var(--gutter); bottom: var(--s-8);
+  display: inline-flex; align-items: center; gap: var(--s-1); margin: 0;
+  font-size: var(--fs-12); line-height: var(--lh-12); color: #6a6a6a; animation: hero-in .8s var(--ease) 2.4s both;
 }
-.me-cue svg { width: 10px; height: 24px; fill: none; stroke: var(--seal); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; animation: cue-nudge 2.4s var(--ease) 3.4s infinite; }
+.me-cue svg { width: 8px; height: 24px; fill: none; stroke: var(--seal); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; animation: cue-nudge 2.4s var(--ease) 3.4s infinite; }
 @keyframes cue-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(5px); } }
 
 /* everything below sits in the hero's column, one full screen per section */
 .me-more { width: 100%; display: flex; flex-direction: column; }
-.me-more > section { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; min-height: 100svh; padding: calc(var(--pad-y) + 72px) 0 calc(var(--pad-y) + 48px); box-sizing: border-box; }
-/* section titles sit a step over the hero paragraph and a clear step over the card and case titles (1.5rem) */
-.me-more h2 { font-size: clamp(1.75rem, 2.4vw, 2rem); font-weight: 400; line-height: 1.15; letter-spacing: -.015em; text-wrap: balance; }
-.me-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+.me-more > section { position: relative; display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; padding: var(--bar) var(--gutter) var(--s-8); box-sizing: border-box; }
+/* each section's content sits in the middle of the space left under its band */
+.me-more > section > [data-reveal]:last-child { margin-block: auto; }
+/* section label: a grey band across the frame with a short rule and a small uppercase name, like a divider tab */
+.me-head {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-1);
+  /* the heading sits up in the open sky, well clear of the hills, so the painting starts beneath it */
+  height: var(--s-12); margin: 0 calc(var(--gutter) * -1) var(--s-12);
+  background: var(--band); border-bottom: 1px solid var(--grid);
+}
+.me-head::before { content: ""; width: var(--s-2); height: 1px; background: var(--fg); }
+.me-more h2 { font: 500 var(--fs-12)/var(--lh-12) var(--font-text); letter-spacing: .12em; text-transform: uppercase; }
 
 /* case studies: the village scene, its motion running only while the section is on screen */
 .me-cases { position: relative; }
-/* the heading sits up in the open sky, well clear of the hills, so the painting starts beneath it */
-.me-cases .me-head { margin-bottom: clamp(4.5rem, 9vw, 8rem); }
-@media (max-width: 760px) { .me-cases .me-head { margin-bottom: 2rem; } }
 .me-cases:not([data-live]) .vl *, .me:not(.open) .vl * { animation-play-state: paused; }
-/*
- * approach: the steps run across the top as one strip, the scene sits beneath. Each step stands on its own hairline;
- * the current one turns to ink, its line goes solid and the seal timer runs along it, the rest stay muted.
- */
-.ap { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); }
-.ap-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2rem); margin: 0; padding: 0; list-style: none; }
-.ap-item { position: relative; display: block; width: 100%; height: 100%; padding: 14px 0 4px; border-top: .8px dashed var(--ink-line); text-align: left; color: #6e6a5c; transition: color .3s var(--ease), border-color .3s var(--ease); }
-.ap-num { display: block; font-size: .75rem; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: #6e6a5c; transition: color .3s var(--ease); }
-.ap-verb { display: block; margin-top: 6px; font-family: var(--font-passenger); font-size: 1.5rem; line-height: 1.15; letter-spacing: -.015em; }
-.ap-line { display: block; margin-top: 6px; font-family: var(--font-text); font-size: .875rem; line-height: 1.55; color: #6e6a5c; transition: color .3s var(--ease); }
-.ap-item[aria-pressed="true"] { color: var(--fg); border-top: 1px solid var(--fg); }
-.ap-item[aria-pressed="true"] .ap-line { color: #3d3b35; }
-.ap-item[aria-pressed="true"] .ap-num { color: var(--seal); font-weight: 600; }
-@media (hover: hover) and (pointer: fine) { .ap-item:hover { color: var(--fg); } }
-.ap-item:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
-@media (max-width: 760px) { .ap-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1.25rem; } }
-@media (prefers-reduced-motion: reduce) { .ap-item, .ap-line { transition: none; } }
-/* while it walks on its own, the current step's top hairline fills in seal until the next one */
-.ap-timer { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--seal); transform-origin: left; transform: scaleX(0); opacity: 0; }
-.is-auto .ap-timer { opacity: 1; animation: ap-timer var(--step-ms) linear forwards; }
-@keyframes ap-timer { to { transform: scaleX(1); } }
-
-/* the stage: the scene sits straight on the page, no frame */
-.ap-stage { position: relative; width: min(100%, 38rem, max(16rem, calc((100svh - 28rem) * 345 / 250))); margin-inline: auto; aspect-ratio: 345 / 250; animation: ap-float 7s ease-in-out infinite; }
-/* the scene drifts, a few pixels up and back, like paper on still air */
-@keyframes ap-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-.me:not(.open) .ap-stage, .ap-stage:not(:has([data-live])) { animation-play-state: paused; }
-.ap-scene { position: absolute; inset: 0; opacity: 0; filter: blur(4px); transform: translateY(6px); transition: opacity .6s var(--ease), filter .6s var(--ease), transform .7s var(--ease); }
-.ap-scene[data-on] { opacity: 1; filter: none; transform: none; }
-.ap-svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--art-ink); stroke-width: .9; stroke-linecap: round; stroke-linejoin: round; }
-.ap-svg .paper { fill: #fff; }
-.ap-svg .f { stroke-width: .55; }
-.ap-svg .h { stroke-width: .4; stroke: #a8a49a; }
-.ap-svg .ap-foot { stroke-width: 2.2; }
-.ap-svg .ap-hinge { stroke-width: 2.4; stroke-linecap: butt; }
-.ap-svg .ap-hand { font-family: var(--font-passenger); font-style: italic; font-size: 10px; fill: var(--art-ink); stroke: none; }
-
-/* reveal: each block rises in the first time it is seen */
-.me-more [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .9s var(--ease), transform 1s var(--ease); }
-.me-more [data-reveal="in"] { opacity: 1; transform: none; }
-
-/* ---------- the live details: each runs only while its scene is on screen ---------- */
-.ap-steam path { stroke-width: .8; stroke-dasharray: 24 6; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; animation: ap-steam 3.3s linear var(--d, 0s) infinite, ap-curl 3.3s linear var(--d, 0s) infinite; }
-@keyframes ap-steam { 0% { opacity: 0; transform: translateY(6px) scaleX(.85); } 30% { opacity: .8; } 100% { opacity: 0; transform: translateY(-16px) scaleX(1.2); } }
-@keyframes ap-curl { to { stroke-dashoffset: -48; } }
-
-.ap-draw path { stroke-width: .9; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
-.ap-draw .ap-thin { stroke-width: .5; }
-.ap-draw .ap-strike { stroke: var(--art-ink); stroke-width: .9; animation-name: ap-strike; }
-.ap-circle { fill: none; stroke: var(--seal); stroke-width: 1.3; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ap-draw 7s var(--ease) var(--d, 0s) infinite; }
-@keyframes ap-draw { 0% { stroke-dashoffset: 1; opacity: 1; } 12%, 88% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 1; opacity: 0; } }
-@keyframes ap-strike { 0%, 20% { stroke-dashoffset: 1; opacity: 1; } 32%, 88% { stroke-dashoffset: 0; opacity: 1; } 96%, 100% { stroke-dashoffset: 1; opacity: 0; } }
-.ap-pencil { animation: ap-write 2.2s ease-in-out infinite; }
-@keyframes ap-write { 0%, 100% { transform: translate(0, 0); } 40% { transform: translate(-12px, 1px); } 50% { transform: translate(-12px, -2px); } 90% { transform: translate(0, -2px); } }
-
-.ap-module { stroke: none; opacity: 0; transform: translateY(-8px); animation: ap-settle 8s var(--ease) var(--d, 0s) infinite; }
-@keyframes ap-settle { 0% { opacity: 0; transform: translateY(-8px); } 8%, 86% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: none; } }
-.ap-sun { transform-box: fill-box; transform-origin: center; transform: scale(0); animation: ap-sun 8s cubic-bezier(.34, 1.56, .64, 1) 3s infinite; }
-@keyframes ap-sun { 0% { transform: scale(0); } 6%, 80% { transform: scale(1); } 88%, 100% { transform: scale(0); } }
-
-.ap-crane { animation: ap-lift 3.2s ease-in-out infinite alternate; }
-@keyframes ap-lift { from { transform: translateY(4px); } to { transform: translateY(-8px); } }
-.ap-wing { transform-box: fill-box; transform-origin: 50% 100%; animation: ap-flap 1.6s ease-in-out infinite; }
-.ap-wing-back { animation-delay: -.1s; }
-@keyframes ap-flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(-.35); } }
-.ap-shadow { transform-box: fill-box; transform-origin: center; animation: ap-shade 3.2s ease-in-out infinite alternate; }
-@keyframes ap-shade { from { transform: scaleX(1); opacity: .9; } to { transform: scaleX(.7); opacity: .5; } }
-.ap-dash { stroke-dasharray: 3 2.5; }
-.ap-trail { stroke-dasharray: .5 4; stroke-width: 1.1; animation: ap-trail 1.4s linear infinite; }
-@keyframes ap-trail { to { stroke-dashoffset: -4.5; } }
-.ap-wind path { stroke-dasharray: .3 .7; animation: ap-gust 4.5s linear var(--d, 0s) infinite; }
-@keyframes ap-gust { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-.ap-far path { animation: ap-glide 6s ease-in-out var(--d, 0s) infinite alternate; }
-@keyframes ap-glide { from { transform: translate(0, 0); } to { transform: translate(-10px, -6px); } }
-
-/* only the current scene moves, and only while it is on screen and the panel is open */
-.ap-scene:not([data-live]) .ap-svg *, .me:not(.open) .ap-svg *, .me:not(.open) .me-cue svg { animation-play-state: paused; }
+/* the scroll cue moves only while the page is open */
+.me:not(.open) .me-cue svg { animation-play-state: paused; }
 
 @media (prefers-reduced-motion: reduce) {
-  .me-more [data-reveal] { opacity: 1; transform: none; transition: none; }
-  .ap-svg * { animation: none !important; }
-  .ap-steam path { opacity: .55; }
-  .ap-draw path, .ap-circle { stroke-dashoffset: 0; }
-  .ap-module, .ap-sun { opacity: 1; transform: none; }
-  .ap-scene { filter: none; transform: none; transition: opacity .2s linear; }
-  .ap-stage { animation: none; }
   .me-cue, .me-cue svg { animation: none; }
 }
 
@@ -132,20 +56,16 @@
   /* the paper runs the full width of the window and casts a soft edge onto the sheet it covers */
   .me-more > section::before {
     content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; margin-left: -50vw;
-    background: var(--bg); box-shadow: 0 -28px 56px -28px rgba(29, 29, 27, .14);
+    background: var(--bg); box-shadow: 0 -28px 56px -28px color-mix(in srgb, var(--ink) 14%, transparent);
   }
 }
-/* the scroll drives these blocks directly, so the one-time reveal stands down */
-@media (min-width: 761px) and (prefers-reduced-motion: no-preference) {
-  .me-more [data-reveal] { opacity: 1; transform: none; transition: none; }
-}
 
-/* ---------- phones: the scene sits above its steps ---------- */
+/* ---------- phones ---------- */
 @media (max-width: 760px) {
-  .panel.me { -webkit-mask-image: none; mask-image: none; }
-  .me-first { min-height: auto; padding: 112px 0 96px; }
-  .me-cue { position: static; margin-top: 40px; }
-  .me-more > section { min-height: auto; padding: 72px 0; }
-  .me-more h2 { font-size: 1.875rem; }
-  .ap { gap: 1.75rem; }
+  .me-first { min-height: auto; padding: calc(var(--bar) + var(--s-6)) var(--gutter) var(--s-8); }
+  .me-cue { position: static; margin-top: var(--s-5); }
+  .me-more > section { min-height: auto; padding: 0 var(--gutter) var(--s-10); }
+  .me-head { height: var(--s-10); margin-bottom: var(--s-4); }
+  /* phones read the page plainly: no frame lines */
+  .me-first::after, .me-more > section::after { border-inline: 0; }
 }

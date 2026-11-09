@@ -5,7 +5,7 @@ import { smoothScroll, stackSheets } from '@/lib/sheets'
 import { getSmoother, setMeSection, type MeSection } from '@/lib/me-section'
 
 /**
- * The whole site on one page: the hero holds the first screen, and scrolling on shows how I work, my jobs and the
+ * The whole site on one page: the hero holds the first screen, and scrolling on shows the
  * case studies. `covered` is set while a case study is open over it.
  */
 export function MePanel({ covered }: { covered: boolean }) {

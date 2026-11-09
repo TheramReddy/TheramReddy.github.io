@@ -33,6 +33,8 @@ export type Project = {
   figma?: string
   /** public web page related to the work, shown like the Figma link */
   link?: { href: string; title: string; note: string }
+  /** not published yet: shown on the map as "Coming soon" and never opens */
+  soon?: boolean
 }
 
 type Metric = { value: string; label: string; group?: string; note: string }
@@ -41,6 +43,8 @@ export type Feature = { title: string; body: string; gif: string; alt: string }
 
 const gif = (name: string) => `/projects/liheap-eap/${name}.gif`
 const shot = (name: string) => `/projects/dso-modernization/${name}.gif`
+// every card shares one grey wash
+const CARD = 'linear-gradient(135deg,#959595,#c2c2c2 55%,#e8e8e8)'
 
 /** Add a project: append an entry here and drop images in /public/projects/<slug>/. */
 export const projects: Project[] = [
@@ -59,7 +63,7 @@ export const projects: Project[] = [
     summary: 'Moving Georgia DHS debt recovery off a legacy mainframe onto three connected cloud portals.',
     description:
       'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization replaces that mainframe with a cloud platform and three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
-    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    gradient: CARD,
     link: {
       href: 'https://dor.georgia.gov/state-refund-offsets-other-agencies',
       title: 'Visit the public information page',
@@ -97,7 +101,7 @@ export const projects: Project[] = [
     summary: 'A design system built from the ground up, now supporting 120+ employees.',
     description:
       'Scobin didn’t have a shared design language. Similar components looked and behaved differently across screens, leaving designers and developers to solve the same problems repeatedly. I built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons, and 95 text styles. The system now supports a user base of more than 120 employees.',
-    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    gradient: CARD,
     tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
     story: true,
     figma: 'https://www.figma.com/design/aQDljAL3G6oGoaenWvq81E/Scobin-Design-System?node-id=6-9',
@@ -114,10 +118,13 @@ export const projects: Project[] = [
     summary: 'A workspace where your files become a map, and AI agents work on it with you. Coming soon to beta.',
     description:
       'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
-    gradient: 'linear-gradient(135deg,#6a8cff,#a9c1ff 55%,#e0e8ff)',
+    gradient: CARD,
     tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
     story: true,
+    soon: true,
   }
 ]
 
-export const getProject = (slug?: string) => projects.find((p) => p.slug === slug)
+/** the case studies that can be opened */
+export const published = projects.filter((p) => !p.soon)
+export const getProject = (slug?: string) => published.find((p) => p.slug === slug)

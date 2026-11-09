@@ -22,7 +22,7 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
   --bg: #ffffff;
   --fg: #0a0a0a;
   --muted: rgba(10, 10, 10, 0.72);
-  --card: #e4e2dc;
+  --card: #e2e2e2;
   --line: rgba(10, 10, 10, 0.14);
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   /* Passenger Display stand-in: Playfair Display is the closest free high-contrast serif. */
@@ -31,22 +31,50 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
   --font-text: 'Instrument Sans Variable', system-ui, sans-serif;
   --font-pixel: var(--font-passenger);
   --font-mono: var(--font-text);
-  --seal: #c8432e;
+  --seal: #0a0a0a;
+  /* warm-black ink for drawings and type, and the off-white paper it sits on */
+  --ink: #1d1d1d;
+  --paper: #f1f1f1;
   --underline-offset: 3px;
-  --pad-x: 80px;
-  --pad-y: 40px;
+
+  /* Spacing: everything on the home page steps in multiples of 8px. */
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-5: 40px;
+  --s-6: 48px;
+  --s-8: 64px;
+  --s-10: 80px;
+  --s-12: 96px;
+  --s-16: 128px;
+
+  /* Type: six steps plus the display name. Line heights sit on the 8px grid. */
+  --fs-12: 12px;  --lh-12: 16px;  /* eyebrows, section labels, numbers */
+  --fs-14: 14px;  --lh-14: 24px;  /* nav, captions, secondary lines */
+  --fs-16: 16px;  --lh-16: 24px;  /* body, links */
+  --fs-20: 20px;  --lh-20: 32px;  /* hero note */
+  --fs-24: 24px;  --lh-24: 32px;  /* card titles */
+  --fs-display: clamp(48px, 8vw, 128px);
+
+  /* Frame: one centred column with hairline grid lines, like a sheet of layout paper */
+  --frame: 1232px;
+  --gutter: var(--s-4);
+  --bar: var(--s-8);
+  --grid: rgba(10, 10, 10, 0.07);
+  --band: #f7f7f7;
 
   --radius: 0.625rem;
   --background: #ffffff;
   --foreground: #0a0a0a;
   --primary: #0a0a0a;
   --primary-foreground: #ffffff;
-  --secondary: #efeeea;
+  --secondary: #eeeeee;
   --secondary-foreground: #0a0a0a;
   --muted-foreground: rgba(10, 10, 10, 0.72);
-  --accent: #efeeea;
+  --accent: #eeeeee;
   --accent-foreground: #0a0a0a;
-  --destructive: #dc2626;
+  --destructive: #797979;
   --border: rgba(10, 10, 10, 0.12);
   --input: rgba(10, 10, 10, 0.12);
   --ring: rgba(10, 10, 10, 0.4);
@@ -103,8 +131,8 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-text);
-  font-size: 0.9375rem;
-  line-height: 1.5;
+  font-size: var(--fs-16);
+  line-height: var(--lh-16);
   letter-spacing: 0;
   font-variant-numeric: lining-nums;
   font-kerning: normal;
@@ -164,6 +192,7 @@ ul {
   list-style: none;
 }
 .label {
-  font-size: 0.9375rem;
+  font-size: var(--fs-14);
   letter-spacing: 0;
 }
+

@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react'
+import { Fragment, memo, useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type RefObject } from 'react'
+import { site } from '@/data/site'
 import { scrollToSection } from '@/lib/me-section'
 import { flapSound, keySound, tick } from '@/lib/sfx'
 
@@ -122,53 +123,277 @@ function Pill({ children }: { children: string }) {
 
 const WAYS = ['think and work', 'find what they need', 'trust a product', 'make decisions', 'get through the day', 'ask for help']
 
-// the card sits tilted inside its 275×291 artwork; the wind lifts its right corner. The crease runs from A to B,
-// 58 units back along each edge from the corner, and the flap swings about that line onto the card.
-const STAMP = '/brand/post-card.svg'
-const CREASE_SIDE = '246.71,128.36 212.41,245.48 269.99,262.35 304.29,145.23'
-const CARD_SIDE = '353.55,-236.35 105.57,610.19 -278.31,497.75 -30.33,-348.79'
-// the paper's back is drawn where the flap lands and pre-turned onto the corner, so it only faces you once folded
-const BACK = '190.20,175.39 241.09,147.56 218.03,226.28'
-const SHADOW = '241.09,147.56 218.03,226.28 186.2,181.4'
-
-/** Landing intro: one written-out line with live words in it, a link to the work, and the Portfolio Post stamp. */
+/** Landing screen: the name large in the middle with a design lens drifting over it, and the written-out line with
+ *  its live words, plus the link to the work, set small in the bottom-right corner. */
 export function Hero() {
   return (
     <header className="hero">
-      <h1 className="hero-lede">
-        I’ve spent <Pill>my career</Pill> learning how people <em>actually</em> use software, and
-        how small decisions keep <Flap word="RESHAPING" /> the way they <Prompt lines={WAYS} />. Because a
-        well-crafted experience doesn’t just look good. It makes someone’s day a little easier.
-      </h1>
-      <p>
-        <button type="button" className="work-link" onClick={() => scrollToSection('projects')}>check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
-      </p>
-      <div className="hero-stamp" aria-hidden="true">
-        <svg className="stamp-card" viewBox="0 0 275 291">
-          <defs>
-            <clipPath id="stamp-card-side"><polygon points={CARD_SIDE} /></clipPath>
-            <clipPath id="stamp-crease-side"><polygon points={CREASE_SIDE} /></clipPath>
-            <pattern id="stamp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
-              <rect width=".6" height="5" fill="#1d1d1b" fillOpacity=".55" />
-            </pattern>
-          </defs>
-          <image href={STAMP} width="275" height="291" clipPath="url(#stamp-card-side)" />
-          <polygon className="stamp-shadow" points={SHADOW} fill="url(#stamp-hatch)" />
-        </svg>
-        <svg className="stamp-wind" viewBox="0 0 275 291">
-          <path pathLength="1" d="M440 168c-46-6-88 10-130 4s-70-16-104-6c-20 6-24 22-10 26 12 3 18-8 10-14" />
-          <path pathLength="1" d="M470 212c-52 2-94-12-142-6s-82 18-126 10" />
-          <path pathLength="1" d="M455 246c-40-8-80 6-118 2-30-3-52-14-80-6-16 5-18 19-6 22 10 2 15-7 8-12" />
-        </svg>
-        <div className="stamp-flap">
-          <svg className="stamp-back" viewBox="0 0 275 291">
-            <polygon points={BACK} fill="#f4f1e8" stroke="#1d1d1b" strokeWidth=".8" strokeLinejoin="round" />
-          </svg>
-          <svg className="stamp-front" viewBox="0 0 275 291">
-            <image href={STAMP} width="275" height="291" clipPath="url(#stamp-crease-side)" />
-          </svg>
-        </div>
+      <div className="hero-center">
+        <p className="hero-role">Product Designer</p>
+        <NameLens name={site.name} />
+      </div>
+      <div className="hero-note">
+        <p className="hero-lede">
+          I’ve spent <Pill>my career</Pill> learning how people <em>actually</em> use software, and
+          how small decisions keep <Flap word="RESHAPING" /> the way they <Prompt lines={WAYS} />. Because a
+          well-crafted experience doesn’t just look good. It makes someone’s day a little easier.
+        </p>
+        <p className="hero-more">
+          <button type="button" className="work-link" onClick={() => scrollToSection('projects')}>check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
+        </p>
       </div>
     </header>
+  )
+}
+
+/** The name with a glass lens over it. Through the lens the name is magnified and shows how it is built: ink letter
+ *  outlines on the 8px grid, the cap height, x-height and baseline with their measured sizes, every letter's box, and
+ *  at each end of a line the line height, side bearing and tracking, plus a readout of the letter under the lens. The lens drifts along the name on its own, follows the pointer (or a finger dragged across
+ *  the name) while it is over the hero, and squashes a little in the direction it moves. It only ever travels along
+ *  the line of the name, so it never covers the role above or the note below. With reduced motion it rests on the
+ *  name and moves only with the pointer. */
+type Glyph = { ch: string; left: number; right: number; width: number; line: number }
+type Line = { top: number; mid: number; left: number; right: number }
+/** everything measured from the name in one pass: the face, its cap and x heights, and what the lens annotates
+ *  (line height, tracking, the side bearing at each end and every letter's box) */
+type Spec = {
+  face: string
+  cap: number
+  x: number
+  lh: number
+  track: number
+  bl: number
+  boxes: { left: number; top: number; width: number }[]
+  lines: Line[]
+}
+const minus = (n: number) => (n < 0 ? `−${Math.abs(n)}` : `${n}`)
+
+/** the magnified spec's labels and annotations; memoised, so the readout changing letter does not rebuild them */
+const SpecMarks = memo(function SpecMarks({ spec, marks }: { spec: Spec; marks: RefObject<HTMLSpanElement | null> }) {
+  return (
+    <>
+      <span className="lens-marks" ref={marks}>
+        <span className="anno-label" style={{ top: 'var(--cap)' }}>cap {spec.cap}</span>
+        <span className="anno-label" style={{ top: 'var(--xh)' }}>x {spec.x}</span>
+        <span className="anno-label" style={{ top: 'var(--base)' }}>base</span>
+      </span>
+      <span className="lens-anno">
+        {spec.boxes.map((b, i) => (
+          <i key={i} className="anno-glyph" style={{ left: b.left, top: b.top, width: b.width, height: spec.lh }} />
+        ))}
+        {spec.lines.map((l, i) => {
+          const mid = `calc(${l.top}px + (var(--xh) + var(--base)) / 2)`
+          return (
+            <span key={i}>
+              <i className="anno-bear" style={{ left: l.left, top: l.top, width: spec.bl, height: spec.lh }} />
+              {[
+                { side: 'is-start', dim: l.left - 16, edge: l.left, note: `bearing ${spec.bl}` },
+                { side: 'is-end', dim: l.right + 16, edge: l.right, note: `tracking ${minus(spec.track)}` },
+              ].map((e) => (
+                <Fragment key={e.side}>
+                  <span className={`anno-dim ${e.side}`} style={{ left: e.dim, top: l.top, height: spec.lh }}>
+                    <span className="anno-label">line-height {spec.lh}</span>
+                  </span>
+                  <span className={`anno-label anno-note ${e.side}`} style={{ left: e.edge, top: mid }}>
+                    {e.note}
+                  </span>
+                </Fragment>
+              ))}
+            </span>
+          )
+        })}
+      </span>
+    </>
+  )
+})
+
+function NameLens({ name }: { name: string }) {
+  const box = useRef<HTMLDivElement>(null)
+  const specRef = useRef<HTMLDivElement>(null)
+  const zoomRef = useRef<HTMLDivElement>(null)
+  const ringRef = useRef<HTMLDivElement>(null)
+  const marksRef = useRef<HTMLSpanElement>(null)
+  const readRef = useRef<HTMLSpanElement>(null)
+  const [spec, setSpec] = useState<Spec | null>(null)
+  const [glyph, setGlyph] = useState<{ ch: string; width: number } | null>(null)
+
+  useEffect(() => {
+    const el = box.current
+    const h1 = el?.querySelector('h1')
+    const area = el?.closest<HTMLElement>('.hero')
+    const c = document.createElement('canvas').getContext('2d')
+    if (!el || !h1 || !area || !c) return
+    const calm = still()
+
+    // ---- measuring: the face's real metrics, and where every letter and line of the name sits ----
+    let glyphs: Glyph[] = []
+    let lines: Line[] = []
+    let em = 0, r = 0, zoom = 1
+    const measure = () => {
+      const cs = getComputedStyle(h1)
+      em = parseFloat(cs.fontSize)
+      c.font = `${cs.fontWeight} ${em}px ${cs.fontFamily}`
+      const H = c.measureText('H')
+      const x = c.measureText('x')
+      const base = (em - (H.fontBoundingBoxAscent + H.fontBoundingBoxDescent)) / 2 + H.fontBoundingBoxAscent
+      el.style.setProperty('--em', `${em}px`)
+      el.style.setProperty('--base', `${base}px`)
+      el.style.setProperty('--cap', `${base - H.actualBoundingBoxAscent}px`)
+      el.style.setProperty('--xh', `${base - x.actualBoundingBoxAscent}px`)
+      el.style.setProperty('--w', `${el.offsetWidth}px`)
+      el.style.setProperty('--h', `${el.offsetHeight}px`)
+      // the lens radius and zoom are set in CSS; read them back now the size is known
+      zoom = parseFloat(getComputedStyle(el).getPropertyValue('--zoom')) || 1
+      r = specRef.current ? specRef.current.offsetWidth / 2 : 0
+
+      const origin = el.getBoundingClientRect()
+      const text = h1.firstChild
+      const chars = text?.textContent ?? ''
+      glyphs = []
+      lines = []
+      const range = document.createRange()
+      for (let i = 0; text && i < chars.length; i++) {
+        range.setStart(text, i)
+        range.setEnd(text, i + 1)
+        const b = range.getBoundingClientRect()
+        const top = b.top - origin.top
+        let line = lines.findIndex((l) => Math.abs(l.top - top) < em / 2)
+        const left = b.left - origin.left
+        const right = b.right - origin.left
+        if (line < 0) { lines.push({ top, mid: top + b.height / 2, left, right }); line = lines.length - 1 }
+        lines[line].left = Math.min(lines[line].left, left)
+        lines[line].right = Math.max(lines[line].right, right)
+        glyphs.push({ ch: chars[i], left, right, width: b.width, line })
+      }
+      if (!lines.length) return
+      // side bearing: the room the face leaves between the start of the text box and the first letter's ink
+      const first = c.measureText(chars[0])
+      setSpec({
+        face: `${cs.fontFamily.split(',')[0].replace(/["']/g, '').replace(/ Variable$/, '')} ${Math.round(em)}px`,
+        cap: Math.round(H.actualBoundingBoxAscent),
+        x: Math.round(x.actualBoundingBoxAscent),
+        lh: Math.round(parseFloat(cs.lineHeight)),
+        track: Math.round((parseFloat(cs.letterSpacing) || 0) * 10) / 10,
+        bl: Math.max(0, Math.round(-first.actualBoundingBoxLeft)),
+        boxes: glyphs.filter((g) => g.ch.trim()).map((g) => ({ left: g.left, top: lines[g.line].top, width: g.width })),
+        lines,
+      })
+      // the readout always sits under the last line, so on a wrapped name it never lands on the second line
+      el.style.setProperty('--read', `${lines[lines.length - 1].mid}px`)
+    }
+
+    // ---- motion: everything moves by translate and scale only, so a frame is composited rather than laid out ----
+    let x = -1, y = 0, tx = 0, ty = 0, lastX = 0, lastY = 0, sx = 0, sy = 0
+    let aim = false, raf = 0, on = false, shown = ''
+    let readText: string | null = null, half = 0
+    const t0 = performance.now()
+    const nearestLine = (py: number) => lines.reduce((b, l, i) => (Math.abs(l.mid - py) < Math.abs(lines[b].mid - py) ? i : b), 0)
+
+    const frame = (now: number) => {
+      raf = 0
+      if (!lines.length) return
+      const w = el.offsetWidth
+      if (!aim) {
+        const t = (now - t0) / 1000
+        const line = lines[lines.length > 1 && Math.sin(t * 0.16) < 0 ? lines.length - 1 : 0]
+        // it sweeps the full line, end to end, so it dwells at each end where the spacing is annotated
+        tx = calm ? w * 0.72 : line.left + (line.right - line.left) * (0.5 + 0.5 * Math.sin(t * 0.32))
+        ty = line.mid + (calm ? 0 : em * 0.06 * Math.sin(t * 0.64))
+      }
+      if (x < 0) { x = lastX = tx; y = lastY = ty }
+      const k = calm ? 1 : 0.1
+      x += (tx - x) * k
+      y += (ty - y) * k
+      // squash: stretch along the way it moves, a little, and ease back when it stops
+      const vx = x - lastX, vy = y - lastY
+      lastX = x; lastY = y
+      sx += (Math.min(Math.abs(vx) / 60, 0.08) - sx) * 0.2
+      sy += (Math.min(Math.abs(vy) / 60, 0.08) - sy) * 0.2
+      const scaleX = 1 + sx - sy, scaleY = 1 + sy - sx
+      // the window and the glass squash together; the magnified name inside is counter-scaled so it never distorts
+      for (const part of [ringRef.current, specRef.current]) {
+        if (part) { part.style.translate = `${x}px ${y}px`; part.style.scale = `${scaleX} ${scaleY}` }
+      }
+      if (zoomRef.current) {
+        zoomRef.current.style.transform = `translate(${r}px, ${r}px) scale(${zoom / scaleX}, ${zoom / scaleY}) translate(${-x - r}px, ${-y - r}px)`
+      }
+      const line = nearestLine(y)
+      if (marksRef.current) marksRef.current.style.translate = `${x}px ${lines[line].top}px`
+      el.dataset.ready = ''
+
+      // the readout names the letter under the lens and keeps itself inside the name's width
+      const g = glyphs.find((g) => g.line === line && x >= g.left && x < g.right && g.ch.trim())
+      const key = g ? `${g.ch}${Math.round(g.width)}` : ''
+      if (key !== shown) { shown = key; setGlyph(g ? { ch: g.ch, width: Math.round(g.width) } : null) }
+      const read = readRef.current
+      if (read) {
+        // measure the readout only when its text changes, not on every frame
+        if (read.textContent !== readText) { readText = read.textContent; half = read.offsetWidth / 2 }
+        read.style.translate = `${Math.min(Math.max(x, half), Math.max(half, w - half)) - half}px 0`
+      }
+
+      const moving = Math.abs(tx - x) > 0.3 || Math.abs(ty - y) > 0.3 || sx + sy > 0.001
+      if (on && (!calm || moving)) raf = requestAnimationFrame(frame)
+    }
+    const start = () => { if (!raf) raf = requestAnimationFrame(frame) }
+
+    // the pointer steers along the name: across freely, and up or down only onto the nearest line of it
+    const move = (e: PointerEvent) => {
+      if (!lines.length) return
+      const b = el.getBoundingClientRect()
+      aim = true
+      tx = Math.min(Math.max(e.clientX - b.left, 0), b.width)
+      ty = lines[nearestLine(e.clientY - b.top)].mid
+      start()
+    }
+    const leave = () => { aim = false; start() }
+    // a resize remeasures at most once a frame, and only when the name's box has actually changed size
+    let size = '', pending = 0
+    const remeasure = () => {
+      pending = 0
+      const now = `${el.offsetWidth}x${el.offsetHeight}`
+      if (now === size) return
+      size = now
+      measure()
+      start()
+    }
+    const queue = () => { if (!pending) pending = requestAnimationFrame(remeasure) }
+
+    // once the web font has loaded the letters change width, so measure again even if the box has not resized
+    document.fonts.ready.then(() => { size = ''; queue() })
+    const ro = new ResizeObserver(queue)
+    ro.observe(el)
+    const io = new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) start() })
+    io.observe(el)
+    area.addEventListener('pointermove', move)
+    area.addEventListener('pointerleave', leave)
+    area.addEventListener('pointercancel', leave)
+    return () => {
+      io.disconnect()
+      ro.disconnect()
+      cancelAnimationFrame(raf)
+      cancelAnimationFrame(pending)
+      area.removeEventListener('pointermove', move)
+      area.removeEventListener('pointerleave', leave)
+      area.removeEventListener('pointercancel', leave)
+    }
+  }, [])
+
+  return (
+    <div className="lens" ref={box}>
+      <h1 className="hero-name">{name}</h1>
+      <div className="lens-spec" ref={specRef} aria-hidden="true">
+        <div className="lens-zoom" ref={zoomRef}>
+          <span className="hero-name lens-type">{name}</span>
+          {spec && <SpecMarks spec={spec} marks={marksRef} />}
+        </div>
+      </div>
+      <div className="lens-ring" ref={ringRef} aria-hidden="true" />
+      {spec && (
+        <span className="lens-read" ref={readRef} aria-hidden="true">
+          {glyph ? <><b>{glyph.ch}</b> · {glyph.width}px wide · </> : null}{spec.face}
+        </span>
+      )}
+    </div>
   )
 }

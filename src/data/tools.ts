@@ -1,4 +1,4 @@
-/** Original full-colour brand logos, stored in /public/tools/<id>.svg. */
+/** Brand logos converted to greyscale, stored in /public/tools/<id>.svg. */
 export const tools = {
   figma: 'Figma',
   sketch: 'Sketch',

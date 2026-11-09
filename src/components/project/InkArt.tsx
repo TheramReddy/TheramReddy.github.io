@@ -3,12 +3,14 @@ import { useLayoutEffect, useRef, type ReactNode } from 'react'
 /**
  * Isometric ink still-lifes for the DSO problems, drawn in the same hand as the
  * hero post card, the Work desk and the Projects brush set (the Scobin chapters reuse the helpers): fine ink lines,
- * hatching and stipple for shade, and one red accent marking the design decision.
+ * hatching and stipple for shade, and one black accent marking the design decision.
  */
 
 const C = 0.866
 const S = 0.5
-export const RED = '#C8432E'
+export const ACCENT = '#0a0a0a'
+/** the drawing ink, the same as the CSS --ink token */
+export const INK = '#1d1d1d'
 
 /** Project a point on the desk (x right-down, y left-down, z up) to the page. */
 export const xy = (x: number, y: number, z = 0): [number, number] => [(x - y) * C, (x + y) * S - z]
@@ -29,33 +31,33 @@ export const InkDefs = () => (
   <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false">
     <defs>
       <pattern id="ink-hatch" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)">
-        <line x1="0" y1="0" x2="0" y2="4" stroke="#1D1D1B" strokeWidth="0.55" />
+        <line x1="0" y1="0" x2="0" y2="4" stroke={INK} strokeWidth="0.55" />
       </pattern>
       <pattern id="ink-hatch-dense" patternUnits="userSpaceOnUse" width="2.6" height="2.6" patternTransform="rotate(45)">
-        <line x1="0" y1="0" x2="0" y2="2.6" stroke="#1D1D1B" strokeWidth="0.55" />
+        <line x1="0" y1="0" x2="0" y2="2.6" stroke={INK} strokeWidth="0.55" />
       </pattern>
       <pattern id="ink-dots" patternUnits="userSpaceOnUse" width="3.2" height="3.2">
-        <circle cx="1.6" cy="1.6" r="0.55" fill="#1D1D1B" />
+        <circle cx="1.6" cy="1.6" r="0.55" fill={INK} />
       </pattern>
       <pattern id="ink-shade" patternUnits="userSpaceOnUse" width="3" height="3" patternTransform="rotate(45)">
         <line x1="0" y1="0" x2="0" y2="3" stroke="#9a9a9a" strokeWidth="0.5" />
       </pattern>
       <pattern id="ink-glow" patternUnits="userSpaceOnUse" width="3.5" height="3.5">
-        <circle cx="1.75" cy="1.75" r="0.5" fill="#1D1D1B" opacity=".55" />
+        <circle cx="1.75" cy="1.75" r="0.5" fill={INK} opacity=".55" />
       </pattern>
     </defs>
   </svg>
 )
 
-type Fill = 'paper' | 'hatch' | 'dense' | 'dots' | 'red' | 'red-hatch' | 'ink'
+type Fill = 'paper' | 'hatch' | 'dense' | 'dots' | 'accent' | 'accent-hatch' | 'ink'
 const fills: Record<Fill, [string, string?]> = {
   paper: ['#fff'],
   hatch: ['#fff', 'url(#ink-hatch)'],
   dense: ['#fff', 'url(#ink-hatch-dense)'],
   dots: ['#fff', 'url(#ink-dots)'],
-  red: [RED],
-  'red-hatch': [RED, 'url(#ink-hatch)'],
-  ink: ['#1D1D1B'],
+  accent: [ACCENT],
+  'accent-hatch': [ACCENT, 'url(#ink-hatch)'],
+  ink: [INK],
 }
 
 const Face = ({ points, fill }: { points: string; fill: Fill }) => {
@@ -138,7 +140,7 @@ export const Art = ({ label, children }: { label: string; children: ReactNode })
 
 export function WallArt() {
   return (
-    <Art label="A tall cabinet of nested menu drawers beside one flat search bar with a red K key and the profile card it opens">
+    <Art label="A tall cabinet of nested menu drawers beside one flat search bar with a black K key and the profile card it opens">
       <Shadow x={-130} y={-20} w={60} d={60} s={36} />
       <Block x={-130} y={-20} w={60} d={60} h={130} left="hatch" right="paper" />
       {['RECORD', 'LIST', 'SUB-MENU', 'MENU'].map((t, i) => {
@@ -156,7 +158,7 @@ export function WallArt() {
       <Disc x={-6} y={62} z={10} r={9} fill="none" />
       <path d={path([0, 68, 10], [8, 76, 10])} strokeWidth="1.8" />
       <Tag plane="top" x={14} y={67} z={10} size={12}>SEARCH PROFILES…</Tag>
-      <Block x={155} y={48} z={10} w={28} d={28} h={10} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={155} y={48} z={10} w={28} d={28} h={10} top="accent" left="accent-hatch" right="accent-hatch" />
       <Tag plane="top" x={164} y={67} z={20} size={14} fill="#fff">K</Tag>
       <Shadow x={40} y={120} w={130} d={80} s={22} />
       <Block x={40} y={120} w={130} d={80} h={3} />
@@ -171,7 +173,7 @@ export function WallArt() {
 
 export function HoldArt() {
   return (
-    <Art label="A refund check on the desk with a red tag tied on that reads on hold, waiting on hearing review, and an hourglass beside it">
+    <Art label="A refund check on the desk with a black tag tied on that reads on hold, waiting on hearing review, and an hourglass beside it">
       <Shadow x={-80} y={0} w={200} d={100} s={24} />
       <Block x={-80} y={0} w={200} d={100} h={3} />
       <Tag plane="top" x={-68} y={18} z={3} size={10}>REFUND CHECK</Tag>
@@ -180,7 +182,7 @@ export function HoldArt() {
       <Tag plane="top" x={30} y={70} z={3} size={9}>$ ——.——</Tag>
       <polygon points={pts([-74, 6, 3], [114, 6, 3], [114, 94, 3], [-74, 94, 3])} fill="none" className="ink-fine" />
       <path d={`M${pt(100, 90, 3)} C${pt(110, 120, 30)} ${pt(110, 130, 10)} ${pt(108, 140, 1)}`} fill="none" />
-      <polygon points={pts([100, 132, 1], [190, 132, 1], [204, 152, 1], [190, 172, 1], [100, 172, 1])} fill={RED} />
+      <polygon points={pts([100, 132, 1], [190, 132, 1], [204, 152, 1], [190, 172, 1], [100, 172, 1])} fill={ACCENT} />
       <polygon points={pts([100, 132, 1], [190, 132, 1], [204, 152, 1], [190, 172, 1], [100, 172, 1])} fill="url(#ink-hatch)" stroke="none" opacity=".35" />
       <Disc x={109} y={140} z={1} r={3} />
       <Tag plane="top" x={120} y={147} z={1} size={10} fill="#fff">ON HOLD</Tag>
@@ -208,7 +210,7 @@ const walls: [number, number, number, number][] = [
 export function MazeArt() {
   const segs = walls.filter((s) => s[2] > 0).sort((a, b) => a[0] + a[1] - (b[0] + b[1]))
   return (
-    <Art label="A maze of walls labelled claims, hearings and decisions, with a red rule laid straight across it to the claim folder">
+    <Art label="A maze of walls labelled claims, hearings and decisions, with a black rule laid straight across it to the claim folder">
       <Shadow x={-10} y={-10} w={260} d={170} s={22} />
       <Block x={-10} y={-10} w={260} d={170} h={6} />
       <Tag plane="top" x={6} y={22} z={6} size={8}>CLAIMS</Tag>
@@ -217,7 +219,7 @@ export function MazeArt() {
       {segs.map(([x, y, l, ax], i) => (
         <Block key={i} x={x} y={y} z={6} w={ax ? l : 3} d={ax ? 3 : l} h={20} />
       ))}
-      <Block x={-34} y={70} z={30} w={300} d={10} h={3} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={-34} y={70} z={30} w={300} d={10} h={3} top="accent" left="accent-hatch" right="accent-hatch" />
       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
         <path key={i} d={path([-24 + i * 30, 70, 33], [-24 + i * 30, 75, 33])} stroke="#fff" strokeWidth="0.8" />
       ))}
@@ -236,7 +238,7 @@ const stamps = ['INTERCEPTED', 'ON HOLD', 'DISTRIBUTED']
 
 export function TrailArt() {
   return (
-    <Art label="A coin stack at the start of a receipt tape stamped intercepted, on hold and distributed in red, with the rubber stamp beside it">
+    <Art label="A coin stack at the start of a receipt tape stamped intercepted, on hold and distributed in black, with the rubber stamp beside it">
       <Shadow x={-40} y={60} w={330} d={60} s={20} />
       <Block x={-40} y={60} w={330} d={60} h={2} />
       <path d={`M${pt(290, 60, 2)} C${pt(304, 60, 4)} ${pt(306, 60, 24)} ${pt(294, 60, 26)}`} fill="none" />
@@ -245,9 +247,9 @@ export function TrailArt() {
       {stamps.map((s, i) => {
         const x = -20 + i * 105
         return (
-          <g key={s} stroke={RED}>
+          <g key={s} stroke={ACCENT}>
             <polygon points={pts([x, 72, 2], [x + 88, 72, 2], [x + 88, 108, 2], [x, 108, 2])} fill="none" strokeWidth="1.4" />
-            <Tag plane="top" x={x + 44} y={94} z={2} size={9} fill={RED} anchor="middle">{s}</Tag>
+            <Tag plane="top" x={x + 44} y={94} z={2} size={9} fill={ACCENT} anchor="middle">{s}</Tag>
             {i < 2 && <path d={path([x + 92, 90, 2], [x + 101, 90, 2])} strokeDasharray="2 2" />}
           </g>
         )
@@ -255,7 +257,7 @@ export function TrailArt() {
       {[0, 1, 2, 3].map((i) => <Drum key={i} x={-70} y={100} z={i * 7} r={20} h={7} />)}
       <Tag plane="top" x={-77} y={103} z={28} size={13}>$</Tag>
       <Shadow x={190} y={150} w={50} d={36} s={18} />
-      <Block x={190} y={150} w={50} d={36} h={6} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={190} y={150} w={50} d={36} h={6} top="accent" left="accent-hatch" right="accent-hatch" />
       <Block x={196} y={154} z={6} w={38} d={28} h={14} />
       <Drum x={215} y={168} z={20} r={6} h={26} />
       <Drum x={215} y={168} z={46} r={11} h={10} top="url(#ink-dots)" />
@@ -269,16 +271,16 @@ const steps = ['DONE', 'NOW', 'NEXT']
 
 export function StoryArt() {
   return (
-    <Art label="Three standing cards on a ledge, done with a tick, now in red with an hourglass and next with an arrow">
+    <Art label="Three standing cards on a ledge, done with a tick, now in black with an hourglass and next with an arrow">
       <Shadow x={-130} y={60} w={330} d={40} s={22} />
       <Block x={-130} y={60} w={330} d={40} h={8} />
       {steps.map((s, i) => {
         const x = -120 + i * 110
         const now = i === 1
-        const ink = now ? '#fff' : '#1D1D1B'
+        const ink = now ? '#fff' : INK
         return (
           <g key={s}>
-            <Block x={x} y={70} z={8} w={90} d={8} h={110} left={now ? 'red' : 'paper'} right={now ? 'red-hatch' : 'dots'} />
+            <Block x={x} y={70} z={8} w={90} d={8} h={110} left={now ? 'accent' : 'paper'} right={now ? 'accent-hatch' : 'dots'} />
             <Tag plane="left" x={x + 10} y={78} z={104} size={11} fill={ink}>{s}</Tag>
             <g stroke={ink} strokeWidth="1.8" fill="none">
               {i === 0 && <path d={path([x + 26, 78, 76], [x + 40, 78, 62], [x + 64, 78, 90])} />}
@@ -299,7 +301,7 @@ const papers = ['CLAIM', 'HEARING', 'PAYMENT']
 
 export function PictureArt() {
   return (
-    <Art label="A profile folder holding a claim, a hearing notice and a payment record together, held by a red binder clip">
+    <Art label="A profile folder holding a claim, a hearing notice and a payment record together, held by a black binder clip">
       <Shadow x={-110} y={0} w={240} d={160} s={24} />
       <Block x={-110} y={0} w={240} d={160} h={3} top="hatch" />
       <polygon points={pts([-100, 0, 3], [-30, 0, 3], [-36, -14, 3], [-94, -14, 3])} fill="#fff" />
@@ -314,7 +316,7 @@ export function PictureArt() {
           </g>
         )
       })}
-      <Block x={80} y={60} z={9} w={46} d={14} h={10} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={80} y={60} z={9} w={46} d={14} h={10} top="accent" left="accent-hatch" right="accent-hatch" />
       <path d={`M${pt(88, 67, 19)} C${pt(88, 60, 50)} ${pt(118, 60, 50)} ${pt(118, 67, 19)}`} fill="none" strokeWidth="1.3" />
       <path d={`M${pt(94, 67, 19)} C${pt(94, 62, 40)} ${pt(112, 62, 40)} ${pt(112, 67, 19)}`} fill="none" strokeWidth="1.3" />
     </Art>
@@ -329,7 +331,7 @@ const tiers = ['DECISION', 'PENDING', 'ASSIGNED']
 export function QueueArt() {
   const post = (x: number, y: number) => <Block x={x} y={y} w={5} d={5} h={150} />
   return (
-    <Art label="A three-tier letter tray labelled assigned, pending and decision, with a red owner flag sticking out of the pending tray">
+    <Art label="A three-tier letter tray labelled assigned, pending and decision, with a black owner flag sticking out of the pending tray">
       <Shadow x={-80} y={-10} w={180} d={130} s={30} />
       {post(-80, -10)}
       {tiers.map((t, i) => {
@@ -341,7 +343,7 @@ export function QueueArt() {
             <Lines x={-58} y={14} z={z + 6} w={110} n={i === 2 ? 6 : 2} gap={12} />
             {i === 1 && (
               <>
-                <Block x={78} y={30} z={z + 6} w={44} d={14} h={2} top="red" left="red-hatch" right="red-hatch" />
+                <Block x={78} y={30} z={z + 6} w={44} d={14} h={2} top="accent" left="accent-hatch" right="accent-hatch" />
                 <Tag plane="top" x={84} y={41} z={z + 8} size={8} fill="#fff">OWNER</Tag>
               </>
             )}
@@ -364,7 +366,7 @@ const flagged = [2, 6]
 
 export function SignalArt() {
   return (
-    <Art label="A long ledger of identical rows where two rows carry red flags, with a magnifier resting on one of them">
+    <Art label="A long ledger of identical rows where two rows carry black flags, with a magnifier resting on one of them">
       <Shadow x={-60} y={0} w={260} d={180} s={22} />
       <Block x={-56} y={4} w={260} d={180} h={2} />
       <Block x={-60} y={0} z={2} w={260} d={180} h={2} />
@@ -375,8 +377,8 @@ export function SignalArt() {
       ))}
       {flagged.map((r) => (
         <g key={r}>
-          <polygon points={pts([-60, 16 + (r - 1) * ROW, 4], [200, 16 + (r - 1) * ROW, 4], [200, 16 + r * ROW, 4], [-60, 16 + r * ROW, 4])} fill={RED} opacity=".14" stroke="none" />
-          <Block x={200} y={18 + (r - 1) * ROW} z={3} w={26} d={ROW - 4} h={1.5} top="red" left="red-hatch" right="red-hatch" />
+          <polygon points={pts([-60, 16 + (r - 1) * ROW, 4], [200, 16 + (r - 1) * ROW, 4], [200, 16 + r * ROW, 4], [-60, 16 + r * ROW, 4])} fill={ACCENT} opacity=".14" stroke="none" />
+          <Block x={200} y={18 + (r - 1) * ROW} z={3} w={26} d={ROW - 4} h={1.5} top="accent" left="accent-hatch" right="accent-hatch" />
         </g>
       ))}
       <Disc x={30} y={44} z={10} r={26} fill="rgba(255,255,255,.35)" />
@@ -397,7 +399,7 @@ export function HiddenArt() {
   const [a1x, a1y] = xy(lx - 4, ly + 36, 2)
   const [a2x, a2y] = xy(lx + 46, ly - 4, 2)
   return (
-    <Art label="Rows of matched card pairs, and one lone red card that a desk lamp lights up">
+    <Art label="Rows of matched card pairs, and one lone black card that a desk lamp lights up">
       {pairs.map(([x, y]) => (
         <g key={`${x}-${y}`}>
           <Shadow x={x} y={y} w={40} d={30} s={8} />
@@ -407,7 +409,7 @@ export function HiddenArt() {
         </g>
       ))}
       <polygon points={`${hx - 12},${hy + 8} ${hx + 12},${hy + 8} ${a2x},${a2y} ${a1x},${a1y}`} fill="url(#ink-glow)" stroke="none" />
-      <Block x={lx} y={ly} w={40} d={30} h={2} top="red" left="red-hatch" right="red-hatch" />
+      <Block x={lx} y={ly} w={40} d={30} h={2} top="accent" left="accent-hatch" right="accent-hatch" />
       <path d={path([lx + 8, ly + 12, 2], [lx + 30, ly + 12, 2]) + ' ' + path([lx + 8, ly + 20, 2], [lx + 22, ly + 20, 2])} stroke="#fff" />
       <Drum x={150} y={70} r={16} h={5} />
       <path d={path([150, 70, 5], [158, 70, 95], [96, 84, 120])} fill="none" strokeWidth="2.2" />

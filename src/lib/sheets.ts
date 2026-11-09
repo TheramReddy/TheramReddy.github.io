@@ -55,7 +55,7 @@ export function stackSheets(page: HTMLElement, motion: boolean) {
   const sheets = sheetsOf(page).map((el) => ({
     el,
     head: el.querySelector<HTMLElement>(':scope > .hero, :scope > .me-head'),
-    body: el.querySelector<HTMLElement>(':scope > [data-reveal]:not(.me-head), :scope > .jobs'),
+    body: el.querySelector<HTMLElement>(':scope > [data-reveal]:not(.me-head)'),
     top: 0,
   }))
   let height = 0

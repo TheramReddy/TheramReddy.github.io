@@ -29,7 +29,7 @@ export function Chrome() {
   )
 }
 
-/** Desktop nav mark: pencil hint on hover, red ink stroke under the current page. */
+/** Desktop nav mark: pencil hint on hover, ink stroke under the current page. */
 function Ink() {
   const d = 'M2 5.2 C 20 3.4, 38 6.2, 56 4.6 S 88 3.8, 98 4.9'
   return (

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowUpRight, Check, CircleAlert, FileText, BookOpen, Gauge, Info, Route, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { CONFETTI } from '@/components/layout/confetti'
-import { projects, type Project } from '@/data/projects'
+import { published, type Project } from '@/data/projects'
 import { tools, type ToolId } from '@/data/tools'
 import { cn } from '@/lib/utils'
 import { Approach } from './Approach'
@@ -33,8 +33,8 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
     return () => io.disconnect()
   }, [root])
 
-  const i = projects.findIndex((x) => x.slug === slug)
-  const next = projects[(i + 1) % projects.length]
+  const i = published.findIndex((x) => x.slug === slug)
+  const next = published[(i + 1) % published.length]
 
   return (
     <div className="kit contact-done walkthrough-end" ref={ref}>

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useId, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { projects } from '@/data/projects'
 
@@ -8,7 +8,7 @@ import { projects } from '@/data/projects'
  * storehouse under a pine in the middle distance, and a pagoda beyond a torii far off. A traveller walks it, smaller
  * and slower the further they go, resting at each stop and lighting its lantern. The scene is painted on stacked
  * layers that shift against each other with the pointer, so the near ground moves more than the hills. Each stop is
- * a link with a red "Read case study" flag planted at its foot, named for its case study for screen readers; pointing at or focusing one sends the traveller there.
+ * a link with a black "Read case study" flag planted at its foot, named for its case study for screen readers; pointing at or focusing one sends the traveller there.
  */
 
 type P = [number, number]
@@ -122,6 +122,7 @@ const CRANE_W = 46 // a crane's width in scene units, up close
 
 const SPEED = 46 // road units a second at the very front; further off, the same walk covers less of the screen
 const DWELL = 2.8 // seconds spent at each stop
+const STRIDE = 50 // road units covered by one pair of steps at the very front, scaled with the traveller like SPEED
 
 // the layers, back to front, and how far each one shifts with the pointer
 const DEPTH = { sky: 0.05, hills: 0.15, mist: 0.25, ground: 0.5, near: 0.85 }
@@ -186,6 +187,39 @@ export function CaseList() {
     let flying = -1
     let nextFlight = 5
 
+    // the stride: phase runs once per pair of steps, tied to ground covered so the feet never slide;
+    // amp eases in and out so the traveller sets off and comes to rest rather than snapping
+    const part = (n: string) => who.querySelector<SVGGElement>(`[data-part="${n}"]`)!
+    const legL = part('legL')
+    const legR = part('legR')
+    const body = part('body')
+    const staff = part('staff')
+    let phase = 0
+    let amp = 0
+    const stride = (walking: boolean, dt: number) => {
+      amp += ((walking ? 1 : 0) - amp) * Math.min(1, dt * 5)
+      if (amp < 0.01 && !walking) amp = 0
+      phase = (phase + dt * (SPEED / STRIDE) * (amp > 0 ? 1 : 0)) % 1
+      const s = Math.sin(phase * 2 * Math.PI)
+      const c = Math.cos(phase * 2 * Math.PI)
+      // the swinging foot lifts and the planted one bears down; the drawn pose already has the left foot up
+      const lift = (v: number) => Math.max(0, v)
+      const yl = amp * (0.55 * lift(-s) - 0.35 * lift(s))
+      const yr = amp * (0.55 * lift(s) - 0.5 * lift(-s))
+      legL.setAttribute('transform', `translate(${(amp * 0.15 * s).toFixed(2)} ${yl.toFixed(2)})`)
+      legR.setAttribute('transform', `translate(${(amp * -0.15 * s).toFixed(2)} ${yr.toFixed(2)})`)
+      // the body rises over each planted foot, shifts its weight onto it and rolls a touch toward it
+      const bob = -amp * 0.45 * Math.abs(s)
+      const sway = amp * 0.35 * s
+      const roll = amp * 1.4 * s
+      body.setAttribute('transform', `translate(${sway.toFixed(2)} ${bob.toFixed(2)}) rotate(${roll.toFixed(2)} 0 0)`)
+      // the staff hangs from the hand and swings forward and back, out of step with the near leg
+      staff.setAttribute(
+        'transform',
+        `translate(${sway.toFixed(2)} ${bob.toFixed(2)}) rotate(${roll.toFixed(2)} 0 0) rotate(${(amp * 5 * c).toFixed(2)} 9.75 -32)`,
+      )
+    }
+
     const place = (walking: boolean) => {
       const p = along(f)
       const k = sizeAt(p.y)
@@ -235,6 +269,7 @@ export function CaseList() {
         }
       }
       place(walking)
+      if (!still) stride(walking, dt)
 
       // the flock flies from the near sky into the far hills, smaller and paler as it goes, then is gone
       if (painted && !still) {
@@ -331,16 +366,16 @@ export function CaseList() {
               <feGaussianBlur stdDeviation="10" />
             </filter>
             {/* the hills thin out to nothing at both ends, so the range melts into the paper instead of stopping */}
-          <linearGradient id={`${id}-sides`}>
-            <stop offset="0" stopColor="#000" />
-            <stop offset=".22" stopColor="#fff" />
-            <stop offset=".8" stopColor="#fff" />
-            <stop offset="1" stopColor="#000" />
-          </linearGradient>
-          <mask id={`${id}-melt`} maskContentUnits="objectBoundingBox">
-            <rect width="1" height="1" fill={`url(#${id}-sides)`} />
-          </mask>
-          {/* a soft-edged sweep that uncovers the road from its near end to its far end */}
+            <linearGradient id={`${id}-sides`}>
+              <stop offset="0" stopColor="#000" />
+              <stop offset=".22" stopColor="#fff" />
+              <stop offset=".8" stopColor="#fff" />
+              <stop offset="1" stopColor="#000" />
+            </linearGradient>
+            <mask id={`${id}-melt`} maskContentUnits="objectBoundingBox">
+              <rect width="1" height="1" fill={`url(#${id}-sides)`} />
+            </mask>
+            {/* a soft-edged sweep that uncovers the road from its near end to its far end */}
             <linearGradient id={`${id}-sweep`}>
               <stop offset=".44" stopColor="#fff" />
               <stop offset=".56" stopColor="#000" />
@@ -351,9 +386,9 @@ export function CaseList() {
               </g>
             </mask>
             <radialGradient id={`${id}-glow`}>
-              <stop offset="0" stopColor="#e0563c" stopOpacity=".95" />
-              <stop offset=".25" stopColor="#c8432e" stopOpacity=".55" />
-              <stop offset="1" stopColor="#c8432e" stopOpacity="0" />
+              <stop offset="0" stopColor="#898989" stopOpacity=".95" />
+              <stop offset=".25" stopColor="#0a0a0a" stopOpacity=".55" />
+              <stop offset="1" stopColor="#0a0a0a" stopOpacity="0" />
             </radialGradient>
           </defs>
           <circle className="vl-sun vl-ink-in" style={{ '--o': 3 } as CSSProperties} cx="1068" cy="64" r="24" />
@@ -365,29 +400,29 @@ export function CaseList() {
         </Layer>
 
         {/* cranes in a loose line; four painted wing positions crossfade on each bird's own beat */}
-      <Layer d={DEPTH.mist}>
-        <g ref={flock} className="vl-flock" style={{ opacity: 0 }}>
-          {cranes.map(([dx, dy, s, beat], i) => (
-            <g key={i} transform={`translate(${dx} ${dy}) scale(${s})`}>
-              <g className="vl-crane" style={{ '--beat': `${beat}s`, '--ph': `${-i * 0.37}s` } as CSSProperties}>
-                {[0, 1, 2, 3].map((f) => (
-                  <image
-                    key={f}
-                    href={`/village/crane-${f}.webp`}
-                    x={-CRANE_W * 0.975}
-                    y={-CRANE_W * 0.475}
-                    width={CRANE_W}
-                    height={CRANE_W * 0.98}
-                    style={{ '--f': f } as CSSProperties}
-                  />
-                ))}
+        <Layer d={DEPTH.mist}>
+          <g ref={flock} className="vl-flock" style={{ opacity: 0 }}>
+            {cranes.map(([dx, dy, s, beat], i) => (
+              <g key={i} transform={`translate(${dx} ${dy}) scale(${s})`}>
+                <g className="vl-crane" style={{ '--beat': `${beat}s`, '--ph': `${-i * 0.37}s` } as CSSProperties}>
+                  {[0, 1, 2, 3].map((f) => (
+                    <image
+                      key={f}
+                      href={`/village/crane-${f}.webp`}
+                      x={-CRANE_W * 0.975}
+                      y={-CRANE_W * 0.475}
+                      width={CRANE_W}
+                      height={CRANE_W * 0.98}
+                      style={{ '--f': f } as CSSProperties}
+                    />
+                  ))}
+                </g>
               </g>
-            </g>
-          ))}
-        </g>
-      </Layer>
+            ))}
+          </g>
+        </Layer>
 
-      {/* mist drifting across the feet of the hills */}
+        {/* mist drifting across the feet of the hills */}
         <Layer d={DEPTH.mist} className="vl-mist">
           <g filter={u('haze')} fill="#fff">
             <ellipse cx="220" cy="200" rx="280" ry="22" />
@@ -410,8 +445,19 @@ export function CaseList() {
 
         {/* the traveller walks on the land's layer: sedge hat, bundle, walking staff */}
         <Layer d={DEPTH.ground} className="vl-walk">
+          {/* the painting is cut into legs, body and the staff below the hand so each can move through a stride */}
+          <defs>
+            <clipPath id={`${id}-legL`}><rect x="-12.5" y="-18.5" width="10.9" height="19" /></clipPath>
+            <clipPath id={`${id}-legR`}><rect x="-1.6" y="-18.5" width="7.2" height="19" /></clipPath>
+            <clipPath id={`${id}-body`}><path d="M-12.5 -61H12.5V-32H8.4L6.5 -28.2 6.2 -13.5H-12.5Z" /></clipPath>
+            <clipPath id={`${id}-staff`}><path d="M8.4 -32H12.5V0.5H6L6.5 -28.2Z" /></clipPath>
+          </defs>
           <g ref={walker} className="vl-walker">
-            <image className="vl-stride" href="/village/walker.webp" x="-12.5" y="-61" width="25" height="61" />
+            {(['legL', 'legR', 'body', 'staff'] as const).map((part) => (
+              <g key={part} data-part={part}>
+                <image clipPath={u(part)} href="/village/walker.webp" x="-12.5" y="-61" width="25" height="61" />
+              </g>
+            ))}
           </g>
         </Layer>
 
@@ -431,23 +477,24 @@ export function CaseList() {
               top: `${((s.y - s.tall * s.k) / H) * 100}%`,
               height: `${((s.tall * s.k) / H) * 100}%`,
             } as CSSProperties
-            return (
-              <li key={p.slug} style={style}>
-                <Link
-                  to={`/project/${p.slug}`}
-                  className="vl-stop"
-                  data-i={i}
-                  onPointerEnter={(e) => e.pointerType === 'mouse' && go(i)()}
-                  onPointerLeave={go(null)}
-                  onFocus={go(i)}
-                  onBlur={go(null)}
-                >
+            const props = {
+              className: `vl-stop${p.soon ? ' is-soon' : ''}`,
+              'data-i': i,
+              onPointerEnter: (e: ReactPointerEvent<HTMLElement>) => e.pointerType === 'mouse' && go(i)(),
+              onPointerLeave: go(null),
+              onFocus: go(i),
+              onBlur: go(null),
+            }
+            const content = (
+              <>
                   <span className="vl-flag">
                     <span className="vl-pennant">
-                      Read case study
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M7 17 17 7M8 7h9v9" />
-                      </svg>
+                      {p.soon ? 'Coming soon' : 'Read case study'}
+                      {!p.soon && (
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M7 17 17 7M8 7h9v9" />
+                        </svg>
+                      )}
                     </span>
                     {/* a washi slip tied under the pennant: the company's logo, what kind of work it is, and the summary;
                         it unrolls on hover, on focus, and where the traveller rests */}
@@ -455,12 +502,21 @@ export function CaseList() {
                       <span className="vl-peek-paper">
                         {p.logo && <img className="vl-peek-logo" src={p.logo} alt="" />}
                         <span className="vl-peek-tag">{p.tag}</span>
-                        <span className="vl-peek-sum">{p.summary}</span>
+                        {!p.soon && <span className="vl-peek-sum">{p.summary}</span>}
                       </span>
                     </span>
                   </span>
                   <span className="sr-only">: {p.title}</span>
-                </Link>
+              </>
+            )
+            return (
+              <li key={p.slug} style={style}>
+                {/* a case study still in the works stands on the map with a "Coming soon" flag and does not open */}
+                {p.soon ? (
+                  <span {...props} tabIndex={0} aria-disabled="true">{content}</span>
+                ) : (
+                  <Link {...props} to={`/project/${p.slug}`}>{content}</Link>
+                )}
               </li>
             )
           })}
