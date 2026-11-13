@@ -1,16 +1,8 @@
 /* ---------- mobile: vertical stack ---------- */
 @media (max-width: 760px) {
-  .ui .logo { width: 80px; }
-  /* hero: role and name stack in the centre; the note takes the full width under them */
-  .hero { gap: var(--s-6); }
-  .me-first { overflow-x: clip; }
-  .hero-note { justify-self: stretch; width: 100%; padding-left: var(--s-2); }
   :root:root { --gutter: var(--s-2); }
   body { overflow: auto; }
 
-  /* the bar runs edge to edge on a phone */
-  .ui .row.top { width: 100%; gap: var(--s-2); border-inline: 0; }
-  .ui .row.top .nav { gap: var(--s-3); margin-left: auto; }
 
   /* project popup */
   .sheet .cols { padding: 96px 20px 88px; gap: 56px; }

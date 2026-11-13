@@ -172,5 +172,3 @@
   .crew .ap-flyer { display: none; }
 }
 
-/* the floating companion carries its agent's hue */
-.crew-pal .bot-legs rect, .crew-pal .bot-body, .crew-pal .bot-armL rect, .crew-pal .bot-armR rect, .crew-pal .bot-antenna rect { fill: color-mix(in oklab, var(--c) 70%, var(--neutral-400)); }

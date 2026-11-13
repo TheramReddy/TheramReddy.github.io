@@ -108,7 +108,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'telemetric',
-    tag: 'Agentic AI',
+    tag: 'Telemetric',
     title: 'Telemetric',
     year: '2026',
     role: 'Product Designer',
@@ -127,4 +127,6 @@ export const projects: Project[] = [
 
 /** the case studies that can be opened */
 export const published = projects.filter((p) => !p.soon)
-export const getProject = (slug?: string) => published.find((p) => p.slug === slug)
+/** The case study pages are closed while they are rewritten: set to true and link the work cards to reopen them. */
+export const CASE_STUDIES_OPEN = true
+export const getProject = (slug?: string) => (CASE_STUDIES_OPEN ? published.find((p) => p.slug === slug) : undefined)

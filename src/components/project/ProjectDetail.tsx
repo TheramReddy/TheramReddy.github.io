@@ -215,6 +215,12 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               {p.slug === 'telemetric' && <Mission className="info-crew" away={null} />}
               {p.logo && <img className="proj-logo" src={p.logo} alt={p.client} />}
               <h2>{p.title}</h2>
+              <p className="cs-lede">{p.summary}</p>
+              <dl className="cs-meta">
+                <div><dt>Role</dt><dd>{p.role}</dd></div>
+                <div><dt>Client</dt><dd>{p.client}</dd></div>
+                <div><dt>Year</dt><dd>{p.year}</dd></div>
+              </dl>
               <p className="about-title">About the project</p>
               <p className="desc">{p.description}</p>
               {p.figma && (

@@ -13,7 +13,6 @@ export const tools = {
   javascript: 'JavaScript',
   typescript: 'TypeScript',
   git: 'Git',
-  react: 'React',
   aftereffects: 'After Effects',
   rive: 'Rive',
   lottie: 'Lottie',

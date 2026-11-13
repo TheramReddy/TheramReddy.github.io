@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
-import { Chrome } from '@/components/layout/Chrome'
-import { MePanel } from '@/components/panels/MePanel'
+import { Nav } from '@/components/home/Nav'
+import { Home } from '@/components/home/Home'
 import { getProject } from '@/data/projects'
 // design tokens for the arc components (tooltip, buttons)
 import '@/components/arc/foundation.css'
@@ -33,8 +33,8 @@ export default function App() {
 
   return (
     <>
-      <Chrome />
-      <MePanel covered={!!project} />
+      <Nav />
+      <Home covered={!!project} />
       <Suspense fallback={null}>
         <ProjectDetail project={project} open={!!project} />
       </Suspense>

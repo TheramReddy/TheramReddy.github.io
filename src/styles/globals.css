@@ -1,10 +1,10 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/playfair-display';
-@import '@fontsource-variable/instrument-sans';
+@import '@fontsource/geist-pixel';
+@import '@fontsource-variable/geist-mono';
+@import '@fontsource-variable/geist';
 @import 'tw-animate-css';
-@import './ui.css';
 @import './panels.css';
-@import './me.css';
+@import './home.css';
 @import './detail.css';
 @import './responsive.css';
 
@@ -19,16 +19,15 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
 
 /* Site tokens (light theme). The UI components read the semantic ones below. */
 :root {
+  --f-code: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
   --bg: #ffffff;
   --fg: #0a0a0a;
   --muted: rgba(10, 10, 10, 0.72);
-  --card: #e2e2e2;
   --line: rgba(10, 10, 10, 0.14);
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
-  /* Passenger Display stand-in: Playfair Display is the closest free high-contrast serif. */
-  --font-passenger: 'Playfair Display Variable', Georgia, serif;
-  /* Playfair is a display face: its hairlines break up below ~20px, so body, labels and UI use a sturdy text sans. */
-  --font-text: 'Instrument Sans Variable', system-ui, sans-serif;
+  /* One sans for everything that is read: Geist stays clear from 12px labels up to headings. */
+  --font-text: 'Geist Variable', system-ui, sans-serif;
+  --font-passenger: var(--font-text);
   --font-pixel: var(--font-passenger);
   --font-mono: var(--font-text);
   --seal: #0a0a0a;
@@ -45,16 +44,11 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
   --s-5: 40px;
   --s-6: 48px;
   --s-8: 64px;
-  --s-10: 80px;
-  --s-12: 96px;
-  --s-16: 128px;
 
   /* Type: six steps plus the display name. Line heights sit on the 8px grid. */
-  --fs-12: 12px;  --lh-12: 16px;  /* eyebrows, section labels, numbers */
   --fs-14: 14px;  --lh-14: 24px;  /* nav, captions, secondary lines */
   --fs-16: 16px;  --lh-16: 24px;  /* body, links */
   --fs-20: 20px;  --lh-20: 32px;  /* hero note */
-  --fs-24: 24px;  --lh-24: 32px;  /* card titles */
   --fs-display: clamp(48px, 8vw, 128px);
 
   /* Frame: one centred column with hairline grid lines, like a sheet of layout paper */
@@ -62,7 +56,6 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
   --gutter: var(--s-4);
   --bar: var(--s-8);
   --grid: rgba(10, 10, 10, 0.07);
-  --band: #f7f7f7;
 
   --radius: 0.625rem;
   --background: #ffffff;
@@ -83,7 +76,7 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
 }
 
 @theme inline {
-  --font-sans: 'Instrument Sans Variable', system-ui, sans-serif;
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: #ffffff;
@@ -128,7 +121,7 @@ html {
   html { font-size: 16px; }
 }
 body {
-  background: var(--bg);
+  background: #0c0c0b;
   color: var(--fg);
   font-family: var(--font-text);
   font-size: var(--fs-16);
@@ -148,15 +141,15 @@ h2,
 h3,
 h4 {
   text-wrap: balance;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 /* display voice: headings and the few large lines that act like them */
 h1,
 h2,
 h3,
 .story-principles li {
-  font-family: var(--font-passenger);
-  font-weight: 400;
+  font-family: var(--font-text);
+  font-weight: 500;
 }
 p {
   text-wrap: pretty;
