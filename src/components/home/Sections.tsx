@@ -3,7 +3,6 @@ import { ArrowRight, ArrowUpRight, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { projects, type Project } from '@/data/projects'
 import { site } from '@/data/site'
-import { scrollToSection } from '@/lib/me-section'
 import { useFit } from '@/lib/use-fit'
 import { PixelField, Timeline } from './WorkWells'
 
@@ -54,7 +53,6 @@ export function Work() {
     <section className="block work" data-nav="projects" aria-labelledby="work-h">
       <div className="col">
         <h2 className="px" id="work-h">work</h2>
-        <p className="block-sub">Real products, start to finish.</p>
         <ol className="tiles">
           {projects.map((p, i) => {
             // the featured card: two keys and a small note under the pitch, and the paper card in the well
@@ -87,7 +85,7 @@ export function Work() {
   )
 }
 
-/** Footer: the invitation, the small print, then the name set as wide as the column. */
+/** Footer: the name set as wide as the column. */
 export function Foot() {
   const box = useRef<HTMLDivElement>(null)
   const word = useRef<HTMLSpanElement>(null)
@@ -95,18 +93,6 @@ export function Foot() {
   return (
     <footer className="foot" data-nav="contact">
       <div className="col">
-        <div className="foot-top">
-          <p className="foot-say">Bring me the workflow<span>nobody wants to use.</span></p>
-        </div>
-        <div className="foot-row">
-          <nav aria-label="Footer">
-            <button type="button" onClick={() => scrollToSection('about')}>Playground</button>
-            <button type="button" onClick={() => scrollToSection('projects')}>Work</button>
-            <button type="button" onClick={() => scrollToSection('me')}>Back to top</button>
-          </nav>
-          <p>{site.location}</p>
-          <p>© {new Date().getFullYear()} {site.name}</p>
-        </div>
         <div className="foot-word" ref={box} aria-hidden="true"><span ref={word}>{site.firstName.toLowerCase()}</span></div>
       </div>
     </footer>
