@@ -40,7 +40,7 @@ export function PlayScene({ scene }: { scene: string }) {
       last = ''
       render(g, scene, t)
       // fade in at the start of a round and out at its end, so the reset never shows
-      const a = 1 - Math.min(t / FADE, (spec.loop - t) / FADE, 1)
+      const a = spec.still !== undefined ? 0 : 1 - Math.min(t / FADE, (spec.loop - t) / FADE, 1)
       if (a > 0) {
         ctx.globalAlpha = a
         ctx.fillStyle = PLATE
@@ -50,7 +50,8 @@ export function PlayScene({ scene }: { scene: string }) {
       }
     }
 
-    // a calm still for reduced motion: the solved state
+    // stills are drawn once; reduced motion gets a calm solved frame
+    if (spec.still !== undefined) { frame(spec.still); return }
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) { frame(spec.loop - FADE - 0.2); return }
 
     const detail = cv.closest('.detail')

@@ -1,20 +1,43 @@
 import { Fragment, useEffect, useRef, type ReactNode } from 'react'
-import { InkDefs } from './InkArt'
 import { JourneyMap } from './JourneyMap'
-import { AuditArt, FlowArt, LayersArt, NotesArt, WireArt } from './ScobinArt'
+import { PlayScene } from './PlayScene'
+import { StatTiles } from './StatTiles'
 
 const img = (name: string) => `/projects/scobin/${name}.png`
 
-const Shot = ({ name, w, h, alt }: { name: string; w: number; h: number; alt: string }) => (
+/** What each Figma frame is, for the title of its window. */
+const CAPS: Record<string, string> = {
+  dashboard: 'dashboard · sample screen', semantic: 'semantic colors', typography: 'typography', contrast: 'color contrast',
+  'button-states': 'button · states', 'button-docs': 'button · docs', accordion: 'accordion', properties: 'accordion · properties',
+}
+
+/** A dark pixel window around a picture or a scene: three little squares and a lowercase title. */
+function Frame({ cap, children }: { cap: string; children: ReactNode }) {
+  return (
+    <figure className="frame px-plate">
+      <figcaption><i /><i /><i /><span>{cap}</span></figcaption>
+      <div className="frame-body">{children}</div>
+    </figure>
+  )
+}
+
+const Pic = ({ name, w, h, alt }: { name: string; w: number; h: number; alt: string }) => (
   <img src={img(name)} width={w} height={h} loading="lazy" decoding="async" alt={alt} />
 )
 
-/** A wide Figma board that scrolls sideways on small screens. */
-const Board = (props: Parameters<typeof Shot>[0]) => (
-  <div className="board" tabIndex={0} role="group" aria-label="Scrollable board">
-    <Shot {...props} />
-  </div>
+const Shot = (props: Parameters<typeof Pic>[0]) => (
+  <Frame cap={CAPS[props.name] ?? props.name}><Pic {...props} /></Frame>
 )
+
+/** A wide Figma board that scrolls sideways on small screens. */
+const Board = (props: Parameters<typeof Pic>[0]) => (
+  <Frame cap={CAPS[props.name] ?? props.name}>
+    <div className="board" tabIndex={0} role="group" aria-label="Scrollable board"><Pic {...props} /></div>
+  </Frame>
+)
+
+/** A pixel scene on a dark plate, in place of a drawing. */
+const Scene = ({ scene }: { scene: string }) => <div className="scene-plate px-plate"><PlayScene scene={scene} /></div>
 
 export type Chapter = {
   id: string
@@ -34,7 +57,7 @@ export type Chapter = {
 function Wireframe() {
   return (
     <div className="pair">
-      <WireArt />
+      <Frame cap="wireframe"><PlayScene scene="Wire" /></Frame>
       <Shot name="dashboard" w={1280} h={1054} alt="The finished Dashboard sample screen with breadcrumbs, title, alert, four stat cards and pagination" />
     </div>
   )
@@ -52,7 +75,7 @@ const chapters: Chapter[] = [
       'I grouped similar controls, looked at the purpose behind each variation, and identified where a single, well defined component could replace multiple competing patterns.',
     ],
     decision: 'The first step wasn’t designing more components. It was understanding which ones we actually needed.',
-    art: <AuditArt />,
+    art: <Scene scene="Audit" />,
   },
   {
     id: 'sc-research',
@@ -65,7 +88,7 @@ const chapters: Chapter[] = [
       'These weren’t isolated UI questions. They revealed a larger problem: the team lacked a shared reference for making consistent decisions.',
     ],
     decision: 'That became the foundation of the design system: every reusable component should answer the questions people would otherwise have to ask.',
-    art: <NotesArt />,
+    art: <Scene scene="Notes" />,
     flip: true,
   },
   {
@@ -78,7 +101,7 @@ const chapters: Chapter[] = [
       'I wanted the library to carry that context. By documenting component behavior, states, and usage rules directly in Figma, I could make important design decisions available at the moment someone needed them.',
     ],
     decision: 'The goal was to spend less time clarifying the same details and more time solving meaningful design problems.',
-    art: <FlowArt />,
+    art: <Scene scene="Flow" />,
   },
   {
     id: 'sc-wireframe',
@@ -103,7 +126,7 @@ const chapters: Chapter[] = [
       'This separation was intentional. I didn’t want designers or developers to memorize which shade of blue belonged to an information message or which raw value should be used for a specific surface. Instead, components reference Applied tokens, which are named for their purpose.',
     ],
     decision: 'The component asks for the meaning of a value, not a hardcoded color.',
-    art: <LayersArt />,
+    art: <Scene scene="Layers" />,
     flip: true,
   },
   {
@@ -245,11 +268,27 @@ export function ChapterBlock({ c, level = 3 }: { c: Chapter; level?: 3 | 4 }) {
 export function ScobinStory() {
   return (
     <div className="story">
-      <InkDefs />
+      <div className="story-open">
       <p className="story-intro">The goal wasn’t simply to create reusable components. I wanted to make design decisions easier to understand, easier to implement, and easier to maintain as the product evolved.</p>
-      <ol className="story-principles" aria-label="My approach">
-        {principles.map((x, i) => <li key={x}><span className="story-num">{num(i + 1)}</span>{x}</li>)}
-      </ol>
+      <StatTiles stats={[
+        { to: 548, label: 'variables' },
+        { to: 41, label: 'documented components' },
+        { to: 95, label: 'text styles' },
+        { to: 120, suffix: '+', label: 'people using it' },
+      ]} />
+      <div className="rulebook px-plate">
+        <span className="id-slot" aria-hidden="true" />
+        <p className="rb-head">how i worked · 5 principles</p>
+        <ol aria-label="My approach">
+          {principles.map((x, i) => (
+            <li key={x}>
+              <span className="rb-num" aria-hidden="true">{num(i + 1)}</span>
+              <h4>{x}</h4>
+            </li>
+          ))}
+        </ol>
+      </div>
+      </div>
       {chapters.map((c, i) => (
         <Fragment key={c.id}>
           {c.part && c.part !== chapters[i - 1]?.part && (

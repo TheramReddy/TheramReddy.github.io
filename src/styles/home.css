@@ -1,6 +1,6 @@
 /* ==========================================================================
    Home: one dark scrolling page. Near-black ground, slightly lifted cards, off-white type, no colour.
-   Everything that is read is Geist; the wordmark and section titles are Geist Pixel; measurements are Geist Mono.
+   Two fonts only: Geist for everything read, Geist Pixel for the wordmark and titles.
    Sizes are in px on purpose: the layout is a fixed 1360px column that only shrinks when the window is narrower.
    ========================================================================== */
 :root {
@@ -11,7 +11,7 @@
   --d-soft: #b4b4b1;
   --d-mute: #8c8c89;
   --d-dim: #626260;
-  --f-px: 'Geist Pixel', 'Geist Mono Variable', ui-monospace, monospace;
+  --f-px: 'Geist Pixel', 'Geist Variable', system-ui, sans-serif;
   --gut: clamp(16px, 2.6vw, 40px);
   --out: cubic-bezier(.16, 1, .3, 1);
   /* a raised card: a lit top edge, a hairline, a dark rim, a soft drop */

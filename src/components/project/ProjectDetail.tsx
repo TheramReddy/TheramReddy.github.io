@@ -43,7 +43,7 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
           {CONFETTI.map((st, n) => <i key={n} style={st} />)}
         </div>
       )}
-      {seen && <span className="contact-done-icon px-plate"><svg viewBox="0 0 8 6" width="24" height="18" shapeRendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="7" y="0" width="1" height="1" /><rect x="6" y="1" width="2" height="1" /><rect x="0" y="2" width="1" height="1" /><rect x="5" y="2" width="2" height="1" /><rect x="0" y="3" width="2" height="1" /><rect x="4" y="3" width="2" height="1" /><rect x="1" y="4" width="4" height="1" /><rect x="2" y="5" width="2" height="1" /></svg></span>}
+      {seen && <span className="contact-done-icon px-plate"><svg viewBox="0 0 8 7" width="24" height="21" shapeRendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="6" y="0" width="2" height="1" /><rect x="5" y="1" width="3" height="1" /><rect x="0" y="2" width="2" height="1" /><rect x="4" y="2" width="3" height="1" /><rect x="0" y="3" width="3" height="1" /><rect x="4" y="3" width="2" height="1" /><rect x="1" y="4" width="5" height="1" /><rect x="2" y="5" width="3" height="1" /><rect x="3" y="6" width="1" height="1" /></svg></span>}
       <p>That’s the walkthrough.</p>
       {next.slug !== slug && (
         <button type="button" className="key is-big is-lit" onClick={() => navigate(`/project/${next.slug}`)}>next: {next.title}</button>

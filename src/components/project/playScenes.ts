@@ -4,7 +4,7 @@
  * calls. A scene is a pure function of time, which keeps it easy to loop, pause and test.
  */
 export type Gfx = { rect: (x: number, y: number, w: number, h: number, c: string) => void }
-export type Scene = { draw: (g: Gfx, t: number) => void; loop: number }
+export type Scene = { draw: (g: Gfx, t: number) => void; loop: number; /** draw once at this time and stay still */ still?: number }
 
 export const W = 144
 export const H = 76
@@ -179,7 +179,7 @@ function along(pts: Pt[], u: number) {
 function stack(items: [number, () => void][]) { items.sort((a, b) => a[0] - b[0]).forEach(([, f]) => f()) }
 
 export function floor(g: Gfx) {
-  for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) tile(g, i, j, 1, 1, (i + j) % 2 ? '#1e1e1c' : '#222220')
+  for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) tile(g, i, j, 1, 1, (i + j) % 2 ? '#212120' : '#272725')
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -485,6 +485,140 @@ const hidden = (g: Gfx, t: number) => {
   if (fly >= 1) { hover(g, P(cx + 0.55, cy + 0.75, 10), G.check, LIT); spark(g, P(cx + 0.55, cy + 0.75, 12), 7.6) }
 }
 
+// ---------------------------------------------------------------------------------------------------------
+// Scobin: audit. Five dropdowns that all do one job; the bot inspects each, then they merge into a single one
+
+const CARET = ['#####', '.###.', '..#..']
+const DROPS: { at: Pt; w: number; h: number; tone: Tone }[] = [
+  { at: [0.8, 0.8], w: 1.8, h: 1.2, tone: MD },
+  { at: [4.4, 0.6], w: 1.4, h: 2.0, tone: LO },
+  { at: [1.2, 4.2], w: 2.2, h: 0.8, tone: HI },
+  { at: [5.2, 4.0], w: 1.6, h: 1.6, tone: MD },
+  { at: [3.0, 6.4], w: 1.2, h: 1.0, tone: LO },
+]
+const DROP_TARGET: Pt = [3.2, 3.2]
+const AUDIT_PATH: Pt[] = [[1.7, 2.6], [5.1, 2.4], [6.0, 5.8], [2.3, 5.9], [3.6, 7.8], [3.9, 5.6]]
+const audit = (g: Gfx, t: number) => {
+  const walk = T(t, 0.4, 4.4)
+  const merge = ease(T(t, 4.8, 6.2))
+  const born = ease(T(t, 5.6, 6.4))
+  const b = along(AUDIT_PATH, walk)
+  const items: [number, () => void][] = DROPS.map((d) => {
+    const gx = lerp(d.at[0], DROP_TARGET[0], merge), gy = lerp(d.at[1], DROP_TARGET[1], merge)
+    const h = d.h * 3 * (1 - merge * 0.85)
+    const near = Math.hypot(b.gx - (d.at[0] + d.w / 2), b.gy - (d.at[1] + 1.2)) < 1.5 && merge === 0
+    return [gx + gy + 0.5, () => {
+      if (merge >= 0.98) return
+      box(g, gx, gy, d.w, 0.9, h, d.tone)
+      glyphAt(g, P(gx + d.w / 2, gy + 0.45, h + 0.4), CARET, MID)
+      if (near && t > 0.4) hover(g, P(gx + d.w / 2, gy + 0.45, h + 9), G.bang, SOFT)
+    }] as [number, () => void]
+  })
+  items.push([DROP_TARGET[0] + DROP_TARGET[1] + 1.2, () => {
+    if (born <= 0) return
+    box(g, DROP_TARGET[0], DROP_TARGET[1], 1.8, 0.9, 3.6 * born, HI)
+    glyphAt(g, P(DROP_TARGET[0] + 0.9, DROP_TARGET[1] + 0.45, 3.6 * born + 0.4), CARET, MID)
+  }])
+  items.push([b.gx + b.gy + 0.6, () => bot(g, b.gx, b.gy, { step: b.step, face: b.face, carry: merge > 0 && merge < 1 })])
+  stack(items)
+  if (walk > 0.05 && walk < 1 && Math.floor(t * 3) % 2 === 0) hover(g, P(b.gx, b.gy, 13), G.lens, SOFT)
+  if (born >= 1) { hover(g, P(4.1, 3.7, 10), G.check, LIT); spark(g, P(4.1, 3.7, 11), 6.4) }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// Scobin: layers. Primitive values, semantic names, component use; a token climbs through all three
+
+const layers = (g: Gfx, t: number) => {
+  const toMid = ease(T(t, 1.0, 2.2))
+  const toTop = ease(T(t, 3.0, 4.2))
+  const lit = t > 4.2
+  const cubes = (gx: number, gy: number, n: number, step: number, z: number, tones: Tone[]) => {
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) box(g, gx + i * step, gy + j * step, 0.6, 0.6, 0.6, tones[(i + j) % tones.length], z)
+  }
+  // posts that tie the layers together
+  for (const [px, py] of [[1, 1], [6, 1], [6, 6], [1, 6]] as Pt[]) line(g, P(px, py, 1.5), P(px, py, 7), '#33332f')
+  box(g, 1, 1, 5, 5, 1.5, LO)
+  cubes(1.6, 1.6, 3, 1.5, 1.5, [MD, HI, LO])
+  box(g, 1.8, 1.8, 3.4, 3.4, 1.4, MD, 7)
+  cubes(2.4, 2.4, 2, 1.2, 8.4, [HI, LO])
+  box(g, 2.7, 2.7, 1.6, 1.6, 1.4, lit ? HI : LO, 13)
+  if (lit) spark(g, P(3.5, 3.5, 16), 4.2)
+  // the token: a small cube that hops from the bottom layer to the top
+  const from: Pt3 = [3.0, 3.0, 2.2], mid: Pt3 = [3.0, 3.0, 9.3], top: Pt3 = [3.2, 3.2, 14.9]
+  const pos = t < 1.0 ? from : t < 2.2 ? lerp3(from, mid, toMid) : t < 3.0 ? mid : lerp3(mid, top, toTop)
+  const hop = (t >= 1.0 && t < 2.2 ? Math.sin(toMid * Math.PI) : 0) * 4 + (t >= 3.0 && t < 4.2 ? Math.sin(toTop * Math.PI) : 0) * 4
+  const s = P(pos[0], pos[1], pos[2] + hop)
+  g.rect(s[0] - 2, s[1] - 3, 5, 5, LIT)
+  g.rect(s[0] - 2, s[1] + 2, 5, 1, SOFT)
+  g.rect(s[0], s[1] - 2, 1, 1, INK)
+  bot(g, 6.9, 5.6, { face: -1, carry: lit })
+}
+type Pt3 = [number, number, number]
+const lerp3 = (a: Pt3, b: Pt3, u: number): Pt3 => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u)]
+
+// ---------------------------------------------------------------------------------------------------------
+// Scobin stills: no motion, drawn once. The notes wall, the question loop before and after, the wireframe
+
+/** A filled rectangle on the left-hand face of a box (the face at gy), from gx = a0..a1 and heights z0..z1. */
+const faceRect = (g: Gfx, gy: number, a0: number, a1: number, z0: number, z1: number, c: string) =>
+  poly(g, [P(a0, gy, z1), P(a1, gy, z1), P(a1, gy, z0), P(a0, gy, z0)], c)
+
+/** research: nine sticky notes on a whiteboard, under three headings, with two bots reading */
+const notes = (g: Gfx) => {
+  box(g, 1, 3, 6, 0.4, 19, LO)
+  const gy = 3.4
+  for (let c = 0; c < 3; c++) {
+    const a0 = 1.4 + c * 1.85, a1 = a0 + 1.5
+    faceRect(g, gy, a0, a1, 15.2, 17.2, LIT)
+    for (let r = 0; r < 3; r++) {
+      const z1 = 13.2 - r * 4.2
+      faceRect(g, gy, a0, a1, z1 - 3.2, z1, (r + c) % 2 ? MID : SOFT)
+      faceL(g, gy, a0 + 0.25, a1 - 0.5, z1 - 1.1, INK)
+      faceL(g, gy, a0 + 0.25, a1 - 0.9, z1 - 2.1, INK)
+    }
+  }
+  bot(g, 3.0, 5.9, { face: 1 })
+  bot(g, 5.3, 6.3, { face: -1, tone: MID })
+  glyphAt(g, P(3.0, 5.9, 13), G.q, SOFT)
+  glyphAt(g, P(5.3, 6.3, 13), G.bang, SOFT)
+}
+
+/** flow: before, design / build / review loop back with questions; after, the library answers and it ships */
+const flowStill = (g: Gfx) => {
+  const xs = [0.8, 3.6, 6.4]
+  const lane = (gy: number, tone: Tone) => {
+    xs.forEach((x) => box(g, x, gy, 1.4, 1.4, 2.5, tone))
+    for (let i = 0; i < 2; i++) {
+      const a = P(xs[i] + 1.5, gy + 0.7, 1.2), b = P(xs[i + 1] - 0.1, gy + 0.7, 1.2)
+      line(g, a, b, tone === HI ? LIT : DIM)
+      g.rect(b[0] - 1, b[1] - 1, 2, 3, tone === HI ? LIT : DIM)
+    }
+  }
+  lane(1.0, LO)
+  // the loop back from review to design, with its questions
+  const top = 7.5
+  line(g, P(xs[2] + 0.7, 1.7, 2.5), P(xs[2] + 0.7, 1.7, top), DIM)
+  line(g, P(xs[2] + 0.7, 1.7, top), P(xs[0] + 0.7, 1.7, top), DIM)
+  line(g, P(xs[0] + 0.7, 1.7, top), P(xs[0] + 0.7, 1.7, 2.5), DIM)
+  bubble(g, P(4.9, 1.7, top), G.q)
+  bubble(g, P(2.6, 1.7, top), G.q)
+  lane(5.0, HI)
+  glyphAt(g, P(xs[2] + 0.7, 5.7, 5), G.check, LIT)
+  bot(g, 0.5, 3.6, { face: 1 })
+}
+
+/** wire: the grey-box app shell lying on the desk, with a single white primary button */
+const wireStill = (g: Gfx) => {
+  box(g, 0.6, 0.8, 6.8, 5.4, 1, LO)
+  box(g, 0.8, 1.0, 6.4, 0.8, 1.6, MD, 1)
+  box(g, 0.8, 2.0, 1.6, 4.0, 1.4, MD, 1)
+  box(g, 2.6, 2.0, 4.6, 4.0, 0.8, LO, 1)
+  for (let i = 0; i < 3; i++) box(g, 2.9 + i * 1.5, 2.3, 1.3, 1.3, 1.1, MD, 1.8)
+  box(g, 2.9, 4.0, 2.8, 1.0, 1.1, MD, 1.8)
+  box(g, 6.1, 4.0, 0.9, 0.5, 1.4, HI, 1.8)
+  bot(g, 8.1, 5.4, { face: -1, carry: true })
+}
+
 /** Each scene with its loop length: its last move plus a short hold before it fades and starts over. */
 export const scenes: Record<string, Scene> = {
   Wall: { draw: wall, loop: 11 },
@@ -496,6 +630,11 @@ export const scenes: Record<string, Scene> = {
   Queue: { draw: queue, loop: 9.4 },
   Signal: { draw: signal, loop: 9 },
   Hidden: { draw: hidden, loop: 9.2 },
+  Audit: { draw: audit, loop: 9 },
+  Layers: { draw: layers, loop: 8 },
+  Notes: { draw: notes, loop: 99, still: 0 },
+  Flow: { draw: flowStill, loop: 99, still: 0 },
+  Wire: { draw: wireStill, loop: 99, still: 0 },
 }
 
 /** Draw one frame of a scene; t is in seconds from the start of its loop. */

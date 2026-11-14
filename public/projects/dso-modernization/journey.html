@@ -11,7 +11,7 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.5 "Karla", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font: 15px/1.5 "Geist", ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased; }
   .edge { fill: none; stroke: #958f82; stroke-linejoin: round; stroke-linecap: round; transition: opacity .2s, stroke .2s; }
   .edge.hot { stroke: var(--ink); }
@@ -57,7 +57,7 @@
   .hand button { font: inherit; font-size: 12px; border: 1px solid #dcd9d2; background: #fff; border-radius: 99px; padding: 2px 10px; cursor: pointer; color: var(--ink); }
   .hand button:hover { border-color: var(--ink); }
   /* ---- clean pass: quieter, Apple-like ---- */
-  html, body { font: 15px/1.47 "Instrument Sans", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; letter-spacing: -.011em; }
+  html, body { font: 15px/1.47 "Geist", ui-sans-serif, system-ui, sans-serif; letter-spacing: -.011em; }
   .stripe, .stripe.alt { background: #fff; border-radius: 18px; box-shadow: none; }
   .stripe.alt { background: #faf9f6; }
   .phase, .lane { font-size: 11px; letter-spacing: .04em; text-transform: none; font-weight: 500; color: #6b6862; }
@@ -103,7 +103,6 @@
   .hand > div { gap: 2px 12px; }
   .viewport { padding: 36px 32px 48px; height: 100vh; }
   /* ---- polish: brand font, browser surfaces, focus, phone layout ---- */
-  @font-face { font-family: "Instrument Sans"; src: url("/fonts/instrument-sans-latin-wght-normal.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
   ::selection { background: rgba(200,67,46,.18); }
   .viewport, .panel { scrollbar-width: thin; scrollbar-color: #c4c0b6 transparent; }
   .viewport::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -121,6 +120,7 @@
   }
 
 </style>
+<link rel="stylesheet" href="/projects/journey-theme.css">
 </head>
 <body>
 

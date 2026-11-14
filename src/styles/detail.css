@@ -3,7 +3,7 @@
   /* dark sheet: the site tokens are swapped here, so everything inside reads light on near-black */
   --sheet: var(--d-bg, #0c0c0b); --bg: var(--d-card, #1a1a19); --fg: var(--d-fg, #f2f2f0); --muted: var(--d-soft, #b4b4b1); --line: rgba(242,242,240,.14);
   --ink: var(--d-fg, #f2f2f0); --paper: var(--d-card, #1a1a19); --seal: var(--d-fg, #f2f2f0);
-  --f-px: 'Geist Pixel', 'Geist Mono Variable', ui-monospace, monospace;
+  --f-px: 'Geist Pixel', 'Geist Variable', system-ui, sans-serif;
   position: fixed; inset: 0; z-index: 35;
   background: var(--sheet); color: var(--fg);
   opacity: 0; visibility: hidden;
@@ -25,10 +25,10 @@
 #cs-overview, #cs-glance, #cs-problems, #cs-journey, #cs-action { scroll-margin-top: 120px; }
 /* journey maps: the standalone map in a pannable frame */
 .journey-lede { margin: 12px 0 0; max-width: 40rem; font-size: 1.0625rem; line-height: 1.6; color: var(--muted); }
-.journey-frame { margin-top: 28px; height: min(720px, 78vh); border-radius: 20px; overflow: hidden; background: #eeeeee; }
+.journey-frame { margin-top: 28px; height: min(720px, 78vh); overflow: hidden; background: #0c0c0b; outline: 1px solid #45453f; outline-offset: -1px; }
 .journey-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 /* phones: leave room above and below so the page can still be scrolled past the map */
-@media (max-width: 768px) { .journey-frame { height: min(520px, 64vh); border-radius: 16px; } }
+@media (max-width: 768px) { .journey-frame { height: min(520px, 64vh); } }
 .detail.open .sheet { transform: none; }
 .sheet .cols { display: flex; flex-direction: column; align-items: stretch; gap: 96px; width: min(100%, 65rem); margin: 0 auto; padding: 150px 32px 120px; min-height: 100%; box-sizing: border-box; text-align: left; }
 .sheet .info { width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
@@ -64,23 +64,20 @@
 .proj-logo[src$="scobin.svg"] { height: 28px; }
 .about-title { margin-top: 40px; font-size: 0.8125rem; color: var(--muted); }
 .about-title + .desc { margin-top: 8px; }
-.cf-controls { margin-top: 24px; display: flex; align-items: center; justify-content: flex-start; gap: 14px; color: var(--muted); }
-.cf-btn { width: 32px; height: 32px; display: grid; place-items: center; color: inherit; transition: color .3s, opacity .3s; }
-.cf-btn:first-child svg { animation: hint-left 1.8s ease-in-out infinite; }
-.cf-btn:last-child svg { animation: hint-right 1.8s ease-in-out infinite; }
-@keyframes hint-left { 50% { transform: translateX(-4px); } }
-@keyframes hint-right { 50% { transform: translateX(4px); } }
-@media (prefers-reduced-motion: reduce) { .cf-btn svg { animation: none !important; } }
-.cf-btn:disabled { opacity: .3; cursor: default; }
-.cf-btn:disabled svg { animation: none !important; }
-@media (hover: hover) and (pointer: fine) { .cf-btn:not(:disabled):hover { color: var(--fg); } }
+.cf-controls { margin-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.cf-count { margin: 0; font: 400 1.125rem/1 var(--f-px); color: var(--muted); }
+.cf-keys { display: flex; align-items: center; gap: 10px; }
+/* the way on: its arrow steps forward and back so it reads as the thing to press */
+.cf-arrow { display: inline-block; animation: cf-nudge 1.1s steps(2, jump-none) infinite; }
+@keyframes cf-nudge { 50% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) { .cf-arrow { animation: none; } }
 /* cards share one grid cell, so the stage is as tall as the tallest card instead of a fixed guess */
 /* the problems as case files: one file open at a time, the picture on the left, the decision on the right */
 .coverflow { position: relative; display: grid; margin-top: 28px; }
 .diagram { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; position: relative; isolation: isolate; grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 36px; align-items: stretch; padding: 28px; box-sizing: border-box; transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s; }
 .diagram[aria-hidden="true"] { opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(calc(var(--o) * 24px)); transition: opacity .3s var(--ease), transform .45s var(--ease), visibility 0s .45s; }
 .diagram .d-art { display: grid; place-items: center; min-height: 0; min-width: 0; align-self: center; }
-.play-scene { display: block; width: min(100%, 432px); height: auto; aspect-ratio: 144 / 76; image-rendering: pixelated; }
+.play-scene { display: block; width: 100%; max-width: 576px; height: auto; aspect-ratio: 144 / 76; image-rendering: pixelated; }
 .d-copy { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 .d-label-tag { display: flex; align-items: center; gap: 10px; margin: 24px 0 0; font: 400 1.25rem/1 var(--f-px); text-transform: lowercase; color: var(--fg); }
 .d-label-tag::before { content: ""; flex: none; width: 8px; height: 8px; background: var(--fg); }
@@ -88,11 +85,7 @@
 .diagram h4 { font: 400 1.75rem/1.2 var(--f-px); letter-spacing: -.02em; }
 .diagram p { margin: 8px 0 0; font-size: 1rem; line-height: 1.55; letter-spacing: 0; color: var(--muted); }
 .diagram svg { display: block; width: 100%; height: auto; color: var(--fg); overflow: visible; }
-.diagram .d-label { font-size: 1.6875rem; } .diagram .d-small { font-size: 1.375rem; }
 /* DSO problem art: isometric ink still-lifes in the hand of the brand drawings */
-.ink-art { stroke: var(--ink); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
-.ink-art .ink-fine { fill: none; stroke-width: .6; }
-.ink-art .ink-tag { stroke: none; fill: var(--ink); font-family: var(--font-text); font-weight: 600; letter-spacing: .08em; }
 .d-box { fill: var(--bg); stroke: currentColor; stroke-width: 1.3; }
 .d-line { fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; }
 .d-dash { stroke-dasharray: 5 6; }
@@ -166,11 +159,11 @@
 .chapter.flip .chapter-art { order: 2; }
 .chapter-art { min-width: 0; display: grid; align-content: center; }
 .chapter-art > svg { display: block; width: 100%; height: auto; color: var(--fg); overflow: visible; }
-.chapter-art img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 0 0 1px rgba(243,241,234,.08); }
+.chapter-art img { display: block; width: 100%; height: auto; }
 .chapter-art .d-label { font-size: 1.5rem; }
 .chapter-art .d-small { font-size: 1.25rem; }
 
-.chapter-art .d-dim { font: 11px var(--font-mono); fill: var(--muted); }
+.chapter-art .d-dim { font: 11px var(--font-text); fill: var(--muted); }
 .chapter-copy :is(h3, h4), .story-principles li { font: 400 1.875rem/1.2 var(--f-px); letter-spacing: -.03em; }
 .chapter-text { margin-top: 16px; }
 .chapter-text p, .story-intro { max-width: 52ch; font-size: 1.0625rem; line-height: 1.65; letter-spacing: 0; color: var(--muted); }
@@ -188,7 +181,6 @@
 .chapter.wide .chapter-text { margin-top: 0; }
 
 /* wide Figma boards scroll sideways on small screens instead of shrinking past reading size */
-.board { border-radius: 10px; }
 .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: center; }
 .stack-shots { display: flex; flex-direction: column; gap: 20px; }
 
@@ -200,6 +192,7 @@
   .pair { grid-template-columns: 1fr; }
   .board { overflow-x: auto; }
   .board img { min-width: 860px; }
+
   .story-principles li { font-size: 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -241,8 +234,8 @@
 .shots-grid { list-style: none; margin: 32px 0 0; padding: 0; columns: 2; column-gap: 12px; }
 .shots-grid li { break-inside: avoid; margin-bottom: 12px; }
 @media (max-width: 600px) { .shots-grid { columns: 1; } }
-.shots-tile { padding: 10px; border-radius: 24px; background: var(--bg); user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-.shots-tile img { display: block; width: 100%; height: auto; border-radius: 14px; pointer-events: none; }
+.shots-tile { padding: 10px; background: var(--bg); user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.shots-tile img { display: block; width: 100%; height: auto; pointer-events: none; }
 .figma-link.page-link { display: flex; align-self: stretch; justify-content: space-between; padding: 18px 22px; gap: 24px; border-radius: 14px; background: transparent; color: var(--fg); border: 1px solid rgba(243,241,234,.14); transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease); }
 .figma-link.page-link small { color: var(--muted); }
 @media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { background: rgba(243,241,234,.03); border-color: rgba(243,241,234,.32); transform: none; } }
@@ -261,14 +254,14 @@
 .metric-group { order: -1; margin: 0 0 10px; font: 400 0.875rem/1 var(--f-px); letter-spacing: 0; text-transform: lowercase; color: var(--muted); }
 .story-num { display: inline-block; min-width: 2.2em; font-size: .5em; vertical-align: .45em; letter-spacing: .04em; font-variant-numeric: lining-nums tabular-nums; color: var(--muted); }
 /* one heading per principle, above its group of chapters; the chapters below drop a level */
-.story-part { margin-bottom: -48px; padding-top: 28px; border-top: 1px solid rgba(243,241,234,.12); font-size: 1.25rem; line-height: 1.3; color: var(--muted); }
-.story-part .story-num { font-size: .75em; vertical-align: .1em; min-width: 2.4em; }
+.story-part { display: flex; align-items: baseline; gap: 14px; margin-bottom: -48px; padding-top: 0; font: 400 1.5rem/1.25 var(--f-px); letter-spacing: -.02em; color: var(--fg); }
+.story-part .story-num { flex: none; min-width: 0; padding: 4px 8px 3px; font: 400 .9375rem/1 var(--f-px); vertical-align: 0; letter-spacing: 0; background: var(--fg); color: var(--sheet); }
 
 /* ---------- dark sheet: the things that stay on paper ---------- */
 /* logos and ink drawings were made for a light ground, so each keeps a paper tile of its own */
 .proj-logo { box-sizing: content-box; padding: 10px 14px; border-radius: 12px; background: #f3f1ea; }
 .chapter-art > svg, .shots-tile { --ink: #1d1d1d; --fg: #0a0a0a; --bg: #fff; --muted: rgba(10,10,10,.72); background: #f3f1ea; color: #0a0a0a; }
-.chapter-art > svg { box-sizing: border-box; padding: 20px; border-radius: 16px; }
+.chapter-art > svg { box-sizing: border-box; padding: 20px; }
 
 .detail .walkthrough-end p { font: 400 1.5rem/1.2 var(--f-px); color: var(--fg); }
 /* the page link is a dark pixel plate; its arrow badge is square */
@@ -289,3 +282,29 @@
 .rb-take b { display: block; margin-bottom: 6px; font: 400 1.25rem/1.25 var(--f-px); color: var(--fg); }
 @media (max-width: 560px) { .rulebook { padding: 36px 20px 24px; } .rulebook li { grid-template-columns: 44px 1fr; } .rb-num { font-size: 1.5rem; } }
 @media (max-width: 760px) { .diagram { grid-template-columns: 1fr; gap: 22px; padding: 18px; } .diagram h4 { font-size: 1.375rem; } }
+
+/* a scene on a dark pixel plate, in place of a drawing */
+.scene-plate { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; display: grid; place-items: center; padding: 18px 14px; }
+/* the big numbers: pixel tiles in a row */
+.stat-tiles { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.stat { --s: 3px; --k-edge: #45453f; --k-fill: #1a1a19; display: flex; flex-direction: column; gap: 10px; padding: 22px 20px 20px; }
+.stat b { font: 400 clamp(2rem, 4vw, 3rem)/1 var(--f-px); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat span { font: 400 .9375rem/1.2 var(--f-px); text-transform: lowercase; color: var(--muted); }
+@media (max-width: 760px) { .stat-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* the story's opening block sits tight; the picture tiles take pixel corners too */
+.story-open { display: flex; flex-direction: column; gap: 32px; }
+.story-open > * { margin: 0; }
+.chapter-art > svg, .shots-tile, .frame-body img { clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px)); }
+
+
+/* a dark pixel window around each Figma frame and scene: three squares and a lowercase title */
+.frame { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; margin: 0; min-width: 0; }
+.frame figcaption { display: flex; align-items: center; gap: 6px; padding: 12px 16px 10px; }
+.frame figcaption i { width: 6px; height: 6px; background: #45453f; }
+.frame figcaption i:first-child { background: var(--fg); }
+.frame figcaption span { margin-left: 8px; font: 400 .9375rem/1 var(--f-px); text-transform: lowercase; color: var(--muted); }
+.frame-body { padding: 0 14px 14px; }
+.frame-body > .play-scene { margin: 0 auto; }
+.scene-plate .play-scene, .frame .play-scene { width: 100%; max-width: 576px; }
+/* the done mark: a dark plate with a bright check (its colours must outrank the plate defaults) */
+.detail .contact-done-icon.px-plate { --k-edge: #8c8c89; --k-fill: #1a1a19; color: #f2f2f0; }

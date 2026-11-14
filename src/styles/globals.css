@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import '@fontsource/geist-pixel';
-@import '@fontsource-variable/geist-mono';
 @import '@fontsource-variable/geist';
 @import 'tw-animate-css';
 @import './panels.css';
@@ -19,7 +18,7 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
 
 /* Site tokens (light theme). The UI components read the semantic ones below. */
 :root {
-  --f-code: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --f-code: 'Geist Variable', system-ui, sans-serif;
   --bg: #ffffff;
   --fg: #0a0a0a;
   --muted: rgba(10, 10, 10, 0.72);
