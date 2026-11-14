@@ -23,7 +23,7 @@ export function Home({ covered }: { covered: boolean }) {
   // a case study opened over the page holds the smoothing so wheel input goes to the case study
   useEffect(() => {
     if (covered) getSmoother()?.stop()
-    else getSmoother()?.start()
+    else { getSmoother()?.start(); window.dispatchEvent(new Event('home-uncovered')) }
   }, [covered])
 
   // blocks marked [data-rise] come up once, the first time they scroll into view

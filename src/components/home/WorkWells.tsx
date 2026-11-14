@@ -162,7 +162,8 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
           } else ctx.fillRect(cx - s / 2, cy - s / 2, s, s)
         }
       }
-      if (seen && !still) frame = requestAnimationFrame(draw)
+      if (seen && !still && !document.querySelector('.detail.open')) frame = requestAnimationFrame(draw)
+      else frame = 0 // a case study covering the page pauses the field
     }
     const kick = () => { if (!frame) frame = requestAnimationFrame(draw) }
 
@@ -179,12 +180,14 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
     size()
     ro.observe(box)
     io.observe(box)
+    window.addEventListener('home-uncovered', kick)
     box.addEventListener('pointermove', move)
     box.addEventListener('pointerleave', leave)
     return () => {
       cancelAnimationFrame(frame)
       ro.disconnect()
       io.disconnect()
+      window.removeEventListener('home-uncovered', kick)
       box.removeEventListener('pointermove', move)
       box.removeEventListener('pointerleave', leave)
     }

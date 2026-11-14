@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 import { Carousel } from './Carousel'
-import { HiddenArt, HoldArt, InkDefs, MazeArt, PictureArt, QueueArt, SignalArt, StoryArt, TrailArt, WallArt } from './InkArt'
+import { PlayScene } from './PlayScene'
 
 /** Arrowhead marker shared by the Scobin and Telemetric chapter drawings. */
 export const Defs = ({ id }: { id: string }) => (
@@ -13,36 +13,36 @@ export const Defs = ({ id }: { id: string }) => (
 )
 
 const items = [
-  { tag: 'Wall', title: 'Finding a profile should take one search.', body: 'Menus put a wall between staff and the profile they need. I replaced the walk through menus with one search box: results as you type, from any screen.', more: 'Staff look people up all day, often with someone waiting on the phone. Every extra click costs time they do not have, so the fastest route had to be the obvious one.', art: <WallArt /> },
-  { tag: 'Hold', title: 'A hold should explain itself.', body: 'When funds are held, the page says why, which step it is waiting on, and who acts next. I wrote it in the words staff already use, not system codes.', more: 'A hold affects real money for a real person, and staff get asked about it constantly. If the page cannot answer the question, staff have to dig or escalate, and the person waits longer.', art: <HoldArt /> },
-  { tag: 'Maze', title: 'A claim shouldn’t be a maze.', body: 'Claims, hearings and decisions are linked. I gave staff one clear path through them, so nobody has to stop and work out where to go next.', more: 'One claim can pass through several teams over weeks. People return to it cold, so each step had to make sense without remembering what came before.', art: <MazeArt /> },
-  { tag: 'Trail', title: 'Every dollar needs a trail.', body: 'Money moves through steps such as intercepted, on hold and distributed. I show each one, so staff can picture the whole flow and nobody has to ask where it went.', more: 'Public money has to be accounted for to the cent, and audits ask where it went. Showing every stage keeps answers on the page, not in someone’s memory.', art: <TrailArt /> },
-  { tag: 'Story', title: 'A status should tell a story.', body: 'A status shows what is done, what is happening now and what comes next, so the state of a case is clear at a glance.', more: 'Many people touch the same case and hand it on. A status that only names a state forces them to guess the rest. One that shows past, present and next lets anyone pick it up.', art: <StoryArt /> },
-  { tag: 'Picture', title: 'A profile should show the whole person.', body: 'Claims, hearings and payments for one person sit together in a single view, so related records read as related.', more: 'Needing three screens to understand one person invites mistakes, like acting on a claim without seeing the hearing that changes it. Putting them together protects against that.', art: <PictureArt /> },
-  { tag: 'Queue', title: 'Approvals shouldn’t disappear into a queue.', body: 'An approval shows who has it and where it stands: assigned, pending or decided, so nobody has to chase it.', more: 'Work stalls when nobody knows whose turn it is. Making ownership visible turns a vague wait into a clear next action for a named person.', art: <QueueArt /> },
-  { tag: 'Signal', title: 'Exceptions should stand out.', body: 'In long lists, I highlighted the few rows that need a person, so they are the first thing staff see.', more: 'When every row looks the same, the one that matters gets missed. Quiet by default and loud only for exceptions means attention goes where it is needed, even on a busy day.', art: <SignalArt /> },
-  { tag: 'Hidden', title: 'Unmatched doesn’t mean invisible.', body: 'Records that did not match are surfaced and easy to find, so staff never have to remember to go looking for them.', more: 'What falls through the cracks is the costliest part of any process. Putting the leftovers in plain sight means nothing depends on someone remembering to check.', art: <HiddenArt /> },
+  { tag: 'Wall', title: 'Finding a profile took too many clicks.', body: 'Staff dug through menus to reach a profile. I replaced that with one search box on every screen, with results as you type.', more: 'They look people up all day, often with someone on the phone. The fastest route had to be the obvious one.' },
+  { tag: 'Hold', title: 'Nobody could tell why money was on hold.', body: 'The page now says why it’s held, what it’s waiting on and who acts next, in the words staff already use.', more: 'Staff got asked about holds all the time. If the page couldn’t answer, they had to dig or escalate, and the person waited longer.' },
+  { tag: 'Maze', title: 'Claims felt like a maze.', body: 'Claims, hearings and decisions now link together, so there’s one clear path and no guessing what comes next.', more: 'A claim can sit with several teams for weeks. People come back cold, so every step has to make sense on its own.' },
+  { tag: 'Trail', title: 'Money had no trail.', body: 'Every stage a payment passes through (intercepted, on hold, distributed) is shown, so nobody has to ask where it went.', more: 'Public money has to be accounted for to the cent. With every stage on the page, the answer isn’t stuck in someone’s memory.' },
+  { tag: 'Story', title: 'A status said what, not the story.', body: 'A status now shows what’s done, what’s happening and what’s next.', more: 'Many people hand a case on. A bare status makes the next person guess; past, present and next lets anyone pick it up.' },
+  { tag: 'Picture', title: 'One person, three screens.', body: 'Claims, hearings and payments for a person now sit on one page.', more: 'Splitting them invites mistakes, like acting on a claim without seeing the hearing that changes it.' },
+  { tag: 'Queue', title: 'Approvals vanished into a queue.', body: 'Each approval shows who has it and where it stands: assigned, pending or decided.', more: 'Work stalls when no one knows whose turn it is. A named owner turns a vague wait into a next step.' },
+  { tag: 'Signal', title: 'Every row looked the same.', body: 'In long lists, only the few rows that need a person stand out.', more: 'When everything looks alike, the one that matters gets missed. Quiet by default, loud for exceptions.' },
+  { tag: 'Hidden', title: 'Unmatched records were easy to forget.', body: 'Records that didn’t match are surfaced and easy to find.', more: 'What falls through the cracks costs the most. Now nothing depends on someone remembering to check.' },
 ]
 
 export function Diagrams() {
   return (
     <>
-      <InkDefs />
       <Carousel id="cs-problems" title="Problems and decisions" noun="problem" labels={items.map((d) => d.tag)}>
-        {(active, go) => items.map((d, i) => {
+        {(active) => items.map((d, i) => {
           const o = Math.max(-2, Math.min(2, i - active))
           return (
             <article
-              className={cn('diagram', o === 0 && 'is-active')}
+              className={cn('diagram px-plate', o === 0 && 'is-active')}
               key={d.title}
               style={{ '--o': o } as CSSProperties}
               aria-hidden={o !== 0}
-              onClick={() => o !== 0 && go(i)}
             >
-              <div className="d-art">{d.art}</div>
+              <div className="d-art">{o === 0 && <PlayScene scene={d.tag} />}</div>
               <div className="d-copy">
                 <h4>{d.title}</h4>
+                <span className="d-label-tag">decision</span>
                 <p>{d.body}</p>
+                <span className="d-label-tag">why</span>
                 <p className="d-more">{d.more}</p>
               </div>
             </article>

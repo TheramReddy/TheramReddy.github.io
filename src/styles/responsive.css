@@ -5,7 +5,7 @@
 
 
   /* project popup */
-  .sheet .cols { padding: 96px 20px 88px; gap: 56px; }
+  .sheet .cols { padding: 112px 20px 88px; gap: 56px; }
   .gallery, .d-art { min-width: 0; max-width: 100%; }
   .sheet h2 { font-size: 2.125rem; }
   .sheet .desc { margin-top: 16px; font-size: 1rem; line-height: 1.45; }
@@ -15,7 +15,6 @@
   .sheet .cols > *, .diagram > * { min-width: 0; }
   .stack-title, .about-title { font-size: 0.875rem; }
   .in-action-title { font-size: 1.5rem; }
-  .coverflow { --w: 270px; --step: 285px; }
   .diagram p { font-size: 1rem; }
   .gallery { gap: 80px; padding-top: 0; }
   .gallery > .problems::before { top: -42px !important; }
@@ -25,11 +24,6 @@
   .coming-soon { min-height: 0; gap: 16px; }
   .pixel-desk { width: calc(100% - 52px); }
   .coming-marquee { height: 180px; font-size: 0.75rem; padding: 0 12px; }
-  .detail .close { right: 10px; }
-  /* no room in the margin on a phone: the ring joins the close button in the top bar */
-  .progress { left: 20px; top: 27px; bottom: auto; z-index: 11; }
-  /* and, like the site nav, that bar fades the page out beneath it */
-  .close-rail::before { content: ""; position: absolute; top: -12px; left: 0; right: 0; height: 104px; background: linear-gradient(var(--bg) 60%, transparent); pointer-events: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition-duration: .01ms !important; animation-duration: .01ms !important; }

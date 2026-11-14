@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { site } from '@/data/site'
 import { scrollToSection, useMeSection, type MeSection } from '@/lib/me-section'
 
@@ -18,23 +18,33 @@ function PixelIcon({ rows }: { rows: string[] }) {
   )
 }
 
-/** Fixed top bar: the wordmark on the left, the section links in a pixel menu in the middle. */
+/** Fixed top bar: the wordmark on the left, the section links in a pixel menu in the middle. Over a case study it stays, with a way back on the right. */
 export function Nav() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const section = useMeSection()
+  const inCase = pathname.startsWith('/project/')
+
+  // from a case study, go home first and then to the section once the page is uncovered
+  const go = (id: MeSection) => {
+    if (!inCase) return scrollToSection(id)
+    navigate('/')
+    setTimeout(() => scrollToSection(id, false), 80)
+  }
 
   return (
-    <div className={pathname.startsWith('/project/') ? 'bar is-hidden' : 'bar'}>
-      <button type="button" className="bar-mark" aria-label={`${site.name}, back to top`} onClick={() => scrollToSection('me')}>
+    <div className={inCase ? 'bar is-case' : 'bar'}>
+      <button type="button" className="bar-mark" aria-label={`${site.name}, back to top`} onClick={() => go('me')}>
         {site.firstName.toLowerCase()}
       </button>
       <nav className="bar-pill" aria-label="Primary">
         {LINKS.map((l) => (
-          <button key={l.id} type="button" className="bar-link" aria-current={section === l.id} onClick={() => scrollToSection(l.id)}>
+          <button key={l.id} type="button" className="bar-link" aria-current={!inCase && section === l.id} onClick={() => go(l.id)}>
             <PixelIcon rows={l.icon} />{l.label}
           </button>
         ))}
       </nav>
+      {inCase && <button type="button" className="key bar-back" onClick={() => go('projects')}>back to work</button>}
     </div>
   )
 }

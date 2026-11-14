@@ -17,12 +17,12 @@
 
 /* done state with confetti (end of the project walkthrough) */
 .contact-done { position: relative; display: grid; justify-items: center; gap: var(--space-4); padding: var(--space-8) 0; text-align: center; font-size: var(--text-base); }
-.contact-done-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--fg); color: #fff; animation: done-pop .6s var(--ease) both; }
-.contact-done-icon svg { stroke-dasharray: 26; stroke-dashoffset: 26; animation: done-draw .5s .3s var(--ease) forwards; }
+.contact-done-icon { --s: 3px; --k-edge: #8c8c89; --k-fill: #f2f2f0; display: grid; place-items: center; width: 52px; height: 52px; color: #0c0c0b; animation: done-pop .6s var(--ease) both; }
+.contact-done-icon svg { animation: none; }
 .contact-done p, .contact-done .kit { animation: done-rise .6s .35s var(--ease) both; }
 .walkthrough-end { padding: var(--space-8) 0 0; min-height: 200px; align-content: start; }
 .contact-burst { position: absolute; top: calc(var(--space-8) + 24px); left: 50%; width: 0; height: 0; pointer-events: none; }
-.contact-burst i { position: absolute; width: 7px; height: 11px; border-radius: 2px; background: var(--c); opacity: 0; animation: confetti 1.3s var(--d) cubic-bezier(.12,.7,.3,1) forwards; }
+.contact-burst i { position: absolute; width: 7px; height: 11px; background: var(--c); opacity: 0; animation: confetti 1.3s var(--d) cubic-bezier(.12,.7,.3,1) forwards; }
 @keyframes done-pop { from { transform: scale(.3); opacity: 0; } 60% { transform: scale(1.15); } to { transform: none; opacity: 1; } }
 @keyframes done-draw { to { stroke-dashoffset: 0; } }
 @keyframes done-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }

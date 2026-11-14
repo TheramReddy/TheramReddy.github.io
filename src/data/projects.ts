@@ -37,7 +37,7 @@ export type Project = {
   soon?: boolean
 }
 
-type Metric = { value: string; label: string; group?: string; note: string }
+export type Metric = { value: string; label: string; group?: string; note: string }
 
 export type Feature = { title: string; body: string; gif: string; alt: string }
 

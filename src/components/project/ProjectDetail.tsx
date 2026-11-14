@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowUpRight, Check, CircleAlert, FileText, BookOpen, Gauge, Info, Route, type LucideIcon } from 'lucide-react'
-import { Button } from '@/components/arc/button/button'
+import { ArrowUpRight, CircleAlert, FileText, BookOpen, Gauge, Info, Route, type LucideIcon } from 'lucide-react'
 import { CONFETTI } from '@/components/layout/confetti'
 import { published, type Project } from '@/data/projects'
 import { tools, type ToolId } from '@/data/tools'
 import { cn } from '@/lib/utils'
 import { Approach } from './Approach'
 import { Gallery } from './Gallery'
+import { MetricCards } from './MetricCards'
 import { Diagrams } from './Diagrams'
 import { JourneyMap } from './JourneyMap'
 import { PixelDesk } from './PixelDesk'
@@ -43,12 +43,10 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
           {CONFETTI.map((st, n) => <i key={n} style={st} />)}
         </div>
       )}
-      {seen && <span className="contact-done-icon"><Check size={22} strokeWidth={2} aria-hidden="true" /></span>}
+      {seen && <span className="contact-done-icon px-plate"><svg viewBox="0 0 8 6" width="24" height="18" shapeRendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="7" y="0" width="1" height="1" /><rect x="6" y="1" width="2" height="1" /><rect x="0" y="2" width="1" height="1" /><rect x="5" y="2" width="2" height="1" /><rect x="0" y="3" width="2" height="1" /><rect x="4" y="3" width="2" height="1" /><rect x="1" y="4" width="4" height="1" /><rect x="2" y="5" width="2" height="1" /></svg></span>}
       <p>That’s the walkthrough.</p>
       {next.slug !== slug && (
-        <Button onClick={() => navigate(`/project/${next.slug}`)}>
-          Next case study: {next.title}
-        </Button>
+        <button type="button" className="key is-big is-lit" onClick={() => navigate(`/project/${next.slug}`)}>next: {next.title}</button>
       )}
     </div>
   )
@@ -161,28 +159,18 @@ function SheetScrollbar({ root }: { root: RefObject<HTMLDivElement | null> }) {
   )
 }
 
-/** Popup sheet with description, gallery and a scroll-progress ring. */
+/** The case study page: description and gallery under the site's top bar, over the home page. */
 export function ProjectDetail({ project, open }: { project?: Project; open: boolean }) {
-  const navigate = useNavigate()
   const sheet = useRef<HTMLDivElement>(null)
-  const ring = useRef<SVGCircleElement>(null)
 
   // keep the last project mounted so the close animation has content
   const shown = useRef<Project | undefined>(undefined)
   if (project) shown.current = project
   const p = shown.current
 
-  const progress = () => {
-    const s = sheet.current
-    if (!s || !ring.current) return
-    const m = s.scrollHeight - s.clientHeight
-    ring.current.style.strokeDashoffset = String(100 - (m > 0 ? Math.min(s.scrollTop / m, 1) : 0) * 100)
-  }
-
   useEffect(() => {
     if (open && sheet.current) {
       sheet.current.scrollTop = 0
-      progress()
     }
   }, [open, p?.slug])
 
@@ -190,24 +178,9 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
     <article
       className={cn('detail', open && 'open')}
       inert={!open}
-      onClick={(e) => e.target === e.currentTarget && navigate('/')}
     >
-      <div className="progress" aria-hidden="true">
-        <svg viewBox="0 0 38 38">
-          <circle className="bg" cx="19" cy="19" r="16" />
-          <circle className="fg" ref={ring} cx="19" cy="19" r="16" pathLength={100} />
-        </svg>
-      </div>
-      <div className="sheet" ref={sheet} onScroll={progress}>
+      <div className="sheet" ref={sheet}>
         <SheetScrollbar root={sheet} />
-        <div className="close-rail">
-          <button className="close" onClick={() => navigate('/')}>
-            <span>Close</span>
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-              <path d="M3 3l12 12M15 3L3 15" />
-            </svg>
-          </button>
-        </div>
         {p?.features && <SectionNav root={sheet} />}
         {p && (
           <div className="cols">
@@ -216,15 +189,30 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
               {p.logo && <img className="proj-logo" src={p.logo} alt={p.client} />}
               <h2>{p.title}</h2>
               <p className="cs-lede">{p.summary}</p>
-              <dl className="cs-meta">
-                <div><dt>Role</dt><dd>{p.role}</dd></div>
-                <div><dt>Client</dt><dd>{p.client}</dd></div>
-                <div><dt>Year</dt><dd>{p.year}</dd></div>
-              </dl>
+              <div className="id-card px-plate">
+                <span className="id-slot" aria-hidden="true" />
+                <dl className="cs-meta">
+                  <div><dt>Role</dt><dd>{p.role}</dd></div>
+                  <div><dt>Client</dt><dd>{p.client}</dd></div>
+                  <div><dt>Year</dt><dd>{p.year}</dd></div>
+                </dl>
+                <div className="stack">
+                  <p className="stack-title">Tools used</p>
+                  <ul className="chips" aria-label="Tools used">
+                    {(p.tools ?? projectTools).map((id) => (
+                      <li className="chip" key={id}>
+                        <img src={`/tools/${id}.svg`} alt="" width="18" height="18" />
+                        {tools[id]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <span className="id-bars" aria-hidden="true" />
+              </div>
               <p className="about-title">About the project</p>
               <p className="desc">{p.description}</p>
               {p.figma && (
-                <a className="figma-link" href={p.figma} target="_blank" rel="noopener noreferrer">
+                <a className="figma-link px-plate" href={p.figma} target="_blank" rel="noopener noreferrer">
                   <img src="/tools/figma.svg" alt="" />
                   <span>
                     Open the Figma file
@@ -235,7 +223,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                 </a>
               )}
               {p.link && (
-                <a className="figma-link page-link" href={p.link.href} target="_blank" rel="noopener noreferrer">
+                <a className="figma-link page-link px-plate" href={p.link.href} target="_blank" rel="noopener noreferrer">
                   <Info size={20} strokeWidth={1.6} className="link-info" aria-hidden="true" />
                   <span>
                     {p.link.title}
@@ -245,32 +233,12 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               )}
-              <div className="stack">
-                <p className="stack-title">Tools used</p>
-                <ul className="chips" aria-label="Tools used">
-                  {(p.tools ?? projectTools).map((id) => (
-                    <li className="chip" key={id}>
-                      <img src={`/tools/${id}.svg`} alt="" width="18" height="18" />
-                      {tools[id]}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
             <div className="gallery">
               {p.metrics && !p.story && (
                 <section className="metrics" id="cs-glance" aria-label="What changed for users">
                   <h3>What changed for the people using it</h3>
-                  <dl>
-                    {p.metrics.map((m) => (
-                      <div className="metric" key={m.label}>
-                        {m.group && <span className="metric-group">{m.group}</span>}
-                        <dt>{m.label}</dt>
-                        <dd>{m.value}</dd>
-                        <p>{m.note}</p>
-                      </div>
-                    ))}
-                  </dl>
+                  <MetricCards items={p.metrics} />
                 </section>
               )}
               {p.features && <Diagrams />}
