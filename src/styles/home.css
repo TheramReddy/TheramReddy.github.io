@@ -83,12 +83,13 @@
 .badge { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .badge-cord { position: absolute; left: 0; top: 70.5%; width: 100%; height: 24.5%; overflow: visible; }
 .badge-cord path { fill: none; stroke: #d9d9d5; stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.badge-clip { position: absolute; left: 50%; top: 94%; width: 12px; height: 18px; margin-left: -6px; border-radius: 3px; background: linear-gradient(#b9b9b5, #7d7d79); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 1px 2px rgba(0, 0, 0, .5); }
-.badge-card { --s: 4px; position: absolute; left: 50%; top: calc(94% + 12px); display: grid; justify-items: center; box-sizing: border-box; width: 168px; margin-left: -84px; padding: 34px 14px 16px; background: linear-gradient(#f6f6f4, #e2e2df); color: var(--d-bg); text-align: center; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .55)); }
+.badge-clip { position: absolute; left: 50%; top: 94%; width: 10px; height: 15px; margin-left: -5px; border-radius: 3px; background: linear-gradient(#b9b9b5, #7d7d79); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 1px 2px rgba(0, 0, 0, .5); }
+.badge-card { --s: 3px; position: absolute; left: 50%; top: calc(94% + 10px); display: grid; justify-items: center; box-sizing: border-box; width: 128px; margin-left: -64px; padding: 26px 12px 13px; background: linear-gradient(#f6f6f4, #e2e2df); color: var(--d-bg); text-align: center; filter: drop-shadow(0 11px 14px rgba(0, 0, 0, .55)); }
 .badge-card, .badge-card::before, .bar-pill::before, .bar-pill::after, .bar-link::before { clip-path: polygon(0 calc(var(--s) * 2), var(--s) calc(var(--s) * 2), var(--s) var(--s), calc(var(--s) * 2) var(--s), calc(var(--s) * 2) 0, calc(100% - var(--s) * 2) 0, calc(100% - var(--s) * 2) var(--s), calc(100% - var(--s)) var(--s), calc(100% - var(--s)) calc(var(--s) * 2), 100% calc(var(--s) * 2), 100% calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s)), calc(100% - var(--s) * 2) calc(100% - var(--s)), calc(100% - var(--s) * 2) 100%, calc(var(--s) * 2) 100%, calc(var(--s) * 2) calc(100% - var(--s)), var(--s) calc(100% - var(--s)), var(--s) calc(100% - var(--s) * 2), 0 calc(100% - var(--s) * 2)); }
-.badge-slot { position: absolute; left: 50%; top: 12px; width: 36px; height: 8px; margin-left: -18px; background: var(--d-bg); }
-.badge-card b { font: 400 24px/1.05 var(--f-px); letter-spacing: -.03em; }
-.badge-bars { width: 128px; height: 22px; margin-top: 14px; background: linear-gradient(90deg, #0c0c0b 0px 2px, transparent 2px 3px, #0c0c0b 3px 4px, transparent 4px 6px, #0c0c0b 6px 9px, transparent 9px 10px, #0c0c0b 10px 11px, transparent 11px 12px, #0c0c0b 12px 14px, transparent 14px 16px, #0c0c0b 16px 17px, transparent 17px 20px, #0c0c0b 20px 21px, transparent 21px 22px, #0c0c0b 22px 24px, transparent 24px 25px, #0c0c0b 25px 28px, transparent 28px 30px, #0c0c0b 30px 31px, transparent 31px 32px, #0c0c0b 32px 33px, transparent 33px 35px, #0c0c0b 35px 37px, transparent 37px 38px, #0c0c0b 38px 39px, transparent 39px 42px, #0c0c0b 42px 43px, transparent 43px 45px, #0c0c0b 45px 46px, transparent 46px 47px, #0c0c0b 47px 50px, transparent 50px 51px, #0c0c0b 51px 53px, transparent 53px 55px, #0c0c0b 55px 56px, transparent 56px 57px, #0c0c0b 57px 59px, transparent 59px 60px, #0c0c0b 60px 61px, transparent 61px 64px, #0c0c0b 64px 66px, transparent 66px 67px, #0c0c0b 67px 68px, transparent 68px 70px, #0c0c0b 70px 71px, transparent 71px 73px, #0c0c0b 73px 76px, transparent 76px 77px, #0c0c0b 77px 78px, transparent 78px 79px, #0c0c0b 79px 81px, transparent 81px 82px, #0c0c0b 82px 85px, transparent 85px 86px, #0c0c0b 86px 88px, transparent 88px 89px, #0c0c0b 89px 90px, transparent 90px 92px, #0c0c0b 92px 94px, transparent 94px 95px, #0c0c0b 95px 96px, transparent 96px 99px, #0c0c0b 99px 100px, transparent 100px 101px, #0c0c0b 101px 103px, transparent 103px 104px, #0c0c0b 104px 106px, transparent 106px 107px, #0c0c0b 107px 110px, transparent 110px 111px, #0c0c0b 111px 112px, transparent 112px 114px, #0c0c0b 114px 115px, transparent 115px 116px, #0c0c0b 116px 118px, transparent 118px 121px, #0c0c0b 121px 122px, transparent 122px 123px, #0c0c0b 123px 125px, transparent 125px 126px, #0c0c0b 126px 128px); }
+.badge-slot { position: absolute; left: 50%; top: 9px; width: 28px; height: 6px; margin-left: -14px; background: var(--d-bg); }
+.badge-card b { font: 400 18px/1.05 var(--f-px); letter-spacing: -.03em; }
+/* the bar code is drawn at its natural 128px; a narrower box simply shows less of it, so every bar stays on a whole pixel */
+.badge-bars { width: 96px; height: 17px; margin-top: 11px; background: linear-gradient(90deg, #0c0c0b 0px 2px, transparent 2px 3px, #0c0c0b 3px 4px, transparent 4px 6px, #0c0c0b 6px 9px, transparent 9px 10px, #0c0c0b 10px 11px, transparent 11px 12px, #0c0c0b 12px 14px, transparent 14px 16px, #0c0c0b 16px 17px, transparent 17px 20px, #0c0c0b 20px 21px, transparent 21px 22px, #0c0c0b 22px 24px, transparent 24px 25px, #0c0c0b 25px 28px, transparent 28px 30px, #0c0c0b 30px 31px, transparent 31px 32px, #0c0c0b 32px 33px, transparent 33px 35px, #0c0c0b 35px 37px, transparent 37px 38px, #0c0c0b 38px 39px, transparent 39px 42px, #0c0c0b 42px 43px, transparent 43px 45px, #0c0c0b 45px 46px, transparent 46px 47px, #0c0c0b 47px 50px, transparent 50px 51px, #0c0c0b 51px 53px, transparent 53px 55px, #0c0c0b 55px 56px, transparent 56px 57px, #0c0c0b 57px 59px, transparent 59px 60px, #0c0c0b 60px 61px, transparent 61px 64px, #0c0c0b 64px 66px, transparent 66px 67px, #0c0c0b 67px 68px, transparent 68px 70px, #0c0c0b 70px 71px, transparent 71px 73px, #0c0c0b 73px 76px, transparent 76px 77px, #0c0c0b 77px 78px, transparent 78px 79px, #0c0c0b 79px 81px, transparent 81px 82px, #0c0c0b 82px 85px, transparent 85px 86px, #0c0c0b 86px 88px, transparent 88px 89px, #0c0c0b 89px 90px, transparent 90px 92px, #0c0c0b 92px 94px, transparent 94px 95px, #0c0c0b 95px 96px, transparent 96px 99px, #0c0c0b 99px 100px, transparent 100px 101px, #0c0c0b 101px 103px, transparent 103px 104px, #0c0c0b 104px 106px, transparent 106px 107px, #0c0c0b 107px 110px, transparent 110px 111px, #0c0c0b 111px 112px, transparent 112px 114px, #0c0c0b 114px 115px, transparent 115px 116px, #0c0c0b 116px 118px, transparent 118px 121px, #0c0c0b 121px 122px, transparent 122px 123px, #0c0c0b 123px 125px, transparent 125px 126px, #0c0c0b 126px 128px); }
 @keyframes rise-in { from { opacity: 0; transform: translateY(16px); } }
 
 /* the landing: everything resolves from pixels. All of it is set by script, so with reduced motion none applies.
@@ -125,9 +126,9 @@
 .intro-text { display: contents; }
 @media (min-width: 1000px) {
   .intro { display: grid; grid-template-columns: auto minmax(0, 720px); align-items: center; justify-content: center; column-gap: clamp(56px, 6vw, 112px); box-sizing: border-box; min-height: 100svh; padding: 104px var(--gut) 56px; text-align: left; }
-  /* the badge hangs about 120px below the portrait: the margin counts it into the figure, so the statement centres
+  /* the badge hangs about 88px below the portrait: the margin counts it into the figure, so the statement centres
      on the portrait and badge together, and the pair sits in the middle of the screen under the bar */
-  .intro-figure { width: clamp(220px, calc((100svh - 330px) * .7466), 352px); margin: 0 0 120px; }
+  .intro-figure { width: clamp(220px, calc((100svh - 330px) * .7466), 352px); margin: 0 0 88px; }
   .intro-text { display: block; }
   .intro .say { margin-top: 0; font-size: clamp(20px, 1.75vw, 26px); }
 }
@@ -162,6 +163,9 @@
 
 /* the live pieces share one small card */
 .toy { box-sizing: border-box; width: 100%; border-radius: 16px; box-shadow: var(--lift); text-align: left; }
+
+/* the board stands in its own chunk, so this holds its exact footprint until it arrives */
+.play-hold { box-sizing: border-box; width: 100%; height: 800px; border-radius: 14px; background: #101012; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 30px 60px -30px rgba(0, 0, 0, .8); }
 
 /* the tracker: the one place on the page with colour. A sidebar, a list or board, and a panel for the open issue. */
 .lin { --ac: #d4d4d8; --line: rgba(255, 255, 255, .07); --ink: #e6e6e9; --dim: #9a9ea7; --faint: #6f747d; position: relative; display: grid; grid-template-columns: 216px minmax(0, 1fr); height: 800px; overflow: hidden; background: #101012; color: var(--ink); font: 400 13px/1.4 var(--font-text); }
@@ -611,8 +615,8 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
   .bar-pill { justify-self: center; }
   .bar-link { width: auto; padding: 0 11px; }
   .intro { padding-top: 88px; }
-  /* the badge hangs about 124px below the portrait: the line starts clear of it */
-  .say { margin-top: 176px; }
+  /* the badge hangs about 92px below the portrait: the line starts clear of it */
+  .say { margin-top: 144px; }
   .block { padding-bottom: 110px; }
   .play-card { padding: 8px; }
   .play-cell { padding: 8px 8px 10px; }
