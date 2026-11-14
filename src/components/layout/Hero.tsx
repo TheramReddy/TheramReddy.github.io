@@ -8,8 +8,9 @@ const press = (go: () => void) => (e: KeyboardEvent) => { if (e.key === 'Enter' 
 
 /** A split-flap word. Each tile's reel runs through twelve random letters and overshoots onto its own letter, a beat
  *  after the tile before it, so the word lands unevenly like a real board. It plays once on load, then on hover or
- *  click. With reduced motion the reel steps letter by letter in place instead of scrolling. */
-export function Flap({ word, delay = 1700 }: { word: string; delay?: number }) {
+ *  click. With reduced motion the reel steps letter by letter in place instead of scrolling. `armed` holds the
+ *  first play back until the word is actually on screen. */
+export function Flap({ word, delay = 1700, armed = true }: { word: string; delay?: number; armed?: boolean }) {
   const [reels, setReels] = useState(() => [...word])
   const [run, setRun] = useState(0)
   const cols = useRef<(HTMLSpanElement | null)[]>([])
@@ -47,9 +48,10 @@ export function Flap({ word, delay = 1700 }: { word: string; delay?: number }) {
   }, [run])
 
   useEffect(() => {
+    if (!armed) return
     const t = window.setTimeout(play, delay)
     return () => window.clearTimeout(t)
-  }, [play, delay])
+  }, [play, delay, armed])
 
   const tap = () => { tick(); play() }
   return (
@@ -67,7 +69,7 @@ export function Flap({ word, delay = 1700 }: { word: string; delay?: number }) {
 
 /** A terminal chip. It types its first line on load; each click deletes the line and types the next, with a key
  *  sound per letter. A hidden copy of the longest line holds the width so the sentence never shifts. */
-export function Prompt({ lines, delay = 2600 }: { lines: string[]; delay?: number }) {
+export function Prompt({ lines, delay = 2600, armed = true }: { lines: string[]; delay?: number; armed?: boolean }) {
   const [text, setText] = useState('')
   const [at, setAt] = useState(0)
   const busy = useRef(true)
@@ -87,9 +89,10 @@ export function Prompt({ lines, delay = 2600 }: { lines: string[]; delay?: numbe
   }, [])
 
   useEffect(() => {
+    if (!armed) return
     timer.current = window.setTimeout(() => retype('', lines[0]), delay)
     return () => window.clearTimeout(timer.current)
-  }, [lines, delay, retype])
+  }, [lines, delay, retype, armed])
 
   const next = () => {
     if (busy.current) return

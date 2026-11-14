@@ -1,64 +1,47 @@
 import type { ToolId } from './tools'
 
 export type Job = {
-  when: string
-  /** years in the role, from the resume, e.g. "2025 — Now" */
-  span: string
-  where: string
-  company: string
-  current?: boolean
   role: string
-  /** creative headline, the card's main line */
-  title: string
-  /** what the product was, then what I did there (both from the resume) */
   product: string
-  did: string
-  /** Drop an image in /public/logos and set `src` to use a real logo instead of the monogram. */
-  logos: { label: string; color: string; src?: string }[]
-  /** Project pages the job links to (see data/projects.ts). */
-  projects: { slug: string }[]
+  highlights: string[]
   tools: ToolId[]
 }
 
 export const jobs: Job[] = [
   {
-    when: 'Present',
-    span: '2025 — Now',
-    where: 'GEORGIA>GOVERNMENT',
-    company: 'Georgia Department of Human Services',
-    current: true,
     role: 'UX Designer',
-    title: 'Clarity is the kindest thing a screen can offer',
     product: 'Legacy state systems rebuilt as cloud portals',
-    did: 'I design role-based portals for the public, agency staff and vendors, grounded in research with 50+ caseworkers and subject experts, with shared components and a WCAG 2.1 AA baseline.',
-    logos: [{ label: 'GA', color: '#fff', src: '/logos/georgia-dhs.png' }],
-    projects: [{ slug: 'dso-modernization' }],
-    tools: ['figma', 'sketch', 'storybook', 'claude', 'rust', 'angular', 'bootstrap', 'photoshop'],
+    highlights: [
+      'Research with 50+ caseworkers and subject experts: contextual inquiry, ride-alongs and workshops',
+      'Three role-based portals for residents, caseworkers and vendors: task time down about 40%, usability scores up 15%',
+      'LIHEAP eligibility modeled as conditional, permission-aware flows that show only the relevant fields',
+      'Shared components on a WCAG 2.1 AA baseline, verified in the build with axe, WAVE and Lighthouse',
+      'Usability testing after every round: user flows, wireframes and annotated high-fidelity prototypes',
+    ],
+    tools: ['figma', 'sketch', 'illustrator', 'storybook', 'photoshop', 'miro', 'claude', 'angular', 'bootstrap', 'rust', 'vscode', 'jira', 'confluence', 'axe', 'wave', 'lighthouse'],
   },
   {
-    when: '2024',
-    span: '2024 — 25',
-    where: 'SCOBIN>PRODUCT',
-    company: 'Scobin',
     role: 'Product Designer',
-    title: 'Decide once, then create freely',
     product: 'Inventory platform with dense operational data',
-    did: 'I led a product-wide UI audit, then built the design system that became the single source of truth for design and engineering.',
-    logos: [{ label: 'S', color: '#fff', src: '/logos/scobin.svg' }],
-    projects: [{ slug: 'scobin-design-system' }],
-    tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
+    highlights: [
+      'A product-wide UI audit to surface inconsistent patterns',
+      'A design system as the single source of truth: 548 variables, 41 documented components, 35 icons and 95 text styles',
+      'Dense inventory screens reworked with progressive disclosure: task time down 35%, manual errors down 40%',
+      'Customer feedback, observation and competitive analysis turned into recommendations: adoption up 20% in three months',
+      'Component specs and ownership agreed with design and engineering',
+    ],
+    tools: ['figma', 'illustrator', 'storybook', 'photoshop', 'miro', 'hotjar', 'html', 'css', 'javascript', 'vscode', 'jira', 'notion'],
   },
   {
-    when: '2021',
-    span: '2021 — 22',
-    where: 'WIPRO>ENTERPRISE',
-    company: 'Wipro',
     role: 'UI Developer',
-    title: 'Made for everyone, from the first line',
     product: 'Enterprise client portals',
-    did: 'I turned UX specs into responsive Angular interfaces and reusable components, and rewrote validation errors as inline messages with recovery steps.',
-    logos: [{ label: 'W', color: '#fff', src: '/logos/wipro.webp' }],
-    projects: [],
-    tools: ['angular', 'typescript', 'javascript', 'html', 'css', 'bootstrap', 'git'],
+    highlights: [
+      'UX specs built as responsive Angular interfaces and reusable components',
+      'Technical constraints flagged early in wireframe and prototype reviews with designers, clients and engineers',
+      'Server and client validation rewritten as inline, actionable messages with recovery steps',
+      'Faster first load through lazy loading, code splitting and asset optimization',
+      'A/B tests on two client portals: engagement up 15%, conversion up 10%',
+    ],
+    tools: ['xd', 'ga4', 'hotjar', 'angular', 'typescript', 'javascript', 'html', 'css', 'bootstrap', 'git', 'vscode', 'jira', 'confluence', 'zeplin'],
   },
 ]

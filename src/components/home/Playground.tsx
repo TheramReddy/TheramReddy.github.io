@@ -1,8 +1,9 @@
 import { type CSSProperties, type FormEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown, ArrowUp, CalendarRange, ChartColumn, Check, ChevronRight, ChevronsUpDown, Code, Columns3, Copy, Ellipsis, ExternalLink, FlaskConical, Kanban, Keyboard, ListFilter, Maximize2, Microscope, PenTool, Plus, Rows3, Search, Send, SquarePen, Trash, User, Workflow, Wrench, X } from 'lucide-react'
+import { WORK } from '@/data/cards'
 import { projects } from '@/data/projects'
 import { site } from '@/data/site'
-import { type ToolId, tools } from '@/data/tools'
+import { LOGOLESS, TOOL_KINDS, type ToolId, apps, logoScale, toolKind, tools } from '@/data/tools'
 import { jobs } from '@/data/work'
 import { scrollToSection } from '@/lib/me-section'
 
@@ -15,10 +16,11 @@ const scobin = projects.find((p) => p.slug === 'scobin-design-system')!
 const month = (year: number, m: number) => (year - 2021) * 12 + m - 1
 const NOW = month(2026, 12)
 const PLACES = [
-  { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', role: jobs[0].role, dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, product: jobs[0].product, did: jobs[0].did, tools: jobs[0].tools },
-  { key: 'SCO', name: 'Scobin', hue: '#e879c7', role: jobs[1].role, dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), product: jobs[1].product, did: jobs[1].did, tools: jobs[1].tools },
-  { key: 'WIP', name: 'Wipro', hue: '#4cb782', role: jobs[2].role, dates: 'Apr 2021 to Dec 2022', start: month(2021, 4), end: month(2022, 12), product: jobs[2].product, did: jobs[2].did, tools: jobs[2].tools },
-  { key: 'TEL', name: 'Telemetric', hue: '#f2994a', role: telemetric.role, dates: '2026, concept', start: month(2026, 1), end: NOW, product: 'A workspace where your files become a map, and AI agents work on it with you', did: 'I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.', tools: telemetric.tools ?? [] },
+  { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', role: jobs[0].role, dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, product: jobs[0].product, highlights: jobs[0].highlights, tools: jobs[0].tools },
+  { key: 'SCO', name: 'Scobin', hue: '#e879c7', role: jobs[1].role, dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), product: jobs[1].product, highlights: jobs[1].highlights, tools: jobs[1].tools },
+  { key: 'WIP', name: 'Wipro', hue: '#4cb782', role: jobs[2].role, dates: 'Apr 2021 to Dec 2022', start: month(2021, 4), end: month(2022, 12), product: jobs[2].product, highlights: jobs[2].highlights, tools: jobs[2].tools },
+  { key: 'TEL', name: 'Telemetric', hue: '#f2994a', role: telemetric.role, dates: '2026, co-founder', start: month(2026, 1), end: NOW, product: 'A workspace where your files become a map, and AI agents work on it with you', highlights: ['The product concept, the end-to-end experience and the interface, designed alongside two engineers', 'A folder becomes a map of connected notes that both you and the AI can move through', 'Several small agents each take one task, and you can see what each one did'], tools: (telemetric.tools ?? []) as ToolId[] },
+  { key: 'UMBC', name: 'UMBC', hue: '#febb00', role: 'Graduate Student', dates: '2023', start: month(2023, 1), end: month(2023, 12), product: 'Master of Science, Information Systems', highlights: ['Master of Science in Information Systems', 'Coursework in UX research methods, information architecture and usability', 'Interaction design and human-computer interaction'], tools: [] as ToolId[] },
 ]
 // the five stages my work moves through; the board has one column for each
 const STAGES = [
@@ -32,32 +34,11 @@ const LABELS: Record<string, string> = { Research: '#4ea7fc', Workflow: '#f2c94c
 const PEOPLE = [site.firstName, 'You'] // the second one is whoever is visiting
 
 type Entry = { who: number; text: string; said?: boolean }
-type Card = { id: number; key: string; place: number; stage: number; title: string; desc: string; labels: string[]; result?: string; link?: { href: string; name: string }; yours?: boolean; log: Entry[] }
+// why, how and out are the detail of a card: the problem, what I did, and what changed
+type Card = { id: number; key: string; place: number; stage: number; title: string; desc: string; why?: string; how?: string[]; out?: string; labels: string[]; result?: string; link?: { href: string; name: string }; yours?: boolean; log: Entry[] }
 
-const RAW: Omit<Card, 'id' | 'key' | 'log'>[] = [
-  { place: 0, stage: 0, title: 'Ride-alongs and workshops with caseworkers', labels: ['Research'], result: '50+ caseworkers and experts', desc: 'I studied real workflows through contextual inquiry, ride-alongs and workshops with 50+ caseworkers and subject experts. Their workarounds showed where the legacy system failed on efficiency and user control, and set the design priorities and build order.' },
-  { place: 0, stage: 1, title: 'Three portals, one for each role', labels: ['Workflow'], result: 'Task time down about 40%', desc: "I designed three role-based portals (resident, caseworker, vendor) around each role's task flow and vocabulary, matching the system to the real world. Task time dropped about 40% and usability scores rose 15%." },
-  { place: 0, stage: 1, title: 'Eligibility rules as conditional flows', labels: ['Workflow'], desc: 'I modeled LIHEAP eligibility (fuel types, county and vendor relationships, access restrictions) as conditional flows that reveal only relevant fields, with permission-aware screens that show each role only what its access allows.' },
-  { place: 0, stage: 2, title: 'Shared components on a WCAG 2.1 AA baseline', labels: ['Design system', 'Accessibility'], desc: 'I defined shared components and a WCAG 2.1 AA baseline (keyboard navigation, logical focus order, semantic markup, ARIA) to enforce consistency and standards.' },
-  { place: 0, stage: 2, title: 'One search from any screen', labels: ['Interaction'], result: '1 search to find a profile', link: dso.link && { href: dso.link.href, name: dso.link.title }, desc: 'Ctrl K opens one search for pages and profiles, from any screen. Experienced staff get a fast path, and new staff can ignore it.' },
-  { place: 0, stage: 2, title: 'Sensitive numbers stay masked', labels: ['Interaction'], desc: 'Social Security numbers stay masked until someone makes a deliberate, logged click, so sensitive detail appears only when it is needed.' },
-  { place: 0, stage: 2, title: 'Navigation that follows the role', labels: ['Interaction'], desc: 'A partner-agency worker sees only Hearings, while DHS staff see everything, so each person faces only the choices that apply to them.' },
-  { place: 0, stage: 4, title: 'Usability testing after every round', labels: ['Research'], result: 'Usability scores up 15%', desc: 'I ran iterative design with usability testing: user flows, wireframes and annotated high-fidelity prototypes, refined after every round.' },
-  { place: 0, stage: 4, title: 'Verified with axe, WAVE and Lighthouse', labels: ['Accessibility'], desc: 'The accessibility baseline was verified in the Angular and Bootstrap build with axe, WAVE and Lighthouse.' },
-  { place: 1, stage: 0, title: 'Product-wide UI audit', labels: ['Design system'], desc: 'I led a product-wide UI audit to surface inconsistent patterns, before building the design system on what it found.' },
-  { place: 1, stage: 0, title: 'Feedback, observation and competitive analysis', labels: ['Research'], result: 'Adoption up 20% in three months', desc: 'I synthesized customer feedback, observation and competitive analysis into recommendations and stakeholder tradeoffs. Adoption grew 20% in three months.' },
-  { place: 1, stage: 2, title: 'A design system as the single source of truth', labels: ['Design system'], result: '41 documented components', link: scobin.figma ? { href: scobin.figma, name: 'Open the Figma file' } : undefined, desc: 'I established the design system (tokens, components) as the single source of truth, enforcing consistency and standards with accessibility built into the foundation.' },
-  { place: 1, stage: 2, title: 'Dense inventory screens you can read', labels: ['Interaction'], result: 'Task time down 35%, errors down 40%', desc: 'I used progressive disclosure and visual hierarchy to favor recognition over recall on dense inventory screens, and designed status chips plus empty, loading and error states to keep system status visible. Task time fell 35% and manual errors fell 40%.' },
-  { place: 1, stage: 3, title: 'Component specs and ownership with engineering', labels: ['Design system'], desc: 'I defined component specs and ownership with design and engineering to streamline handoff.' },
-  { place: 2, stage: 3, title: 'UX specs as responsive Angular interfaces', labels: ['Front-end'], desc: 'I implemented UX specs as responsive Angular interfaces and reusable components, and flagged technical constraints early in wireframe and prototype reviews with designers, clients and engineers.' },
-  { place: 2, stage: 3, title: 'Errors people can recover from', labels: ['Front-end', 'Interaction'], desc: 'I helped users recognize, diagnose and recover from errors by turning server and client validation into inline, actionable messages with recovery steps.' },
-  { place: 2, stage: 3, title: 'A faster first load', labels: ['Front-end'], desc: 'I sped up initial load with lazy loading, code splitting and asset optimization.' },
-  { place: 2, stage: 4, title: 'A/B tests on two client portals', labels: ['Research'], result: 'Engagement up 15%, conversion up 10%', desc: 'I contributed to A/B tests on two client portals: engagement rose 15% and conversion 10%.' },
-  { place: 3, stage: 1, title: 'A folder becomes a map', labels: ['Workflow'], desc: 'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it quickly.' },
-  { place: 3, stage: 2, title: 'Agents you can watch working', labels: ['Interaction'], desc: 'When you ask a question, several small agents each take one task, and you can see what each one did. I designed the product concept, the end-to-end experience and the interface.' },
-]
 const counts = PLACES.map(() => 0)
-const SEED: Card[] = RAW.map((c, id) => ({ ...c, id, key: `${PLACES[c.place].key}-${++counts[c.place]}`, log: [{ who: 0, text: `did this at ${PLACES[c.place].name}` }] }))
+const SEED: Card[] = WORK.map((c, id) => ({ ...c, id, key: `${PLACES[c.place].key}-${++counts[c.place]}`, log: [{ who: 0, text: `did this at ${PLACES[c.place].name}` }] }))
 
 // the numbers on the resume, as changes in percent: below zero is a drop
 const RESULTS = [
@@ -69,11 +50,12 @@ const RESULTS = [
   { place: 2, what: 'Engagement', v: 15 },
   { place: 2, what: 'Conversion', v: 10 },
 ]
+// each area borrows the icon and colour of the matching stage on the board
 const EXPERTISE = [
-  ['Research', 'Contextual inquiry, ride-alongs, stakeholder interviews, usability testing, personas, journey maps, GA4 and Hotjar'],
-  ['Product', 'Information architecture, user flows, task analysis, workflow and form design, state logic, design strategy'],
-  ['Design', 'Interaction design, prototyping, design systems, design tokens, microcopy, WCAG 2.1 AA, Section 508, design QA'],
-  ['Build', 'Figma, Dev Mode, Miro, Jira, Angular, Bootstrap, HTML, CSS and JavaScript, ARIA, REST APIs, axe, WAVE, Lighthouse'],
+  { name: 'Research', hue: '#4ea7fc', Icon: Microscope, list: ['Contextual inquiry', 'Ride-alongs', 'Stakeholder interviews', 'Usability testing', 'Personas', 'Journey maps', 'GA4', 'Hotjar'] },
+  { name: 'Product', hue: '#f2c94c', Icon: Workflow, list: ['Information architecture', 'User flows', 'Task analysis', 'Workflow and form design', 'State logic', 'Design strategy'] },
+  { name: 'Design', hue: '#e879c7', Icon: PenTool, list: ['Interaction design', 'Prototyping', 'Design systems', 'Design tokens', 'Microcopy', 'WCAG 2.1 AA', 'Section 508', 'Design QA'] },
+  { name: 'Build', hue: '#4cb782', Icon: Code, list: ['Figma', 'Dev Mode', 'Miro', 'Jira', 'Angular', 'Bootstrap', 'HTML', 'CSS', 'JavaScript', 'ARIA', 'REST APIs', 'axe', 'WAVE', 'Lighthouse'] },
 ]
 
 /* ---------- small pieces ---------- */
@@ -87,12 +69,16 @@ const MARKS: Record<string, string> = {
   GA: '/logos/georgia-dhs-mark.png',
   SCO: '/logos/scobin-mark.svg',
   WIP: '/logos/wipro.webp',
+  UMBC: '/logos/umbc-mark.svg',
 }
 
-// each workplace shows its real emblem on a small light tile, the ground the logos were drawn for; Telemetric has none yet, so it gets a small map of three joined notes
+// the Georgia DHS and Scobin emblems are dark single-colour marks, so they sit straight on the dark page with their colours inverted
+const BARE = ['GA', 'SCO', 'UMBC']
+
+// Wipro keeps its real colours on a small light tile, the ground the logo was drawn for; Telemetric has none yet, so it gets a small map of three joined notes
 function PlaceLogo({ p }: { p: number }) {
   const { hue, key } = PLACES[p]
-  if (MARKS[key]) return <img className="plogo" src={MARKS[key]} alt="" width={18} height={18} draggable={false} />
+  if (MARKS[key]) return <img className={BARE.includes(key) ? 'plogo is-bare' : 'plogo'} src={MARKS[key]} alt="" width={18} height={18} draggable={false} />
   return (
     <svg className="ico" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke={hue} strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
       <path d="M4.2 10.4l3-5.4M9.4 5.2l2.6 4.2M5.4 12h5.2" /><circle cx="8.3" cy="3.6" r="1.7" /><circle cx="3.4" cy="12" r="1.7" /><circle cx="12.6" cy="11" r="1.7" />
@@ -100,11 +86,22 @@ function PlaceLogo({ p }: { p: number }) {
   )
 }
 
+// a tool shows its real logo straight on the page, with no tile behind it; one with no logo file shows its first letter
+function ToolLogo({ id }: { id: ToolId }) {
+  if (LOGOLESS.includes(id)) return <span className="plogo is-tool is-mono" aria-hidden="true">{tools[id][0].toUpperCase()}</span>
+  return <img className="plogo is-tool" src={`/tools/color/${id}.svg`} alt="" width={18} height={18} draggable={false} style={{ scale: logoScale[id] }} />
+}
+
 function Avatar({ who }: { who: number }) {
   return who ? <span className="av" aria-hidden="true"><User size={11} strokeWidth={2.2} /></span> : <img className="av" src="/me/portrait.webp" alt="" width={18} height={18} draggable={false} />
 }
 
 const STAGE_OPTS = STAGES.map((s, i) => <><StageIcon s={i} />{s.name}</>)
+
+/** The cross that closes whatever is open: the card, a dialog or a toast. One button, so it looks and works the same everywhere. */
+function Close({ label = 'Close', onClick, tip, small, autoFocus }: { label?: string; onClick: () => void; tip?: string; small?: boolean; autoFocus?: boolean }) {
+  return <button type="button" className="lin-icon" aria-label={label} data-tip={tip} data-tip-end={tip ? '' : undefined} autoFocus={autoFocus} onClick={(e) => { e.stopPropagation(); onClick() }}><X size={small ? 13 : 15} /></button>
+}
 
 /** A button that opens a small panel beside itself. Closes on Escape, or when focus leaves; the content is handed a way to close it. */
 function Pop({ label, face, end, up, children }: { label: string; face: ReactNode; end?: boolean; up?: boolean; children: (close: () => void) => ReactNode }) {
@@ -116,7 +113,7 @@ function Pop({ label, face, end, up, children }: { label: string; face: ReactNod
       onKeyDown={(e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); setOpen(false) } }}
     >
       <button type="button" className="pick-btn" aria-haspopup="menu" aria-expanded={open} aria-label={label} title={open ? undefined : label} onClick={() => setOpen((o) => !o)}>{face}</button>
-      {open && <span className="pick-menu" data-end={end || undefined} data-up={up || undefined} role="menu">{children(() => setOpen(false))}</span>}
+      {open && <span className="pick-menu" data-end={end || undefined} data-up={up || undefined} role="menu" tabIndex={-1}>{children(() => setOpen(false))}</span>}
     </span>
   )
 }
@@ -143,7 +140,7 @@ function Detail({ card, change, say, close, more, openPlace }: { card: Card; cha
         <span className="lin-key"><PlaceLogo p={card.place} />{card.key}</span>
         <span className="lin-tools">
           <button type="button" className="lin-icon" aria-label="More for this card" onClick={more}><Ellipsis size={15} /></button>
-          <button type="button" className="lin-icon" aria-label="Close the card" data-tip="Close  Esc" data-tip-end="" onClick={close}><X size={15} /></button>
+          <Close label="Close the card" tip="Close  Esc" onClick={close} />
         </span>
       </header>
       {card.yours ? <input className="lin-h" value={card.title} aria-label="Title" onChange={(e) => change({ title: e.target.value })} /> : <h3 className="lin-h">{card.title}</h3>}
@@ -154,6 +151,9 @@ function Detail({ card, change, say, close, more, openPlace }: { card: Card; cha
         <button type="button" className="pick-btn" onClick={() => openPlace(card.place)}><PlaceLogo p={card.place} />{PLACES[card.place].name}</button>
       </div>
       {card.labels.length > 0 && <p className="lin-tags">{card.labels.map((l) => <Tag key={l} name={l} />)}</p>}
+      {card.why && <section className="lin-part"><h4>The problem</h4><p>{card.why}</p></section>}
+      {card.how && <section className="lin-part"><h4>What I did</h4><ol>{card.how.map((step) => <li key={step}>{step}</li>)}</ol></section>}
+      {card.out && <section className="lin-part"><h4>What changed</h4><p>{card.out}</p></section>}
       {card.link && <a className="lin-link" href={card.link.href} target="_blank" rel="noreferrer"><ExternalLink size={14} aria-hidden="true" />{card.link.name}<span>New tab</span></a>}
       <h4>Activity</h4>
       <ol className="lin-log">
@@ -203,7 +203,7 @@ function NewCard({ start, create, close }: { start: Partial<Draft>; create: (d: 
   return (
     <div className="lin-veil" onClick={close}>
       <form className="lin-new" role="dialog" aria-label="New card" onClick={(e) => e.stopPropagation()} onSubmit={(e) => { e.preventDefault(); if (d.title.trim()) create({ ...d, title: d.title.trim() }) }}>
-        <header>Add a card of your own<button type="button" className="lin-icon" aria-label="Close" onClick={close}><X size={15} /></button></header>
+        <header>Add a card of your own<Close onClick={close} /></header>
         <input autoFocus className="lin-h" value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} placeholder="What should I do next?" aria-label="Card title" />
         <div className="lin-fields">
           <select aria-label="Stage" {...num('stage')}>{STAGES.map((s, i) => <option key={s.name} value={i}>{s.name}</option>)}</select>
@@ -274,7 +274,7 @@ const YEARS = [2021, 2022, 2023, 2024, 2025, 2026]
 const SPAN = YEARS.length * 12
 
 function Timeline({ cards, open }: { cards: Card[]; open: (p: number) => void }) {
-  const order = [2, 1, 0, 3] // oldest first
+  const order = [2, 4, 1, 0, 3] // oldest first
   return (
     <div className="lin-screen rm is-years">
       <div className="rm-row is-head"><span /><div className="rm-weeks">{YEARS.map((y) => <span key={y}>{y}</span>)}</div></div>
@@ -284,7 +284,7 @@ function Timeline({ cards, open }: { cards: Card[]; open: (p: number) => void })
         return (
           <div className="rm-row" key={place.key}>
             <button type="button" className="rm-name" aria-label={`${place.name}. Show that work`} onClick={() => open(p)}>
-              <PlaceLogo p={p} /><span>{place.name}<small>{place.role} · {mine} cards</small></span>
+              <PlaceLogo p={p} /><span>{place.name}<small>{place.role}</small></span>
             </button>
             <div className="rm-track">
               <button type="button" className="rm-bar" aria-label={`${place.name}, ${place.dates}. Show that work`} style={{ left: `${(place.start / SPAN) * 100}%`, width: `${((place.end - place.start) / SPAN) * 100}%`, '--hue': place.hue, '--p': 1 } as CSSProperties} onClick={() => open(p)}>
@@ -301,20 +301,47 @@ function Timeline({ cards, open }: { cards: Card[]; open: (p: number) => void })
 
 /* ---------- toolkit: what I used in each role, and what I am good at ---------- */
 
+function PlaceHead({ p, open }: { p: number; open: (p: number) => void }) {
+  const place = PLACES[p]
+  return <button type="button" className="tk-head" aria-label={`${place.name}. Show that work`} onClick={() => open(p)}><PlaceLogo p={p} /><span>{place.name}<small>{place.role} · {place.dates}</small></span><ChevronRight size={14} aria-hidden="true" /></button>
+}
+
 function Toolkit({ open }: { open: (p: number) => void }) {
   return (
     <div className="lin-screen tk">
-      {PLACES.map((place, p) => (
-        <section key={place.key} className="tk-card">
-          <button type="button" className="tk-head" aria-label={`${place.name}. Show that work`} onClick={() => open(p)}><PlaceLogo p={p} /><span>{place.name}<small>{place.role} · {place.dates}</small></span><ChevronRight size={14} aria-hidden="true" /></button>
-          <p className="tk-what">{place.product}</p>
-          <p>{place.did}</p>
-          <ul className="tk-tools">{place.tools.map((id: ToolId) => <li key={id}><img src={`/tools/${id}.svg`} alt="" width={14} height={14} draggable={false} />{tools[id]}</li>)}</ul>
-        </section>
-      ))}
-      <section className="tk-card is-wide">
-        <h4>Core expertise</h4>
-        <dl className="tk-skills">{EXPERTISE.map(([name, list]) => <div key={name}><dt>{name}</dt><dd>{list}</dd></div>)}</dl>
+      <section className="tk-sec">
+        <header><h4>Experience</h4><span>What I did in each role, and the tools I did it with</span></header>
+        <div className="tk-roles">
+          {PLACES.map((place, p) => (
+            <article key={place.key} className="tk-role">
+              <header><PlaceHead p={p} open={open} /><p>{place.product}</p></header>
+              <div>
+                <h5>What I did</h5>
+                <ul className="tk-did">{place.highlights.map((line) => <li key={line}>{line}</li>)}</ul>
+              </div>
+              <div>
+                <h5>Tools</h5>
+                <dl className="tk-kinds">
+                  {TOOL_KINDS.map((kind) => {
+                    const mine = place.tools.filter((id) => toolKind[id] === kind)
+                    return mine.length > 0 && <div key={kind}><dt>{kind}</dt><dd><ul className="tk-tools">{mine.map((id) => <li key={id}><ToolLogo id={id} />{tools[id]}</li>)}</ul></dd></div>
+                  })}
+                </dl>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="tk-sec">
+        <header><h4>Core expertise</h4><span>Skills and methods, by area</span></header>
+        <dl className="tk-rows">
+          {EXPERTISE.map(({ name, hue, Icon, list }) => (
+            <div key={name} className="tk-row">
+              <dt className="tk-name"><Icon size={15} strokeWidth={1.9} color={hue} aria-hidden="true" />{name}<small>{list.length}</small></dt>
+              <dd><ul className="tk-tools is-plain">{list.map((skill) => <li key={skill}>{skill}</li>)}</ul></dd>
+            </div>
+          ))}
+        </dl>
       </section>
     </div>
   )
@@ -392,7 +419,6 @@ function Workspace() {
   const here: Partial<Draft> = typeof view === 'number' ? { place: view } : {}
   const open = cards.find((c) => c.id === openId)
   const picked = menu && cards.find((c) => c.id === menu.id)
-  const title = typeof view === 'number' ? PLACES[view].name : SCREENS.find((sc) => sc.id === view)!.name
   const actions: Action[] = [
     ...SCREENS.map(({ id, name, Icon }) => ({ label: `Go to ${name}`, icon: <Icon size={14} />, run: () => go(id) })),
     ...PLACES.map((p, i) => ({ label: `Show ${p.name}`, icon: <PlaceLogo p={i} />, run: () => go(i) })),
@@ -442,6 +468,10 @@ function Workspace() {
             </button>
           ))}
         </nav>
+        <p className="lin-label">Applications</p>
+        <ul className="lin-apps" aria-label="Applications">
+          {apps.map((id) => <li key={id}><ToolLogo id={id} />{tools[id]}</li>)}
+        </ul>
         <div className="lin-me">
           <Pop up label="Contact and help" face={<><Avatar who={0} /><span>{site.name}</span><ChevronsUpDown size={13} /></>}>
             {(close) => (
@@ -456,7 +486,8 @@ function Workspace() {
 
       <section className="lin-main">
         <header className="lin-bar">
-          <h3>{typeof view === 'number' && <PlaceLogo p={view} />}{title}{typeof view === 'number' && <small>{PLACES[view].role} · {PLACES[view].dates}</small>}</h3>
+          {typeof view === 'number' ? <h3><PlaceLogo p={view} />{PLACES[view].name}<small>{PLACES[view].role} · {PLACES[view].dates}</small></h3>
+            : <h3>{SCREENS.find((sc) => sc.id === view)!.name}</h3>}
           {listing && (
             <>
               <Pop end label="Filter by kind of work" face={<><ListFilter size={14} />Filter{only.length > 0 && <b>{only.length}</b>}</>}>
@@ -540,7 +571,7 @@ function Workspace() {
       {help && (
         <div className="lin-veil" onClick={() => setHelp(false)}>
           <div className="lin-new lin-help" role="dialog" aria-label="Keyboard shortcuts" onClick={(e) => e.stopPropagation()}>
-            <header>Keyboard shortcuts<button type="button" className="lin-icon" aria-label="Close" autoFocus onClick={() => setHelp(false)}><X size={15} /></button></header>
+            <header>Keyboard shortcuts<Close autoFocus onClick={() => setHelp(false)} /></header>
             <dl>{SHORTCUTS.map(([combo, what]) => <div key={what}><dt>{what}</dt><dd>{combo.map((k) => <kbd key={k}>{k}</kbd>)}</dd></div>)}</dl>
           </div>
         </div>
@@ -562,7 +593,7 @@ function Workspace() {
         <div className="lin-toast" role="status">
           <Check size={14} />{toast.text}
           {toast.action && <button type="button" onClick={() => { toast.run?.(); setToast(null) }}>{toast.action}</button>}
-          <button type="button" className="lin-icon" aria-label="Dismiss" onClick={() => setToast(null)}><X size={13} /></button>
+          <Close small label="Dismiss" onClick={() => setToast(null)} />
         </div>
       )}
     </div>
