@@ -152,13 +152,8 @@
 /* playground: one big dotted card of live pieces */
 .play-card { display: grid; grid-template-columns: minmax(0, 1fr); padding: 32px 32px 28px; border-radius: 20px; background: radial-gradient(rgba(255, 255, 255, .055) 1px, transparent 1.5px) 0 0 / 18px 18px, var(--d-card); box-shadow: var(--lift); }
 /* a cell is only its component; the tile behind it and its name show up under the pointer */
-.play-cell { display: grid; grid-template-rows: 1fr auto; align-items: start; min-width: 0; padding: 16px 16px 12px; border-radius: 16px; transition: background .35s var(--out); }
-.play-cell:first-child { grid-column: 1 / -1; }
-.play-cell figcaption { margin-top: 14px; text-align: center; font: 400 13px/1.4 var(--font-text); color: var(--d-mute); opacity: 0; translate: 0 4px; transition: opacity .3s var(--out), translate .3s var(--out); }
-.play-cell:focus-within figcaption { opacity: 1; translate: none; }
-@media (hover: hover) and (pointer: fine) {
-  .play-cell:hover figcaption { opacity: 1; translate: none; }
-}
+.play-cell { display: grid; align-items: start; min-width: 0; margin: 0; padding: 16px; border-radius: 16px; }
+.play .play-card { margin-top: 76px; }
 .play-more { margin-top: 28px; text-align: center; }
 
 /* the live pieces share one small card */
@@ -166,6 +161,31 @@
 
 /* the board stands in its own chunk, so this holds its exact footprint until it arrives */
 .play-hold { box-sizing: border-box; width: 100%; height: 800px; border-radius: 14px; background: #101012; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 30px 60px -30px rgba(0, 0, 0, .8); }
+
+/* the front door of the app: the signature in the middle under a soft light, two ways in, and a line at the foot */
+.door { --ink: #e6e6e9; --dim: #9a9ea7; --faint: #6f747d; position: relative; isolation: isolate; display: grid; grid-template-rows: 1fr auto; justify-items: center; box-sizing: border-box; height: 800px; overflow: hidden; border-radius: 14px; background: #0f0f11; color: var(--ink); font: 400 13px/1.4 var(--font-text); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .8); animation: lin-fade .3s; }
+.door-glow { position: absolute; z-index: -1; inset: 0; background: radial-gradient(circle 720px at 50% 44%, rgba(255, 255, 255, .045), rgba(255, 255, 255, .022) 35%, rgba(255, 255, 255, .008) 65%, transparent 100%); }
+.door-grid { position: absolute; z-index: -1; inset: 0; background: radial-gradient(rgba(255, 255, 255, .11) 1px, transparent 1.4px) 0 0 / 22px 22px; -webkit-mask-image: radial-gradient(circle 520px at 50% 44%, #000, rgba(0, 0, 0, .35) 45%, transparent 100%); mask-image: radial-gradient(circle 520px at 50% 44%, #000, rgba(0, 0, 0, .35) 45%, transparent 100%); }
+.door-body { display: grid; justify-items: center; align-self: center; width: 100%; max-width: 300px; padding-inline: 16px; box-sizing: border-box; transition: opacity .4s var(--out), scale .6s var(--out); }
+.door-sign { width: auto; height: 40px; filter: invert(1) drop-shadow(0 0 24px rgba(255, 255, 255, .18)); user-select: none; }
+.door-hint { margin: 26px 0 0; font-size: 13px; color: var(--dim); }
+.door-ways { display: grid; gap: 10px; width: 100%; margin-top: 30px; }
+.door-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 40px; padding: 0 14px; border-radius: 9px; color: var(--ink); font: 500 13.5px/1 var(--font-text); letter-spacing: -.005em; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .11), 0 1px 2px rgba(0, 0, 0, .35); background: rgba(255, 255, 255, .04); transition: background .18s, box-shadow .18s, filter .18s, transform .15s var(--out), opacity .3s; }
+.door-btn.is-main { background: linear-gradient(#f6f6f4, #e4e4e1); color: #101012; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 1px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px -12px rgba(255, 255, 255, .35); }
+.door-btn:not(:disabled):active { transform: translateY(1px); }
+.door-btn:disabled { opacity: .55; cursor: default; }
+.door-btn:disabled:has(.door-spin) { opacity: 1; }
+.door-spin { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid currentColor; border-right-color: transparent; opacity: .8; animation: door-spin .7s linear infinite; }
+.door-foot { margin: 0; padding: 0 16px 22px; font-size: 12px; color: var(--faint); text-align: center; }
+.door[data-way] .door-body { opacity: .7; scale: .985; }
+@keyframes door-spin { to { rotate: 1turn; } }
+@media (hover: hover) and (pointer: fine) {
+  .door-btn:not(:disabled):not(.is-main):hover { background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18), 0 1px 2px rgba(0, 0, 0, .35); }
+  .door-btn.is-main:not(:disabled):hover { filter: brightness(1.04); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 1px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .5), 0 10px 30px -12px rgba(255, 255, 255, .5); }
+}
+/* the app comes up in place of the door */
+.play-in { animation: play-in .5s var(--out); }
+@keyframes play-in { from { opacity: 0; scale: .992; } }
 
 /* the tracker: the one place on the page with colour. A sidebar, a list or board, and a panel for the open issue. */
 .lin { --ac: #d4d4d8; --line: rgba(255, 255, 255, .07); --ink: #e6e6e9; --dim: #9a9ea7; --faint: #6f747d; position: relative; display: grid; grid-template-columns: 216px minmax(0, 1fr); height: 800px; overflow: hidden; background: #101012; color: var(--ink); font: 400 13px/1.4 var(--font-text); }
@@ -187,7 +207,7 @@
 .lin-primary:disabled { opacity: .4; }
 
 /* sidebar */
-.lin-side { display: flex; flex-direction: column; padding: 10px 8px; border-right: 1px solid var(--line); background: #0c0c0e; }
+.lin-side { display: flex; flex-direction: column; min-height: 0; padding: 10px 8px; border-right: 1px solid var(--line); background: #0c0c0e; }
 /* my sign sits alone at the top, with room under it before the menu starts */
 .lin-top { display: flex; align-items: center; gap: 2px; padding: 8px 2px 26px 8px; }
 .lin-sign { width: auto; height: 22px; margin-right: auto; filter: invert(1); }
@@ -198,6 +218,10 @@
 .lin-side nav button > span:last-child { margin-left: auto; font: 400 11px/1 var(--f-code); color: var(--faint); }
 
 .lin-label { padding: 16px 8px 5px; font-size: 11.5px; color: var(--faint); }
+.lin-fold { display: flex; align-items: center; gap: 5px; width: 100%; margin-bottom: 4px; padding-right: 8px; padding-left: 5px; border-radius: 6px; text-align: left; transition: color .15s; }
+.lin-fold > svg { flex: none; transition: rotate .18s var(--out); }
+.lin-fold[aria-expanded="true"] > svg { rotate: 90deg; }
+.lin-fold > span { margin-left: auto; font: 400 11px/1 var(--f-code); }
 
 /* the bar over the list */
 .lin-main { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
@@ -289,7 +313,8 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
 
 @media (hover: hover) and (pointer: fine) {
   .lin-icon:not(:disabled):hover,
-.lin-side nav button:not([aria-current]):hover,
+.lin-fold:hover { color: var(--dim); }
+  .lin-side nav button:not([aria-current]):hover,
 .lin-tabs button:not([aria-pressed="true"]):hover,
 .pick-btn:hover,
 .pick-menu button:hover { background: rgba(255, 255, 255, .08); color: var(--ink); }
@@ -306,7 +331,7 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
   .lin-top { flex: none; padding: 0; }
   .lin-side nav { display: flex; flex: none; }
   .lin-side nav button { width: auto; white-space: nowrap; }
-  .lin-label, .lin-me, .lin-row .lin-labels { display: none; }
+  .lin-label, .lin-fold, .lin-me, .lin-row .lin-labels { display: none; }
   /* two classes, so the later `.lin-bar h3 { display: flex }` does not bring it back */
   .lin .lin-bar h3 { display: none; }
   .lin-bar { justify-content: flex-end; }
@@ -322,10 +347,15 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
 
 /* insights */
 .in { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 10px; }
-.in-tiles { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-.in-tiles div, .in-card { padding: 12px 14px; border-radius: 10px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--line); }
-.in-tiles dt { font-size: 12px; color: var(--dim); }
-.in-tiles dd { margin-top: 2px; font-size: 24px; font-weight: 500; line-height: 1.15; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+/* the headline numbers: one card, four columns parted by hairlines. The label above, the number large, its source below. */
+.in-tiles { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); border-radius: 10px; background: linear-gradient(rgba(255, 255, 255, .045), rgba(255, 255, 255, .02)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), inset 0 0 0 1px var(--line); }
+.in-tiles div { display: grid; align-content: start; gap: 6px; padding: 16px 18px 15px; }
+.in-tiles div + div { border-left: 1px solid var(--line); }
+.in-tiles dt { font-size: 11.5px; color: var(--faint); }
+.in-tiles dd { display: flex; align-items: baseline; gap: 3px; margin: 0; font-size: 30px; font-weight: 500; line-height: 1; letter-spacing: -.04em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.in-tiles dd small { font-size: 13px; font-weight: 400; letter-spacing: 0; color: var(--dim); }
+.in-tiles p { font-size: 12px; color: var(--dim); }
+.in-card { padding: 12px 14px; border-radius: 10px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--line); }
 .in-card { display: grid; align-content: start; gap: 10px; }
 
 .in-card > svg { display: block; width: 100%; height: auto; overflow: visible; cursor: crosshair; touch-action: pan-y; }
@@ -339,7 +369,13 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
 .in-legend span { width: 34px; font: 400 11.5px/1 var(--f-code); color: var(--faint); text-align: right; }
 .in-load li { display: grid; grid-template-columns: 18px minmax(0, 104px) minmax(0, 1fr) 34px; align-items: center; gap: 9px; height: 28px; color: var(--dim); }
 .in-load li > span:nth-child(2) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.in-load b { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink); text-align: right; }
+.in-load b { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink); text-align: right; white-space: nowrap; }
+/* the role I am in now: the bar runs into the present and the number says so */
+.in-load li[data-live] { grid-template-columns: 18px minmax(0, 104px) minmax(0, 1fr) auto; }
+.in-load li[data-live] .in-bar i { background: linear-gradient(90deg, var(--ac), #4cb782); }
+.in-load em { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 5px; border-radius: 999px; background: rgba(76, 183, 130, .14); font: 500 10.5px/1.5 var(--font-text); font-style: normal; color: #4cb782; }
+.in-load em i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: in-pulse 1.6s ease-in-out infinite; }
+@keyframes in-pulse { 50% { opacity: .35; } }
 .in-bar { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, .06); }
 .in-bar i { display: block; height: 100%; min-width: 2px; border-radius: 4px; background: var(--ac); transition: width .4s var(--out); }
 
@@ -402,6 +438,7 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
 .lin-me .pick-btn { justify-content: flex-start; gap: 9px; height: 32px; padding: 0 8px; color: var(--dim); transition: background .15s, color .15s; }
 .lin-me .pick-btn > svg:last-child { flex: none; margin-left: -3px; color: var(--faint); }
 .lin-me .pick-menu { min-width: 100%; }
+.pick-menu .lin-out { margin-top: 2px; border-top: 1px solid var(--line); border-radius: 0 0 6px 6px; color: var(--dim); }
 .lin-me .pick-menu p { padding: 6px 8px 5px; font: 400 11.5px/1.35 var(--font-text); white-space: nowrap; }
 
 .lin-help dl { display: grid; gap: 2px; }
@@ -415,6 +452,9 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
 
 /* insights: a burn-up across two columns, and a grid of activity */
 .in-card.is-wide { grid-column: span 2; }
+.in-card.is-full { grid-column: 1 / -1; }
+/* the roles side by side across the full width */
+.is-full .in-load { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 28px; }
 .in-card header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .in-keys { display: flex; gap: 14px; font-size: 11.5px; color: var(--dim); }
 .in-keys span { display: inline-flex; align-items: center; gap: 6px; }
@@ -425,7 +465,12 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
   .lin-toast button:not(.lin-icon):hover { background: rgba(212, 212, 216, .16); }
   
 }
-@media (max-width: 900px) { .in-card.is-wide { grid-column: auto; } }
+@media (max-width: 900px) {
+  .in-card.is-wide { grid-column: auto; }
+  .is-full .in-load { grid-template-columns: 1fr; gap: 2px; }
+  .in-tiles div:nth-child(2n + 1) { border-left: 0; }
+  .in-tiles div:nth-child(n + 3) { border-top: 1px solid var(--line); }
+}
 /* the app is about me: workplace logos, my portrait as the avatar, a result on a card */
 /* each workplace shows its real emblem on a small light tile: the logos are dark marks drawn for a light page */
 .plogo { box-sizing: border-box; flex: none; width: 18px; height: 18px; padding: 2px; border-radius: 5px; background: #f2f2f0; object-fit: contain; }
@@ -454,16 +499,10 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .lin-part li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255, 255, 255, .08); color: var(--dim); font: 500 10.5px/18px var(--font-text); text-align: center; }
 
 /* results */
-.in-tiles dd { margin: 0; }
-.in-tiles dt { margin-top: 2px; }
 .re-list { display: grid; gap: 2px; }
 .re-list li { display: grid; grid-template-columns: 132px minmax(0, 190px) minmax(0, 1fr) 104px; align-items: center; gap: 12px; height: 30px; color: var(--dim); }
 .re-place { display: flex; align-items: center; gap: 8px; color: var(--ink); }
 .re-list b { display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
-.re-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
-.re-facts dd { font-size: 19px; font-weight: 500; line-height: 1.15; letter-spacing: -.02em; }
-.re-facts dt { margin-top: 2px; font-size: 12px; color: var(--dim); }
-.re-facts div { display: flex; flex-direction: column; }
 
 /* timeline: six years instead of eight weeks */
 .rm.is-years .rm-weeks { grid-template-columns: repeat(6, 1fr); }
@@ -620,7 +659,7 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
   .block { padding-bottom: 110px; }
   .play-card { padding: 8px; }
   .play-cell { padding: 8px 8px 10px; }
-  .tiles { margin-top: 40px; }
+  .tiles, .play .play-card { margin-top: 40px; }
   .tile-text { padding: 28px; }
   .tile-shot { height: 260px; padding: 20px; }
   .tile-shot:has(.biz) { height: 430px; }
@@ -637,7 +676,8 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
   .pixels-note i, .intro-figure { animation: none; }
   .intro-stud { animation: none; opacity: .6; transform: scale(.6) rotate(20deg); }
   .tl-ruler, .biz { transition: none; }
-  .lin * { animation: none; }
+  .lin *, .door, .play-in { animation: none; }
+  .door-spin { animation: none; border-right-color: currentColor; opacity: .4; }
   [data-rise] { opacity: 1; translate: none; transition: none; }
 }
 

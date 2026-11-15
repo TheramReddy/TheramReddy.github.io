@@ -322,7 +322,7 @@ export const WORK: Work[] = [
     desc: 'I defined component specs and ownership with design and engineering.',
     why: 'Design and engineering each had their own version of a component, and nobody owned the answer.',
     how: ['Defined what a component spec includes', 'Agreed who owns each component, across design and engineering', 'Made the design system the single source of truth for both'],
-    out: 'Handoff was streamlined.',
+    out: 'Handoff stopped needing a second round of questions.',
   },
   {
     place: 1, stage: 3, title: 'One page structure for every component', labels: ['Design system'], result: '41 documented components',
@@ -354,9 +354,9 @@ export const WORK: Work[] = [
     out: 'If an interaction matters in the browser, it gets attention in the design system.',
   },
   {
-    place: 1, stage: 4, title: 'A system the whole company uses', labels: ['Design system'], result: 'Supports 120+ employees',
+    place: 1, stage: 4, title: 'A system the whole company uses', labels: ['Design system'], result: '120+ people use it',
     link: scobin.figma ? { href: scobin.figma, name: 'Open the Figma file' } : undefined,
-    desc: 'The design system now supports a user base of more than 120 employees.',
+    desc: 'More than 120 people use the design system today.',
     why: 'A design system only works if people keep using it after its author steps away.',
     how: ['Built it to be used and maintained without me explaining every detail', 'Made each decision easy to find at the moment it is needed', 'Made it the single source of truth for design and engineering'],
     out: 'It makes good design easier to repeat.',
@@ -424,7 +424,7 @@ export const WORK: Work[] = [
   },
   {
     place: 2, stage: 2, title: 'Variations for the A/B tests', labels: ['Interaction'],
-    desc: 'I contributed to the A/B tests on two client portals.',
+    desc: 'I built the variations for the A/B tests on two client portals.',
     why: 'Opinions about which design works better are cheap. A test settles it.',
     how: ['Worked with the team on what to compare', 'Kept the difference between versions to the one thing being tested', 'Kept both versions equally fast and stable'],
     out: 'The results could be trusted.',

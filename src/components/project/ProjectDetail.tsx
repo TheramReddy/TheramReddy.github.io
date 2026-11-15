@@ -44,7 +44,7 @@ function WalkthroughEnd({ slug, root }: { slug: string; root: RefObject<HTMLDivE
         </div>
       )}
       {seen && <span className="contact-done-icon px-plate"><svg viewBox="0 0 8 7" width="24" height="21" shapeRendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="6" y="0" width="2" height="1" /><rect x="5" y="1" width="3" height="1" /><rect x="0" y="2" width="2" height="1" /><rect x="4" y="2" width="3" height="1" /><rect x="0" y="3" width="3" height="1" /><rect x="4" y="3" width="2" height="1" /><rect x="1" y="4" width="5" height="1" /><rect x="2" y="5" width="3" height="1" /><rect x="3" y="6" width="1" height="1" /></svg></span>}
-      <p>That’s the walkthrough.</p>
+      <p>That’s the case study.</p>
       {next.slug !== slug && (
         <button type="button" className="key is-big is-lit" onClick={() => navigate(`/project/${next.slug}`)}>next: {next.title}</button>
       )}
@@ -236,8 +236,8 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
             </div>
             <div className="gallery">
               {p.metrics && !p.story && (
-                <section className="metrics" id="cs-glance" aria-label="What changed for users">
-                  <h3>What changed for the people using it</h3>
+                <section className="metrics" id="cs-glance" aria-label="What changed">
+                  <h3>What changed</h3>
                   <MetricCards items={p.metrics} />
                 </section>
               )}
@@ -246,7 +246,7 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
                 <JourneyMap
                   src="/projects/dso-modernization/journey.html"
                   title="DSO debt setoff journey map"
-                  lede="Getting a clearer view before stepping in gives the full picture."
+                  lede="The whole journey, mapped before I changed anything."
                 />
               )}
               {p.features && <Approach />}

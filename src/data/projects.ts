@@ -66,7 +66,7 @@ export const projects: Project[] = [
     gradient: CARD,
     link: {
       href: 'https://dor.georgia.gov/state-refund-offsets-other-agencies',
-      title: 'Visit the public information page',
+      title: 'Read the state’s public page',
       note: 'How the state explains refund offsets to residents',
     },
     metrics: [
@@ -98,9 +98,9 @@ export const projects: Project[] = [
     stack: ['Figma', 'Storybook'],
     url: '#',
     client: 'Scobin',
-    summary: 'A design system built from the ground up, now supporting 120+ employees.',
+    summary: 'A design system built from scratch, now used by more than 120 people.',
     description:
-      'Scobin didn’t have a shared design language. Similar components looked and behaved differently across screens, leaving designers and developers to solve the same problems repeatedly. I built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons, and 95 text styles. The system now supports a user base of more than 120 employees.',
+      'Scobin didn’t have a shared design language. Similar components looked and behaved differently across screens, leaving designers and developers to solve the same problems repeatedly. I built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons, and 95 text styles. More than 120 people use it today.',
     gradient: CARD,
     tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
     story: true,

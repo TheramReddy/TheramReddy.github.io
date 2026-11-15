@@ -1,19 +1,21 @@
-import { type CSSProperties, type FormEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowDown, ArrowUp, CalendarRange, ChartColumn, Check, ChevronRight, ChevronsUpDown, Code, Columns3, Copy, Ellipsis, ExternalLink, FlaskConical, Kanban, Keyboard, ListFilter, Maximize2, Microscope, PenTool, Plus, Rows3, Search, Send, SquarePen, Trash, User, Workflow, Wrench, X } from 'lucide-react'
+import { type CSSProperties, type FormEvent, type KeyboardEvent, type MouseEvent, type ReactNode, Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowDown, ArrowUp, CalendarRange, ChartColumn, Check, ChevronRight, ChevronsUpDown, Code, Columns3, Copy, Ellipsis, ExternalLink, FlaskConical, Kanban, Keyboard, LayoutTemplate, ListFilter, LogOut, Maximize2, Microscope, PenTool, Plus, Rows3, Search, Send, SquarePen, Trash, User, Workflow, Wrench, X } from 'lucide-react'
 import { WORK } from '@/data/cards'
 import { projects } from '@/data/projects'
 import { site } from '@/data/site'
 import { LOGOLESS, TOOL_KINDS, type ToolId, apps, logoScale, toolKind, tools } from '@/data/tools'
 import { jobs } from '@/data/work'
+// the deliverables screen, its templates and its copilot, is a chunk of its own, fetched the first time it is opened
+const Studio = lazy(() => import('./Studio').then((m) => ({ default: m.Studio })))
 
 /* ---------- the content: where I have worked, how I work, and what I did, all from the resume and data/ ---------- */
 
 const telemetric = projects.find((p) => p.slug === 'telemetric')!
-const dso = projects.find((p) => p.slug === 'dso-modernization')!
-const scobin = projects.find((p) => p.slug === 'scobin-design-system')!
-// months are counted from January 2021; `end` is the month after the last one, and the present is November 2026
+// months are counted from January 2021; `end` is the month after the last one. The present is read from the clock, held within
+// the years the timeline draws
 const month = (year: number, m: number) => (year - 2021) * 12 + m - 1
-const NOW = month(2026, 12)
+const today = new Date()
+const NOW = Math.min(month(today.getFullYear(), today.getMonth() + 1) + 1, month(2027, 1))
 const PLACES = [
   { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', role: jobs[0].role, dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, product: jobs[0].product, highlights: jobs[0].highlights, tools: jobs[0].tools },
   { key: 'SCO', name: 'Scobin', hue: '#e879c7', role: jobs[1].role, dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), product: jobs[1].product, highlights: jobs[1].highlights, tools: jobs[1].tools },
@@ -23,11 +25,11 @@ const PLACES = [
 ]
 // the five stages my work moves through; the board has one column for each
 const STAGES = [
-  { name: 'Research', hue: '#4ea7fc', Icon: Microscope, what: 'Watch the real work first' },
-  { name: 'Define', hue: '#f2c94c', Icon: Workflow, what: 'Turn rules and roles into flows' },
-  { name: 'Design', hue: '#e879c7', Icon: PenTool, what: 'Every state, not just the happy path' },
-  { name: 'Build', hue: '#4cb782', Icon: Code, what: 'Specs that hold up in code' },
-  { name: 'Test', hue: '#a1a1aa', Icon: FlaskConical, what: 'Check it with people and tools' },
+  { name: 'Research', hue: '#4ea7fc', Icon: Microscope, what: 'Watch the real work' },
+  { name: 'Define', hue: '#f2c94c', Icon: Workflow, what: 'Rules into flows' },
+  { name: 'Design', hue: '#e879c7', Icon: PenTool, what: 'Every state, drawn' },
+  { name: 'Build', hue: '#4cb782', Icon: Code, what: 'Specs that hold in code' },
+  { name: 'Test', hue: '#a1a1aa', Icon: FlaskConical, what: 'Checked with people' },
 ]
 const LABELS: Record<string, string> = { Research: '#4ea7fc', Workflow: '#f2c94c', Interaction: '#e879c7', 'Design system': '#a1a1aa', Accessibility: '#3ecfb2', 'Front-end': '#4cb782' }
 const PEOPLE = [site.firstName, 'You'] // the second one is whoever is visiting
@@ -159,8 +161,8 @@ function Detail({ card, change, say, close, more, openPlace }: { card: Card; cha
         {card.log.map((entry, i) => <li key={i} data-said={entry.said || undefined}><Avatar who={entry.who} /><p><b>{PEOPLE[entry.who]}</b> {entry.text}</p></li>)}
       </ol>
       <form className="lin-say" onSubmit={send}>
-        <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Leave a note (it stays on this page)" aria-label="Leave a note" />
-        <button type="submit" className="lin-icon" aria-label="Add the note" disabled={!text.trim()}><Send size={14} /></button>
+        <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Leave a note. It stays on this page." aria-label="Leave a note" />
+        <button type="submit" className="lin-icon" aria-label="Send the note" disabled={!text.trim()}><Send size={14} /></button>
       </form>
     </aside>
   )
@@ -182,10 +184,10 @@ function Command({ actions, close }: { actions: Action[]; close: () => void }) {
   return (
     <div className="lin-veil" onClick={close}>
       <div className="lin-cmd" role="dialog" aria-label="Command menu" onClick={(e) => e.stopPropagation()} onKeyDown={keys}>
-        <input autoFocus value={q} onChange={(e) => { setQ(e.target.value); setAt(0) }} placeholder="Search my work, or type a command" aria-label="Search my work, or type a command" />
+        <input autoFocus value={q} onChange={(e) => { setQ(e.target.value); setAt(0) }} placeholder="Search cards, or run a command" aria-label="Search cards, or run a command" />
         <ul>
           {hits.map((a, i) => <li key={a.label}><button type="button" data-on={i === Math.min(at, hits.length - 1) || undefined} onMouseEnter={() => setAt(i)} onClick={() => run(a)}>{a.icon}<span>{a.label}</span>{a.hint && <kbd>{a.hint}</kbd>}</button></li>)}
-          {!hits.length && <li className="is-none">Nothing matches</li>}
+          {!hits.length && <li className="is-none">No matches</li>}
         </ul>
       </div>
     </div>
@@ -202,7 +204,7 @@ function NewCard({ start, create, close }: { start: Partial<Draft>; create: (d: 
   return (
     <div className="lin-veil" onClick={close}>
       <form className="lin-new" role="dialog" aria-label="New card" onClick={(e) => e.stopPropagation()} onSubmit={(e) => { e.preventDefault(); if (d.title.trim()) create({ ...d, title: d.title.trim() }) }}>
-        <header>Add a card of your own<Close onClick={close} /></header>
+        <header>Add a card<Close onClick={close} /></header>
         <input autoFocus className="lin-h" value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} placeholder="What should I do next?" aria-label="Card title" />
         <div className="lin-fields">
           <select aria-label="Stage" {...num('stage')}>{STAGES.map((s, i) => <option key={s.name} value={i}>{s.name}</option>)}</select>
@@ -220,12 +222,19 @@ function Results({ cards }: { cards: Card[] }) {
   const [hot, setHot] = useState<number | null>(null)
   const by = STAGES.map((_, s) => cards.filter((c) => c.stage === s).length)
   const months = PLACES.slice(0, 3).map((p) => p.end - p.start)
-  const tiles = [['Nearly 5', 'years in government and enterprise software'], ['50+', 'caseworkers and experts in my research'], ['3', 'role-based portals at Georgia DHS'], ['AA', 'WCAG 2.1 baseline, checked in the build']]
+  const years = (months.reduce((a, n) => a + n, 0) / 12).toFixed(1)
+  // the headline numbers: what they are, the number, its unit if any, and a line that says where it comes from
+  const tiles: [string, string, string, string][] = [
+    ['Years in the field', years, 'yrs', 'Government and enterprise software'],
+    ['People I researched with', '50', '+', 'Caseworkers and subject experts'],
+    ['Portals shipped', '3', '', 'Residents, caseworkers and vendors'],
+    ['Accessibility', 'AA', '', 'WCAG 2.1, checked in the build'],
+  ]
   return (
     <div className="lin-screen in">
-      <dl className="in-tiles">{tiles.map(([value, label]) => <div key={label}><dd>{value}</dd><dt>{label}</dt></div>)}</dl>
+      <dl className="in-tiles">{tiles.map(([label, value, unit, note]) => <div key={label}><dt>{label}</dt><dd>{value}{unit && <small>{unit}</small>}</dd><p>{note}</p></div>)}</dl>
       <section className="in-card is-wide">
-        <header><h4>Measured results</h4><p className="in-keys"><span>Change in percent, as on my resume</span></p></header>
+        <header><h4>Measured results</h4><p className="in-keys"><span>Percent change, from my resume</span></p></header>
         <ul className="re-list">
           {RESULTS.map((r, i) => {
             const Way = r.v < 0 ? ArrowDown : ArrowUp
@@ -241,7 +250,7 @@ function Results({ cards }: { cards: Card[] }) {
         </ul>
       </section>
       <section className="in-card">
-        <h4>Where the work sits</h4>
+        <h4>Where my time goes</h4>
         <div className="in-stack" aria-hidden="true">
           {STAGES.map((st, s) => by[s] > 0 && <i key={st.name} style={{ flexGrow: by[s], background: st.hue }} data-dim={(hot != null && hot !== s) || undefined} onMouseEnter={() => setHot(s)} onMouseLeave={() => setHot(null)} />)}
         </div>
@@ -249,19 +258,14 @@ function Results({ cards }: { cards: Card[] }) {
           {STAGES.map((st, s) => <li key={st.name} data-dim={(hot != null && hot !== s) || undefined} onMouseEnter={() => setHot(s)} onMouseLeave={() => setHot(null)}><StageIcon s={s} />{st.name}<b>{by[s]}</b><span>{Math.round((by[s] / Math.max(1, cards.length)) * 100)}%</span></li>)}
         </ul>
       </section>
-      <section className="in-card">
-        <h4>Time in each role</h4>
+      <section className="in-card is-full">
+        <h4>Years in each role</h4>
         <ul className="in-load">
-          {months.map((n, p) => <li key={PLACES[p].key}><PlaceLogo p={p} /><span>{PLACES[p].name}</span><span className="in-bar"><i style={{ width: `${(n / Math.max(...months)) * 100}%` }} /></span><b>{(n / 12).toFixed(1)} yr</b></li>)}
+          {months.map((n, p) => {
+            const live = PLACES[p].end === NOW
+            return <li key={PLACES[p].key} data-live={live || undefined}><PlaceLogo p={p} /><span>{PLACES[p].name}</span><span className="in-bar"><i style={{ width: `${(n / Math.max(...months)) * 100}%` }} /></span><b>{(n / 12).toFixed(1)} yr{live && <em><i />now</em>}</b></li>
+          })}
         </ul>
-      </section>
-      <section className="in-card">
-        <h4>{dso.title}</h4>
-        <dl className="re-facts">{dso.metrics?.map((m) => <div key={m.value}><dd>{m.value}</dd><dt>{m.label}</dt></div>)}</dl>
-      </section>
-      <section className="in-card">
-        <h4>{scobin.title}</h4>
-        <dl className="re-facts">{[['41', 'Documented components'], ['35', 'Icons'], ['95', 'Text styles'], ['120+', 'Employees it supports']].map(([value, label]) => <div key={label}><dd>{value}</dd><dt>{label}</dt></div>)}</dl>
       </section>
     </div>
   )
@@ -308,7 +312,7 @@ function Toolkit({ open }: { open: (p: number) => void }) {
   return (
     <div className="lin-screen tk">
       <section className="tk-sec">
-        <header><h4>Experience</h4><span>What I did in each role, and the tools I did it with</span></header>
+        <header><h4>Experience</h4><span>Each role, what I did, and what with</span></header>
         <div className="tk-roles">
           {PLACES.map((place, p) => (
             <article key={place.key} className="tk-role">
@@ -331,7 +335,7 @@ function Toolkit({ open }: { open: (p: number) => void }) {
         </div>
       </section>
       <section className="tk-sec">
-        <header><h4>Core expertise</h4><span>Skills and methods, by area</span></header>
+        <header><h4>Skills</h4><span>Methods and tools, by area</span></header>
         <dl className="tk-rows">
           {EXPERTISE.map(({ name, hue, Icon, list }) => (
             <div key={name} className="tk-row">
@@ -348,18 +352,19 @@ function Toolkit({ open }: { open: (p: number) => void }) {
 /* ---------- the workspace ---------- */
 
 // a number is one workplace
-type View = 'work' | 'results' | 'timeline' | 'toolkit' | number
+type View = 'work' | 'results' | 'timeline' | 'toolkit' | 'make' | number
 const SCREENS = [
   { id: 'work', name: 'How I work', Icon: Kanban },
   { id: 'results', name: 'Results', Icon: ChartColumn },
   { id: 'timeline', name: 'Timeline', Icon: CalendarRange },
   { id: 'toolkit', name: 'Toolkit', Icon: Wrench },
+  { id: 'make', name: 'Deliverables', Icon: LayoutTemplate },
 ] as const
-const SHORTCUTS: [string[], string][] = [[['C'], 'Add a card'], [['Ctrl', 'K'], 'Search and commands'], [['?'], 'This list'], [['Esc'], 'Close what is open'], [['Right-click'], 'Card menu'], [['↑', '↓', 'Enter'], 'Move and choose in the command menu']]
+const SHORTCUTS: [string[], string][] = [[['C'], 'Add a card'], [['Ctrl', 'K'], 'Search and commands'], [['?'], 'This list'], [['Esc'], 'Close whatever is open'], [['Right-click'], 'Card menu'], [['↑', '↓', 'Enter'], 'Move through the command menu']]
 type Toast = { text: string; action?: string; run?: () => void }
 
-/** My work laid out as a small working app: the board is how I work; the tabs are results, timeline and toolkit. */
-export default function Workspace() {
+/** My work laid out as a small working app: the board is how I work; the tabs are results, timeline and toolkit. `onSignOut` goes back to the door. */
+export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
   const shell = useRef<HTMLDivElement>(null)
   const [cards, setCards] = useState(SEED)
   const [view, setView] = useState<View>('work')
@@ -371,6 +376,7 @@ export default function Workspace() {
   const [draft, setDraft] = useState<Partial<Draft> | null>(null)
   const [menu, setMenu] = useState<{ id: number; x: number; y: number } | null>(null)
   const [folded, setFolded] = useState<number[]>([])
+  const [appsOpen, setAppsOpen] = useState(false)
   const [drag, setDrag] = useState<number | null>(null)
   const [over, setOver] = useState<number | null>(null)
   const [toast, setToast] = useState<Toast | null>(null)
@@ -467,16 +473,20 @@ export default function Workspace() {
             </button>
           ))}
         </nav>
-        <p className="lin-label">Applications</p>
-        <ul className="lin-apps" aria-label="Applications">
-          {apps.map((id) => <li key={id}><ToolLogo id={id} />{tools[id]}</li>)}
-        </ul>
+        {/* the applications fold away, so the sidebar stays short and the profile keeps its place at the foot */}
+        <button type="button" className="lin-label lin-fold" aria-expanded={appsOpen} aria-controls="lin-apps" onClick={() => setAppsOpen(!appsOpen)}><ChevronRight size={12} />Applications<span>{apps.length}</span></button>
+        {appsOpen && (
+          <ul className="lin-apps" id="lin-apps" aria-label="Applications">
+            {apps.map((id) => <li key={id}><ToolLogo id={id} />{tools[id]}</li>)}
+          </ul>
+        )}
         <div className="lin-me">
           <Pop up label="Contact and help" face={<><Avatar who={0} /><span>{site.name}</span><ChevronsUpDown size={13} /></>}>
             {(close) => (
               <>
                 <p>{site.role} · {site.location}</p>
                 <button type="button" role="menuitem" onClick={() => { close(); setHelp(true) }}><Keyboard size={14} />Keyboard shortcuts<kbd>?</kbd></button>
+                {onSignOut && <button type="button" role="menuitem" className="lin-out" onClick={() => { close(); onSignOut() }}><LogOut size={14} />Sign out</button>}
               </>
             )}
           </Pop>
@@ -510,7 +520,7 @@ export default function Workspace() {
           )}
         </header>
 
-        {view === 'results' ? <Results cards={cards} /> : view === 'timeline' ? <Timeline open={go} /> : view === 'toolkit' ? <Toolkit open={go} /> : board ? (
+        {view === 'results' ? <Results cards={cards} /> : view === 'timeline' ? <Timeline open={go} /> : view === 'toolkit' ? <Toolkit open={go} /> : view === 'make' ? <Suspense fallback={<div className="lin-screen" />}><Studio /></Suspense> : board ? (
           <div className="lin-board">
             {STAGES.map((stage, s) => {
               const mine = shown.filter((c) => c.stage === s)
@@ -558,7 +568,7 @@ export default function Workspace() {
                 </li>
               )
             })}
-            {!shown.length && <li className="lin-empty">Nothing here with that filter</li>}
+            {!shown.length && <li className="lin-empty">No cards match this filter</li>}
           </ul>
         )}
 

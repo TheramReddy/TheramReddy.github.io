@@ -303,7 +303,7 @@ export function Intro() {
           <span className="keep">{words('they')}<span className="w is-chip" style={nth()}><Prompt lines={WAYS} armed={go} delay={landed()} />.</span></span>{' '}
           {words('Because a well-crafted experience doesn’t just look good. It makes someone’s day a little easier.')}
         </p>
-        <button type="button" className="say-link" style={nth()} onClick={() => scrollToSection('projects')}>check my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
+        <button type="button" className="say-link" style={nth()} onClick={() => scrollToSection('projects')}>see my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
       </div>
     </header>
   )

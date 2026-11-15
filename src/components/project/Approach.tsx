@@ -9,8 +9,8 @@ const rules = [
 /** The design approach as a short rulebook: five rules, each with one line of why, and the takeaway at the foot. */
 export function Approach() {
   return (
-    <section className="approach" id="cs-action" aria-label="How I approached it">
-      <h3 className="in-action-title">How I approached it</h3>
+    <section className="approach" id="cs-action" aria-label="How I worked">
+      <h3 className="in-action-title">How I worked</h3>
       <div className="rulebook px-plate">
         <span className="id-slot" aria-hidden="true" />
         <p className="rb-head">rulebook · 5 rules</p>

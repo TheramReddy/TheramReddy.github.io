@@ -299,7 +299,7 @@ export function ScobinStory() {
             <JourneyMap
               src="/projects/scobin/journey.html"
               title="Scobin journey map: one screen from design to use"
-              lede="One screen, followed from the first layout through build and review to the people using it, with the question that stopped each step and the part of the system that answers it."
+              lede="One screen, followed from first layout to the people using it: the question that stopped each step, and the part of the system that answers it."
               level={4}
             />
           )}
