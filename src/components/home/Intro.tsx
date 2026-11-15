@@ -261,15 +261,14 @@ export function Intro() {
 
       <div className="intro-text">
         <p className="say" ref={say}>
-          {words('I’ve spent')}
-          <span className="w is-chip" style={nth()}><Pill>my career</Pill></span>{' '}
-          {words('learning how people')}
-          <em className="w" style={nth()}>actually</em>{' '}
-          {words('use software, and how small decisions keep')}
-          <span className="w is-chip" style={nth()}><Flap word="RESHAPING" armed={go} delay={landed()} /></span>{' '}
-          {words('the way')}
-          <span className="keep">{words('they')}<span className="w is-chip" style={nth()}><Prompt lines={WAYS} armed={go} delay={landed()} />.</span></span>{' '}
-          {words('Because a well-crafted experience doesn’t just look good. It makes someone’s day a little easier.')}
+          {words('The best interface is one')}
+          <span className="w is-chip" style={nth()}><Pill>nobody notices</Pill>.</span>{' '}
+          {words('You open it,')}
+          <em className="w" style={nth()}>finish</em>{' '}
+          {words('what you came to do, and get on with your day. I design everything that makes that possible: the')}
+          <span className="w is-chip" style={nth()}><Flap word="FLOW" armed={go} delay={landed()} />,</span>{' '}
+          {words('the layout, the')}
+          <span className="keep">{words('moment')}<span className="w is-chip" style={nth()}><Prompt lines={WAYS} armed={go} delay={landed()} />.</span></span>
         </p>
         <button type="button" className="say-link" style={nth()} onClick={() => scrollToSection('projects')}>see my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
       </div>

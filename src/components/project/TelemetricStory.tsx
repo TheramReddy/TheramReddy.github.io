@@ -131,17 +131,20 @@ function Handoff() {
 
 const chapters: Chapter[] = [
   {
-    id: 'tl-idea',
+    id: 'tl-idea', law: 'curse',
+    here: 'The setup made sense to the person who built it. I looked at it as someone who hadn’t.',
     title: 'A different way to work with AI',
     body: [
-      'The idea began with a friend who was using several AI models to build a game. Each model had a specific job, but the whole setup lived in a terminal. I was interested in what the system could do. As a designer, though, I became more interested in the person trying to use it.',
-      'The engineers built the agent system. My job was to give that person a way in.',
+      'The idea began with a friend who was building a game with several AI models. Each model had its own job, but the whole setup lived in a terminal.',
+      'I was interested in what the system could do. As a designer, I became more interested in the person trying to use it.',
+      'Two engineers built the agent system. My job was to give that person a way in.',
     ],
     decision: 'How could someone who doesn’t live in a terminal see what several agents are doing, and feel comfortable letting them work?',
     wide: true,
   },
   {
-    id: 'tl-problem',
+    id: 'tl-problem', law: 'mental',
+    here: 'People already think of their notes as things that connect. A map shows that. A file tree only shows where things are stored.',
     title: 'Files become a map',
     body: [
       'All the folder’s data becomes notes (.md files) that link to each other. Together they form a map you can scan at a glance, instead of a file tree.',
@@ -152,36 +155,40 @@ const chapters: Chapter[] = [
     flip: true,
   },
   {
-    id: 'tl-crew',
+    id: 'tl-crew', law: 'labor',
+    here: 'Each agent shows its task and its result as it works, so the wait reads as progress.',
     title: 'One task for each agent',
     body: [
-      'Every question in the workspace is split into tasks by an orchestrator. Each agent owns one task and has its own model. Each agent also has its own connector (MCP), and connectors can be separated per agent.',
-      'The panel shows each agent working and what it produced. Users never have to guess whether something is happening or what the system is doing.',
+      'An orchestrator splits every question into tasks. Each agent owns one task, with its own model and its own connector (MCP).',
+      'I designed a panel that shows each agent working and what it produced. Nobody has to guess whether something is happening, or what the system is doing.',
       'Specialized models handle the tasks they are good at, so a large model is not used for everything. Smaller, focused prompts use fewer tokens, and each output is refined by the agent that owns it. Telemetric works with cloud models and with local AI.',
     ],
     art: <Crew />,
   },
   {
-    id: 'tl-control',
+    id: 'tl-control', law: 'endowment',
+    here: 'Once someone has edited an output, the result is their work, not something handed to them.',
     title: 'Change an output, and the work runs again',
     body: [
-      'You can edit an output or change an instruction. The agents run again from that point. If your change touches a different domain, the agents in that domain re-run too.',
-      'In this product, that meant something practical: you could hand over work without surrendering control of it.',
+      'You can edit an output or change an instruction, and the agents run again from that point. If your change touches a different domain, the agents in that domain run again too.',
+      'You can hand work over without giving up control of it.',
     ],
     art: <Control />,
     flip: true,
   },
   {
-    id: 'tl-onboarding',
+    id: 'tl-onboarding', law: 'aha',
+    here: 'The first thing people meet is the product working on a real example, not a settings form.',
     title: 'Let people see the value first',
     body: [
-      'Telemetric starts with onboarding and then opens the Atlas Migration demo workspace. Someone can look around, understand the workflow, and make setup decisions when they are ready.',
-      'Rather than making people remember unfamiliar choices up front, the interface lets them recognize what is available as they explore, and reveals more only when they need it.',
+      'Telemetric starts with onboarding and then opens the Atlas Migration demo workspace. Someone can look around, follow the workflow, and make setup decisions when they are ready.',
+      'Nobody has to make unfamiliar choices up front. People see what is available as they explore, and more appears only when they need it.',
     ],
     art: <Onboarding />,
   },
   {
-    id: 'tl-search',
+    id: 'tl-search', law: 'spark',
+    here: 'One click turns a found note into a chip in the chat, so asking is the easy next step.',
     title: 'Finding a note should lead somewhere',
     body: [
       'Search walks the map and returns result cards, so you search the map instead of asking a chat to remember it.',
@@ -192,7 +199,8 @@ const chapters: Chapter[] = [
     flip: true,
   },
   {
-    id: 'tl-watch',
+    id: 'tl-watch', law: 'reactance',
+    here: 'Telemetric asks before it acts on a change, so the decision stays with the person.',
     title: 'The workspace tells you when it changes',
     body: [
       'When a file is updated or added, Telemetric is notified. It reports what changed, where, and why it matters, and asks for your input before acting on the change.',
@@ -212,7 +220,7 @@ const chapters: Chapter[] = [
     id: 'tl-lesson',
     title: 'Looking back',
     body: [
-      'When we started, I was drawn to what a team of AI agents could accomplish. Working on the experience shifted my attention to something less flashy: the small moments when a person needs reassurance, context, or the ability to change course.',
+      'When we started, I was drawn to what a team of AI agents could accomplish. Working on the experience moved my attention to the small moments when a person needs reassurance, context, or a way to change course.',
       'That became the most interesting part of the design. Telemetric is still evolving, but it has made one thing clear to me.',
     ],
     decision: 'The better AI gets at doing work for us, the more carefully we need to design how people stay involved.',
@@ -223,7 +231,7 @@ const chapters: Chapter[] = [
 export function TelemetricStory() {
   return (
     <div className="story">
-      <p className="story-intro">A workspace where your files become a map, and a team of AI agents works on that map while you watch, steer and edit.</p>
+      <p className="story-intro">Several AI agents are working through your files at once. What is each one doing? Can you change it? This is the workspace where you can watch, steer and edit.</p>
       <ul className="story-principles" aria-label="My approach">
         {[
           'Turn files into a map you can scan at a glance.',

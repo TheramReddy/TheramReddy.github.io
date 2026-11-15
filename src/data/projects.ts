@@ -21,7 +21,7 @@ export type Project = {
   gallery?: string[]
   /** logo shown above the title in the project popup, e.g. "/logos/georgia-dhs.png" */
   logo?: string
-  /** GIF + context blocks shown on the right of the popup; replace the gallery when set */
+  /** screen recordings shown in the gallery at the end of the case study */
   features?: Feature[]
   /** headline numbers for the whole system, shown first on the right of the popup */
   metrics?: Metric[]
@@ -39,7 +39,7 @@ export type Project = {
 
 export type Metric = { value: string; label: string; group?: string; note: string }
 
-export type Feature = { title: string; body: string; gif: string; alt: string }
+export type Feature = { gif: string; alt: string }
 
 const gif = (name: string) => `/projects/liheap-eap/${name}.gif`
 const shot = (name: string) => `/projects/dso-modernization/${name}.gif`
@@ -60,9 +60,9 @@ export const projects: Project[] = [
     stack: ['Figma', 'Bootstrap', 'Angular'],
     url: '#',
     client: 'Georgia DHS',
-    summary: 'Moving Georgia DHS debt recovery off a legacy mainframe onto three connected cloud portals.',
+    summary: 'How I took 40% of the steps out of recovering debt for the state of Georgia.',
     description:
-      'For years, the Georgia Department of Human Services (DHS) recovered debt through an outdated mainframe. The Debt Setoff (DSO) Modernization replaces that mainframe with a cloud platform and three connected portals: one for the public, one for agency staff and one for external vendors. I set out to make claims, hearings, payments and reconciliation easier to handle, faster to finish and accessible to everyone involved.',
+      'A caseworker has someone on the phone, asking where their tax refund went. To answer, the caseworker digs through menus to find the profile, then opens three separate screens: claims, hearings, payments. None of them says why the money is on hold. That was debt recovery at the Georgia Department of Human Services (DHS), on a mainframe that had run for years. The Debt Setoff (DSO) Modernization replaces it with three connected cloud portals: one for the public, one for agency staff and one for vendors. I was the UX designer. I mapped the pipeline end to end, then redesigned how staff find a person, follow a payment and approve a risky action. A process now takes 40% fewer steps.',
     gradient: CARD,
     link: {
       href: 'https://dor.georgia.gov/state-refund-offsets-other-agencies',
@@ -76,15 +76,15 @@ export const projects: Project[] = [
       { value: 'AA', label: 'Built to WCAG 2.1 AA', group: 'Accessible to everyone', note: 'Keyboard use and screen-reader labels were part of the design from the start.' },
     ],
     features: [
-      { title: "Real-time status tracking", body: "A checklist shows which step each file is on, so nobody guesses whether a transfer is stuck.", gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
-      { title: "Segmented record views", body: "Intercepts, disbursements and refunds each get a tab under running totals, so a long record is split into small groups instead of one long page.", gif: shot('trail'), alt: "Switching between the intercepts, disbursements and refunds tabs of a profile" },
-      { title: "System status visibility", body: "A void waits for supervisor approval, and the page says nothing is sent to the bank until then, so nobody is left wondering or acts too early.", gif: gif('check_void_approval'), alt: "Filling in a check void reason and comment and submitting for supervisor approval" },
-      { title: "Status signaling", body: "A badge marks the hold and the Hearing tab explains it in plain language.", gif: shot('hold'), alt: "A profile marked Hearing: Under review, then the Hearing tab explaining the hold" },
-      { title: "Progressive disclosure", body: "Social Security numbers stay masked until someone makes a deliberate, logged click, so sensitive detail appears only when it is needed.", gif: gif('ssn_reveal'), alt: "Revealing and hiding a masked SSN in a table row" },
-      { title: "Guided scheduling", body: "Past dates are locked and the page warns that a batch can’t change on the day it runs, so the mistake is blocked before it happens.", gif: gif('check_batch_scheduling'), alt: "Choosing a date range and a weekly repeat and generating four scheduled batch dates" },
-      { title: "Global command palette", body: "Ctrl K opens one search for pages and profiles, from any screen. Experienced staff get a fast path, and new staff can ignore it.", gif: gif('command_palette_search'), alt: "Command palette searching for the name Alder and listing four matching profiles" },
-      { title: "Sortable, filterable data tables", body: "Sort, filter, resize and pick columns, built for work done hundreds of times a day, so repeat use is fast and not only the first visit.", gif: gif('table_sort_filter'), alt: "Profile table sorted by name and then filtered by city to show only Savannah" },
-      { title: "Role-based navigation", body: "A partner-agency worker sees only Hearings, while DHS staff see everything, so each person faces only the choices that apply to them.", gif: gif('role_switch_nav'), alt: "Switching roles from the profile menu and the sidebar changing to show only hearing pages" },
+      { gif: gif('system_process_live'), alt: "System process page with a live checklist advancing and an interface menu opening" },
+      { gif: shot('trail'), alt: "Switching between the intercepts, disbursements and refunds tabs of a profile" },
+      { gif: gif('check_void_approval'), alt: "Filling in a check void reason and comment and submitting for supervisor approval" },
+      { gif: shot('hold'), alt: "A profile marked Hearing: Under review, then the Hearing tab explaining the hold" },
+      { gif: gif('ssn_reveal'), alt: "Revealing and hiding a masked SSN in a table row" },
+      { gif: gif('check_batch_scheduling'), alt: "Choosing a date range and a weekly repeat and generating four scheduled batch dates" },
+      { gif: gif('command_palette_search'), alt: "Command palette searching for the name Alder and listing four matching profiles" },
+      { gif: gif('table_sort_filter'), alt: "Profile table sorted by name and then filtered by city to show only Savannah" },
+      { gif: gif('role_switch_nav'), alt: "Switching roles from the profile menu and the sidebar changing to show only hearing pages" },
     ],
   },
   {
@@ -98,9 +98,9 @@ export const projects: Project[] = [
     stack: ['Figma', 'Storybook'],
     url: '#',
     client: 'Scobin',
-    summary: 'A design system built from scratch, now used by more than 120 people.',
+    summary: 'Five dropdowns, three primary buttons, four error styles. How I replaced them with one design system that 120+ people use.',
     description:
-      'Scobin didn’t have a shared design language. Similar components looked and behaved differently across screens, leaving designers and developers to solve the same problems repeatedly. I built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons, and 95 text styles. More than 120 people use it today.',
+      'A designer at Scobin needs a dropdown. The product already has five. Which one is right? Nobody could say. The same went for three versions of the primary button and four ways to show an error, so designers and developers kept solving the same problems again. I audited the product, sat with the people who design, build and use it, and built a design system from the ground up: a structured Figma library with 548 variables, 41 documented components, 35 icons and 95 text styles. More than 120 people use it today.',
     gradient: CARD,
     tools: ['figma', 'storybook', 'photoshop', 'html', 'css', 'javascript'],
     story: true,
@@ -115,9 +115,9 @@ export const projects: Project[] = [
     stack: ['Figma'],
     url: '#',
     client: 'Telemetric',
-    summary: 'A workspace where your files become a map, and AI agents work on it with you. Coming soon to beta.',
+    summary: 'Several AI agents are working on your files. Can you see what they’re doing? I’m designing the workspace that shows you. Coming soon to beta.',
     description:
-      'Most AI tools treat a folder as a pile of text and re-read it on every question. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it quickly. When you ask a question, several small agents each take one task, and you can see what each one did. I worked with two engineers who built the multi-agent engine, and designed the product concept, the end-to-end experience and the interface.',
+      'Ask most AI tools about a folder, and they read the whole pile of text again, every time. Then they answer, and you can’t see how. Telemetric turns the folder into a map of connected notes first, so both you and the AI can move through it. When you ask a question, several small agents each take one task, and you can watch what each one did. Two engineers built the multi-agent engine. I designed the product concept, the end-to-end experience and the interface.',
     gradient: CARD,
     tools: ['figma', 'aftereffects', 'rive', 'lottie', 'framer'],
     story: true,

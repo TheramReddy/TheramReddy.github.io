@@ -269,6 +269,13 @@
 .figma-link.page-link .link-arrow { border-radius: 0; }
 @media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { --k-edge: #8c8c89; background: none; } }
 
+/* the thinking behind a decision (see .law in home.css), sized for the case study */
+.detail .law { margin-top: 16px; padding: 12px 14px; font-size: .9375rem; line-height: 1.55; letter-spacing: 0; color: var(--muted); max-width: 40rem; }
+.detail .law-name { font-size: .9375rem; margin-bottom: 6px; }
+.detail .law-here { color: var(--fg); }
+.rulebook li .law, .diagram .law, .d-label-tag + .law { margin-top: 12px; }
+.rulebook li .law { padding-block: 8px; }
+
 /* the approach as a rulebook: one plate, five numbered rules with a line of why, the takeaway at the foot */
 .approach { position: relative; }
 .rulebook { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; margin-top: 28px; padding: 40px 32px 28px; max-width: 46rem; }

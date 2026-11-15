@@ -122,4 +122,5 @@ export function Pill({ children }: { children: string }) {
   return <span className="pill" onMouseEnter={enter}>{children}</span>
 }
 
-export const WAYS = ['think and work', 'find what they need', 'trust a product', 'make decisions', 'get through the day', 'ask for help']
+// each line finishes the sentence "…the moment ___." in the intro; a click on the chip types the next one
+export const WAYS = ['nobody planned for', 'something goes wrong', 'the page is empty', 'a form gets rejected', 'someone gets stuck', 'the data is missing']

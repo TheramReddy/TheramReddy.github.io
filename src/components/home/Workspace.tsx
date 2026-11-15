@@ -1,6 +1,8 @@
 import { type CSSProperties, type FormEvent, type KeyboardEvent, type MouseEvent, type ReactNode, Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown, ArrowUp, CalendarRange, ChartColumn, Check, ChevronRight, ChevronsUpDown, Code, Columns3, Copy, Ellipsis, ExternalLink, FlaskConical, Kanban, Keyboard, LayoutTemplate, ListFilter, LogOut, Maximize2, Microscope, PenTool, Plus, Rows3, Search, Send, SquarePen, Trash, User, Workflow, Wrench, X } from 'lucide-react'
+import { Law } from '@/components/Law'
 import { WORK } from '@/data/cards'
+import type { LawId } from '@/data/laws'
 import { projects } from '@/data/projects'
 import { site } from '@/data/site'
 import { LOGOLESS, TOOL_KINDS, type ToolId, apps, logoScale, toolKind, tools } from '@/data/tools'
@@ -20,7 +22,7 @@ const PLACES = [
   { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', role: jobs[0].role, dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, product: jobs[0].product, highlights: jobs[0].highlights, tools: jobs[0].tools },
   { key: 'SCO', name: 'Scobin', hue: '#e879c7', role: jobs[1].role, dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), product: jobs[1].product, highlights: jobs[1].highlights, tools: jobs[1].tools },
   { key: 'WIP', name: 'Wipro', hue: '#4cb782', role: jobs[2].role, dates: 'Apr 2021 to Dec 2022', start: month(2021, 4), end: month(2022, 12), product: jobs[2].product, highlights: jobs[2].highlights, tools: jobs[2].tools },
-  { key: 'TEL', name: 'Telemetric', hue: '#f2994a', role: telemetric.role, dates: '2026, co-founder', start: month(2026, 1), end: NOW, product: 'A workspace where your files become a map, and AI agents work on it with you', highlights: ['The product concept, the end-to-end experience and the interface, designed alongside two engineers', 'A folder becomes a map of connected notes that both you and the AI can move through', 'Several small agents each take one task, and you can see what each one did'], tools: (telemetric.tools ?? []) as ToolId[] },
+  { key: 'TEL', name: 'Telemetric', hue: '#f2994a', role: telemetric.role, dates: '2026, co-founder', start: month(2026, 1), end: NOW, product: 'A workspace where your files become a map, and AI agents work on it with you', highlights: ['Designed the product concept, the end-to-end experience and the interface, alongside the two engineers who built the agent engine', 'Turned a folder into a map of connected notes that both you and the AI can move through', 'Designed a panel that shows several small agents each taking one task, and what each one did'], tools: (telemetric.tools ?? []) as ToolId[] },
   { key: 'UMBC', name: 'UMBC', hue: '#febb00', role: 'Graduate Student', dates: '2023', start: month(2023, 1), end: month(2023, 12), product: 'Master of Science, Information Systems', highlights: ['Master of Science in Information Systems', 'Coursework in UX research methods, information architecture and usability', 'Interaction design and human-computer interaction'], tools: [] as ToolId[] },
 ]
 // the five stages my work moves through; the board has one column for each
@@ -35,8 +37,8 @@ const LABELS: Record<string, string> = { Research: '#4ea7fc', Workflow: '#f2c94c
 const PEOPLE = [site.firstName, 'You'] // the second one is whoever is visiting
 
 type Entry = { who: number; text: string; said?: boolean }
-// why, how and out are the detail of a card: the problem, what I did, and what changed
-type Card = { id: number; key: string; place: number; stage: number; title: string; desc: string; why?: string; how?: string[]; out?: string; labels: string[]; result?: string; link?: { href: string; name: string }; yours?: boolean; log: Entry[] }
+// why, how and out are the detail of a card: before, what I did, and after
+type Card = { id: number; key: string; place: number; stage: number; title: string; desc: string; why?: string; how?: string[]; out?: string; law?: LawId; here?: string; labels: string[]; result?: string; link?: { href: string; name: string }; yours?: boolean; log: Entry[] }
 
 const counts = PLACES.map(() => 0)
 const SEED: Card[] = WORK.map((c, id) => ({ ...c, id, key: `${PLACES[c.place].key}-${++counts[c.place]}`, log: [{ who: 0, text: `did this at ${PLACES[c.place].name}` }] }))
@@ -152,9 +154,10 @@ function Detail({ card, change, say, close, more, openPlace }: { card: Card; cha
         <button type="button" className="pick-btn" onClick={() => openPlace(card.place)}><PlaceLogo p={card.place} />{PLACES[card.place].name}</button>
       </div>
       {card.labels.length > 0 && <p className="lin-tags">{card.labels.map((l) => <Tag key={l} name={l} />)}</p>}
-      {card.why && <section className="lin-part"><h4>The problem</h4><p>{card.why}</p></section>}
+      {card.why && <section className="lin-part"><h4>Before</h4><p>{card.why}</p></section>}
       {card.how && <section className="lin-part"><h4>What I did</h4><ol>{card.how.map((step) => <li key={step}>{step}</li>)}</ol></section>}
-      {card.out && <section className="lin-part"><h4>What changed</h4><p>{card.out}</p></section>}
+      {card.out && <section className="lin-part"><h4>After</h4><p>{card.out}</p></section>}
+      {card.law && <section className="lin-part"><h4>Why it works</h4><Law id={card.law} here={card.here} className="lin-law" /></section>}
       {card.link && <a className="lin-link" href={card.link.href} target="_blank" rel="noreferrer"><ExternalLink size={14} aria-hidden="true" />{card.link.name}<span>New tab</span></a>}
       <h4>Activity</h4>
       <ol className="lin-log">

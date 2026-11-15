@@ -505,6 +505,16 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .lin-part li { position: relative; padding-left: 26px; counter-increment: step; }
 .lin-part li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255, 255, 255, .08); color: var(--dim); font: 500 10.5px/18px var(--font-text); text-align: center; }
 
+/* the thinking behind a decision: the principle's name in pixel type, then what it means in plain words. The case
+   studies and the work app's cards both use it; each sets its own size and colour. */
+.law { margin: 0; padding: 0 0 0 12px; border-left: 2px solid rgba(255, 255, 255, .14); }
+.law-name { display: block; margin-bottom: 4px; font: 400 1em/1 var(--f-px); text-transform: lowercase; color: var(--ink); text-decoration: none; }
+.law-name:hover, .law-name:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+/* what the principle says is the quieter line; how it shows up in this piece of work is the one to read */
+.law-says, .law-here { display: block; }
+.law-here { margin-top: 6px; color: var(--ink); }
+.lin-part .lin-law { color: var(--dim); }
+
 /* results */
 .re-list { display: grid; gap: 2px; }
 .re-list li { display: grid; grid-template-columns: 132px minmax(0, 190px) minmax(0, 1fr) 104px; align-items: center; gap: 12px; height: 30px; color: var(--dim); }
