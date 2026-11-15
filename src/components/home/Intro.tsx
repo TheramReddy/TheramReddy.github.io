@@ -6,42 +6,43 @@ import { Flap, Pill, Prompt, WAYS } from '@/components/layout/Hero'
 const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
-/* the curtain over the opening screen is a grid of squares this big (px); the portrait is this many blocks across */
-const CELL = 48, COLS = 20
+/* under the pointer the portrait turns to blocks: this many across */
+const COLS = 20
 /* the badge on its lanyard is a spring: stiffness, damping, and the furthest it may swing (px) */
-const PULL = 60, DRAG = 2.2, REACH = 44, PUSH = 340
-/* the cord is elastic too: how hard it pulls the dropped badge back, and how soon the bounce dies */
-const SNAP = 150, GIVE = 5.5
-/* the statement lands a word at a time: a pause, then each word this long after the one before (ms) */
-const WAIT = 250, BEAT = 30
+const PULL = 60, DRAG = 3, REACH = 44, PUSH = 340
+/* the cord gives a little too: how hard it pulls the dropped badge back, and how soon the settle dies */
+const SNAP = 150, GIVE = 9
+/* the portrait leads: the badge drops this long after it starts to develop, the statement starts this long after,
+   then lands a word at a time, each this long after the one before (ms) */
+const DROP = 900, WAIT = 500, BEAT = 30
 
 /**
- * The landing: everything resolves from pixels.
- * A curtain of squares covers the opening screen until the portrait is in, then it breaks away left to right.
- * Behind it the portrait is built of blocks that shrink away in the same sweep, then the badge drops like a cartoon:
- * let go at the neck on an elastic cord, it stretches as it falls, overshoots, bounces and sways to rest. Afterwards
- * the portrait turns back to blocks under the pointer, the badge can be batted (it tips as it swings and comes back
- * square, so the pixel type rests crisp), and the pool of light leans towards the pointer. `onOpen` fires as the curtain starts to break. With reduced motion none of this runs.
+ * The landing: one quiet take.
+ * Nothing shows until the portrait is in. Then it develops: wiped in from the bottom while it settles from large and
+ * soft to sharp, with the pool of light blooming under it. Just behind, the badge is let go at the neck on its cord,
+ * slides down, overshoots a touch and sways to rest; the statement follows a word at a time. Afterwards the portrait
+ * turns to blocks under the pointer, the badge can be batted (it tips as it swings and comes back square, so the
+ * pixel type rests crisp), and the pool of light leans towards the pointer. `onOpen` fires as the portrait starts to
+ * develop. With reduced motion none of this runs and everything is simply there.
  */
 function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDivElement | null>, onOpen: () => void) {
   useLayoutEffect(() => {
     const root = stage.current, el = fig.current
     const img = el?.querySelector('img')
-    const veil = root?.querySelector<HTMLCanvasElement>('.intro-veil')
     const cv = el?.querySelector<HTMLCanvasElement>('.intro-pixels')
     const cord = el?.querySelector('.badge-cord path')
     const card = el?.querySelector<HTMLElement>('.badge-card')
-    const vx = veil?.getContext('2d'), px = cv?.getContext('2d')
-    if (!root || !el || !img || !veil || !cv || !cord || !card || !vx || !px || still()) return
+    const px = cv?.getContext('2d')
+    if (!root || !el || !img || !cv || !cord || !card || !px || still()) return
 
     const timers: number[] = []
     const later = (fn: () => void, ms: number) => { timers.push(window.setTimeout(fn, ms)) }
-    const rafs = { veil: 0, blocks: 0, swing: 0 }
+    const rafs = { blocks: 0, swing: 0 }
 
     // ---- the badge on its cord: x is the swing, y the bounce (0 is rest; the cord's own length above is the neck)
     let x = 0, v = 0, y = 0, vy = 0, last = 0, width = 1, cordLong = 1
     const draw = () => {
-      const stretch = 1 + clamp(Math.abs(vy) / 2400, 0, 0.28)
+      const stretch = 1 + clamp(Math.abs(vy) / 3000, 0, 0.1)
       el.style.setProperty('--sx', `${x.toFixed(1)}px`)
       el.style.setProperty('--sy', `${y.toFixed(1)}px`)
       el.style.setProperty('--st', stretch.toFixed(3))
@@ -73,7 +74,7 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
       cordLong = (img.offsetHeight || 1) * 0.245
       y = -cordLong
       vy = 0
-      kick(170)
+      kick(110)
       draw()
     }
     const bat = (e: PointerEvent) => { if (e.pointerType === 'mouse') kick(e.movementX * 16) }
@@ -157,51 +158,18 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
     }
     const resize = () => { measure(); wake() }
 
-    // ---- the curtain: one canvas pixel per square, stretched over the opening screen
-    const vc = Math.ceil(root.offsetWidth / CELL), vr = Math.ceil(root.offsetHeight / CELL)
-    veil.width = vc
-    veil.height = vr
-    vx.fillStyle = '#0c0c0b'
-    vx.fillRect(0, 0, vc, vr)
-    root.dataset.land = 'veiled'
     el.dataset.state = 'loading'
 
+    // the portrait develops (in CSS), the badge drops onto it, and the statement follows
     const open = () => {
-      const t0 = performance.now()
-      root.dataset.land = 'opening'
       el.dataset.state = 'sharp'
       onOpen()
-
-      // the portrait's blocks let go left to right, a little ragged, just behind the curtain
       sample()
-      for (let k = 0; k < heat.length; k++) {
-        heat[k] = 1
-        until[k] = t0 + 250 + (k % COLS) / COLS * 550 + Math.random() * 220 + Math.floor(k / COLS) / rows * 100
-      }
-      free = t0 + 1500
-      wake()
-      later(() => { drop(); el.dataset.badge = 'in' }, 1150)
-
-      // each square of the curtain lights for a moment, then is gone
-      const due = Float32Array.from({ length: vc * vr }, (_, k) => 80 + (k % vc) / vc * 620 + Math.random() * 260)
-      const state = new Uint8Array(vc * vr)
-      const part = (now: number) => {
-        const t = now - t0
-        let left = false
-        for (let k = 0; k < due.length; k++) {
-          if (state[k] === 2) continue
-          const cx = k % vc, cy = Math.floor(k / vc)
-          if (t >= due[k]) { vx.clearRect(cx, cy, 1, 1); state[k] = 2; continue }
-          left = true
-          if (state[k] === 0 && t >= due[k] - 80) { vx.fillStyle = Math.random() < 0.12 ? '#f2f2f0' : '#3a3a38'; vx.fillRect(cx, cy, 1, 1); state[k] = 1 }
-        }
-        if (left) rafs.veil = requestAnimationFrame(part)
-        else { rafs.veil = 0; root.dataset.land = 'open' }
-      }
-      rafs.veil = requestAnimationFrame(part)
+      free = performance.now() + 1700
+      later(() => { drop(); el.dataset.badge = 'in' }, DROP)
     }
 
-    // the curtain breaks as soon as the portrait is in (or has failed to load)
+    // all of it waits for the portrait to be in (or to have failed to load)
     let off = false
     img.decode().catch(() => {}).then(() => { if (!off) open() })
 
@@ -221,7 +189,6 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
       root.removeEventListener('pointermove', look)
       root.removeEventListener('pointerleave', rest)
       window.removeEventListener('resize', resize)
-      delete root.dataset.land
       delete el.dataset.state
       delete el.dataset.badge
       for (const name of ['--sx', '--sy', '--st', '--sr']) el.style.removeProperty(name)
@@ -250,7 +217,7 @@ export function Intro() {
   const [opened, setOpened] = useState(still)
   const open = useCallback(() => setOpened(true), [])
   useLanding(stage, fig, open)
-  // the statement lands once the curtain has opened and it is on screen (on a phone, once scrolled to)
+  // the statement lands once the portrait has started to develop and it is on screen (on a phone, once scrolled to)
   const go = useSeen(say) && opened
 
   // every word, chip and the link below take a number, in reading order
@@ -267,12 +234,13 @@ export function Intro() {
     <header className="intro" ref={stage} data-read={go ? 'go' : 'wait'} style={{ '--wait': `${WAIT}ms`, '--beat': `${BEAT}ms` } as CSSProperties}>
       {/* the page's heading: the badge on the portrait says it for the eye */}
       <h1 className="sr-only">{site.name}, {site.role}</h1>
-      {/* the curtain of squares, shown only while the page lands */}
-      <canvas className="intro-veil" aria-hidden="true" />
       <div className="intro-figure" ref={fig}>
-        <img src="/me/portrait.webp" alt={`A low-poly 3D portrait of ${site.firstName}: curly hair, glasses, a green cardigan over a blue jumper`} width={896} height={1200} fetchPriority="high" draggable={false} />
-        {/* the portrait as blocks: on landing, and wherever the pointer passes */}
-        <canvas className="intro-pixels" aria-hidden="true" />
+        {/* the frame the portrait is wiped into on landing */}
+        <div className="intro-art">
+          <img src="/me/portrait.webp" alt={`A low-poly 3D portrait of ${site.firstName}: curly hair, glasses, a green cardigan over a blue jumper`} width={896} height={1200} fetchPriority="high" draggable={false} />
+          {/* the portrait as blocks, wherever the pointer passes */}
+          <canvas className="intro-pixels" aria-hidden="true" />
+        </div>
         {/* a glint on the ear stud, every few seconds */}
         <svg className="intro-stud" viewBox="-12 -12 24 24" aria-hidden="true">
           <path d="M0 -11 C1 -3 3 -1 11 0 C3 1 1 3 0 11 C-1 3 -3 1 -11 0 C-3 -1 -1 -3 0 -11Z" />
