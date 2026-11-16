@@ -15,6 +15,11 @@ const SNAP = 150, GIVE = 9
 /* the portrait leads: the badge drops this long after it starts to develop, the statement starts this long after,
    then lands a word at a time, each this long after the one before (ms) */
 const DROP = 900, WAIT = 500, BEAT = 30
+/* the build plays only where there is room and a mouse */
+const roomy = () => window.matchMedia('(min-width: 1000px) and (hover: hover) and (pointer: fine)').matches
+
+/** How the live words start: 'paced' waits for the statement to land around them, 'quick' starts at once. */
+type Arm = 'paced' | 'quick'
 
 /**
  * The landing: one quiet take.
@@ -22,10 +27,14 @@ const DROP = 900, WAIT = 500, BEAT = 30
  * soft to sharp, with the pool of light blooming under it. Just behind, the badge is let go at the neck on its cord,
  * slides down, overshoots a touch and sways to rest; the statement follows a word at a time. Afterwards the portrait
  * turns to blocks under the pointer, the badge can be batted (it tips as it swings and comes back square, so the
- * pixel type rests crisp), and the pool of light leans towards the pointer. `onOpen` fires as the portrait starts to
- * develop. With reduced motion none of this runs and everything is simply there.
+ * pixel type rests crisp), and the pool of light leans towards the pointer. `onOpen` fires when the statement should
+ * start to land and `onArm` when its live words should start. With reduced motion none of this runs and everything
+ * is simply there.
+ *
+ * On a wide screen with a mouse, the same pieces are instead put together by a team of pointers:
+ * see build.ts. There the portrait arrives as blocks that resolve, and the badge is hung last.
  */
-function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDivElement | null>, onOpen: () => void) {
+function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDivElement | null>, onOpen: () => void, onArm: (how: Arm) => void) {
   useLayoutEffect(() => {
     const root = stage.current, el = fig.current
     const img = el?.querySelector('img')
@@ -51,7 +60,8 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
       cord.setAttribute('d', `M36 0 L${fx.toFixed(2)} ${fy.toFixed(2)} M64 0 L${fx.toFixed(2)} ${fy.toFixed(2)}`)
     }
     const swing = (t: number) => {
-      const dt = Math.min((t - last) / 1000, 0.032)
+      // a frame's time can be earlier than the moment the swing was started: never step backwards
+      const dt = clamp((t - last) / 1000, 0, 0.032)
       last = t
       v += (-PULL * x - DRAG * v) * dt
       x = clamp(x + v * dt, -REACH, REACH)
@@ -157,6 +167,14 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
       wake()
     }
     const resize = () => { measure(); wake() }
+    // the whole portrait as blocks, each letting go at its own moment
+    const mosaic = () => {
+      const now = performance.now()
+      for (let k = 0; k < heat.length; k++) if (fill[k]) { heat[k] = 1; until[k] = now + 250 + Math.random() * 550 }
+      free = now + 1200
+      wake()
+    }
+    const hang = () => { drop(); el.dataset.badge = 'in' }
 
     el.dataset.state = 'loading'
 
@@ -164,14 +182,34 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
     const open = () => {
       el.dataset.state = 'sharp'
       onOpen()
+      onArm('paced')
       sample()
       free = performance.now() + 1700
-      later(() => { drop(); el.dataset.badge = 'in' }, DROP)
+      later(hang, DROP)
     }
 
-    // all of it waits for the portrait to be in (or to have failed to load)
+    // or the team builds it: the stage starts as an empty wireframe, and the build calls each piece in
+    const crewed = roomy()
+    if (crewed) root.dataset.build = ''
+    let stop = () => {}
+    const crew = () => import('./build').then(({ build }) => {
+      if (off) return
+      stop = build(root, {
+        type: onOpen,
+        art: () => { el.dataset.state = 'built'; sample(); mosaic() },
+        chips: () => onArm('quick'),
+        badge: hang,
+      })
+    }).catch(() => { delete root.dataset.build; open() })
+
+    // all of it waits for the portrait to be in (or to have failed to load), and for the tab to be the one in front
     let off = false
-    img.decode().catch(() => {}).then(() => { if (!off) open() })
+    const start = () => {
+      if (off) return
+      if (document.hidden) { document.addEventListener('visibilitychange', start, { once: true }); return }
+      void (crewed ? crew : open)()
+    }
+    img.decode().catch(() => {}).then(start)
 
     card.addEventListener('pointermove', bat)
     card.addEventListener('pointerdown', tap)
@@ -181,6 +219,9 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
     window.addEventListener('resize', resize)
     return () => {
       off = true
+      document.removeEventListener('visibilitychange', start)
+      stop()
+      delete root.dataset.build
       timers.forEach(clearTimeout)
       Object.values(rafs).forEach(cancelAnimationFrame)
       card.removeEventListener('pointermove', bat)
@@ -193,7 +234,7 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
       delete el.dataset.badge
       for (const name of ['--sx', '--sy', '--st', '--sr']) el.style.removeProperty(name)
     }
-  }, [stage, fig, onOpen])
+  }, [stage, fig, onOpen, onArm])
 }
 
 /** True once the element has been on screen. With reduced motion it is true from the start. */
@@ -209,22 +250,24 @@ function useSeen(target: RefObject<HTMLElement | null>) {
   return seen
 }
 
-/** The opening screen: the portrait wearing the role on an ID badge. */
+/** The opening screen, as two cards: the portrait wearing the role on an ID badge, and the statement beside it. */
 export function Intro() {
   const stage = useRef<HTMLElement>(null)
   const fig = useRef<HTMLDivElement>(null)
   const say = useRef<HTMLParagraphElement>(null)
   const [opened, setOpened] = useState(still)
+  const [arm, setArm] = useState<Arm | null>(() => (still() ? 'paced' : null))
   const open = useCallback(() => setOpened(true), [])
-  useLanding(stage, fig, open)
+  useLanding(stage, fig, open, setArm)
   // the statement lands once the portrait has started to develop and it is on screen (on a phone, once scrolled to)
   const go = useSeen(say) && opened
 
   // every word, chip and the link below take a number, in reading order
   let i = 0
   const nth = () => ({ '--i': i++ }) as CSSProperties
-  // a live word plays just after it has landed
-  const landed = () => WAIT + i * BEAT + 650
+  // a live word plays just after it has landed; switched on by the build, it plays at once
+  const live = go && arm !== null
+  const landed = () => (arm === 'quick' ? 0 : WAIT + i * BEAT + 650)
   const words = (text: string) => text.split(' ').map((word) => {
     const style = nth()
     return <Fragment key={i}><span className="w" style={style}>{word}</span>{' '}</Fragment>
@@ -234,41 +277,46 @@ export function Intro() {
     <header className="intro" ref={stage} data-read={go ? 'go' : 'wait'} style={{ '--wait': `${WAIT}ms`, '--beat': `${BEAT}ms` } as CSSProperties}>
       {/* the page's heading: the badge on the portrait says it for the eye */}
       <h1 className="sr-only">{site.name}, {site.role}</h1>
-      <div className="intro-figure" ref={fig}>
-        {/* the frame the portrait is wiped into on landing */}
-        <div className="intro-art">
-          <img src="/me/portrait.webp" alt={`A low-poly 3D portrait of ${site.firstName}: curly hair, glasses, a green cardigan over a blue jumper`} width={896} height={1200} fetchPriority="high" draggable={false} />
-          {/* the portrait as blocks, wherever the pointer passes */}
-          <canvas className="intro-pixels" aria-hidden="true" />
-        </div>
-        {/* a glint on the ear stud, every few seconds */}
-        <svg className="intro-stud" viewBox="-12 -12 24 24" aria-hidden="true">
-          <path d="M0 -11 C1 -3 3 -1 11 0 C3 1 1 3 0 11 C-1 3 -3 1 -11 0 C-3 -1 -1 -3 0 -11Z" />
-        </svg>
-        {/* the role, on an ID badge: a lanyard from both sides of the neck, a clip, and a pixel-cornered card */}
-        <div className="badge" aria-hidden="true">
-          <svg className="badge-cord" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M36 0 L50 100 M64 0 L50 100" />
+      <div className="intro-card is-me">
+        <div className="intro-figure" ref={fig}>
+          {/* the wireframe's box for the portrait: it stays behind it, faint */}
+          <i className="intro-ghost" aria-hidden="true" />
+          {/* the frame the portrait is wiped into on landing */}
+          <div className="intro-art">
+            <img src="/me/portrait.webp" alt={`A low-poly 3D portrait of ${site.firstName}: curly hair, glasses, a green cardigan over a blue jumper`} width={896} height={1200} fetchPriority="high" draggable={false} />
+            {/* the portrait as blocks, wherever the pointer passes */}
+            <canvas className="intro-pixels" aria-hidden="true" />
+          </div>
+          {/* a glint on the ear stud, every few seconds */}
+          <svg className="intro-stud" viewBox="-12 -12 24 24" aria-hidden="true">
+            <path d="M0 -11 C1 -3 3 -1 11 0 C3 1 1 3 0 11 C-1 3 -3 1 -11 0 C-3 -1 -1 -3 0 -11Z" />
           </svg>
-          <i className="badge-clip" />
-          <div className="badge-card">
-            <i className="badge-slot" />
-            <b>product<br />designer</b>
-            <i className="badge-bars" />
+          {/* the role, on an ID badge: a lanyard from both sides of the neck, a clip, and a pixel-cornered card */}
+          <div className="badge" aria-hidden="true">
+            <svg className="badge-cord" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path d="M36 0 L50 100 M64 0 L50 100" />
+            </svg>
+            <i className="badge-clip" />
+            <div className="badge-card">
+              <i className="badge-slot" />
+              <b>product<br />designer</b>
+              <i className="badge-bars" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="intro-text">
+      <div className="intro-card intro-text">
         <p className="say" ref={say}>
           {words('The best interface is one')}
-          <span className="w is-chip" style={nth()}><Pill>nobody notices</Pill>.</span>{' '}
+          {/* the draft is the phrase the build types first and then takes back */}
+          <span className="w is-chip is-plain" style={nth()}><i className="draft" aria-hidden="true">that looks good</i><Pill>nobody notices</Pill>.</span>{' '}
           {words('You open it,')}
           <em className="w" style={nth()}>finish</em>{' '}
           {words('what you came to do, and get on with your day. I design everything that makes that possible: the')}
-          <span className="w is-chip" style={nth()}><Flap word="FLOW" armed={go} delay={landed()} />,</span>{' '}
+          <span className="w is-chip is-live" style={nth()}><Flap word="FLOW" armed={live} delay={landed()} />,</span>{' '}
           {words('the layout, the')}
-          <span className="keep">{words('moment')}<span className="w is-chip" style={nth()}><Prompt lines={WAYS} armed={go} delay={landed()} />.</span></span>
+          <span className="keep">{words('moment')}<span className="w is-chip is-live" style={nth()}><Prompt lines={WAYS} armed={live} delay={landed()} />.</span></span>
         </p>
         <button type="button" className="say-link" style={nth()} onClick={() => scrollToSection('projects')}>see my work<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></button>
       </div>

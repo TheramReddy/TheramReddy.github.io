@@ -70,9 +70,19 @@
 @media (hover: hover) and (pointer: fine) { .bar-link:not([aria-current="true"]):hover { color: var(--d-fg); } .bar-link:not([aria-current="true"]):hover::before { background: rgba(242, 242, 240, .12); } }
 
 /* ---------- intro: the name in pixels, the role, the portrait ---------- */
-.intro { display: flex; flex-direction: column; align-items: center; padding: 112px var(--gut) 132px; text-align: center; }
-/* the portrait stands on a pool of light, and fades into the page at the bottom */
-.intro-figure { position: relative; width: min(352px, 62vw); margin-top: 40px; }
+.intro { display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; max-width: calc(1360px + var(--gut) * 2); margin-inline: auto; padding: 112px var(--gut) 132px; text-align: center; }
+/* two raised cards: the portrait in one, the statement in the other. Each clips what is inside it, so the pool of
+   light stops at the card's edge */
+.intro-card { position: relative; display: grid; align-content: center; justify-items: center; overflow: hidden; padding: var(--py) var(--px); border-radius: 20px; background: var(--d-card); box-shadow: var(--lift); }
+/* the wireframe stays behind as a ghost: hairline guides along the statement card's margins, and the crossed box
+   the portrait was placed in. --px and --py are a card's padding, so the guides sit exactly on it */
+.intro-card { --px: 24px; --py: 28px; isolation: isolate; }
+.intro-text::before { --g: linear-gradient(rgba(255, 255, 255, .05) 0 0); content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none; background: var(--g) var(--px) 0 / 1px 100%, var(--g) calc(100% - var(--px)) 0 / 1px 100%, var(--g) 0 var(--py) / 100% 1px, var(--g) 0 calc(100% - var(--py)) / 100% 1px; background-repeat: no-repeat; }
+.intro-ghost { --g: rgba(255, 255, 255, .5); position: absolute; inset: 0; opacity: .13; outline: 1px solid var(--g); outline-offset: -1px; background: linear-gradient(to top right, transparent calc(50% - .5px), var(--g) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)), linear-gradient(to bottom right, transparent calc(50% - .5px), var(--g) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)); pointer-events: none; transition: opacity .8s; }
+.intro-ghost::after { content: "image"; position: absolute; left: 8px; top: 7px; font: 400 13px/1 var(--f-px); color: #fff; }
+/* the portrait stands on a pool of light, and fades into the card at the bottom. The badge hangs about 92px below
+   the portrait: the margin counts it into the figure, so the card closes under the badge */
+.intro-figure { position: relative; width: min(352px, 62vw); margin-bottom: 92px; }
 .intro-figure::before { content: ""; position: absolute; left: 50%; top: 8%; width: 150%; aspect-ratio: 1; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(235, 235, 235, .13), rgba(235, 235, 235, .04) 55%, transparent); }
 .intro-figure img { position: relative; display: block; width: 100%; height: auto; user-select: none; }
 /* the ear stud glints: a four-point star that flares, turns a little and fades, then rests */
@@ -85,7 +95,7 @@
 .badge-cord path { fill: none; stroke: #d9d9d5; stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .badge-clip { position: absolute; left: 50%; top: 94%; width: 10px; height: 15px; margin-left: -5px; border-radius: 3px; background: linear-gradient(#b9b9b5, #7d7d79); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 1px 2px rgba(0, 0, 0, .5); }
 .badge-card { --s: 3px; position: absolute; left: 50%; top: calc(94% + 10px); display: grid; justify-items: center; box-sizing: border-box; width: 128px; margin-left: -64px; padding: 26px 12px 13px; background: linear-gradient(#f6f6f4, #e2e2df); color: var(--d-bg); text-align: center; filter: drop-shadow(0 11px 14px rgba(0, 0, 0, .55)); }
-.badge-card, .badge-card::before, .bar-pill::before, .bar-pill::after, .bar-link::before { clip-path: polygon(0 calc(var(--s) * 2), var(--s) calc(var(--s) * 2), var(--s) var(--s), calc(var(--s) * 2) var(--s), calc(var(--s) * 2) 0, calc(100% - var(--s) * 2) 0, calc(100% - var(--s) * 2) var(--s), calc(100% - var(--s)) var(--s), calc(100% - var(--s)) calc(var(--s) * 2), 100% calc(var(--s) * 2), 100% calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s)), calc(100% - var(--s) * 2) calc(100% - var(--s)), calc(100% - var(--s) * 2) 100%, calc(var(--s) * 2) 100%, calc(var(--s) * 2) calc(100% - var(--s)), var(--s) calc(100% - var(--s)), var(--s) calc(100% - var(--s) * 2), 0 calc(100% - var(--s) * 2)); }
+.badge-card, .badge-card::before, .crew-ptr b, .crew-note, .bar-pill::before, .bar-pill::after, .bar-link::before { clip-path: polygon(0 calc(var(--s) * 2), var(--s) calc(var(--s) * 2), var(--s) var(--s), calc(var(--s) * 2) var(--s), calc(var(--s) * 2) 0, calc(100% - var(--s) * 2) 0, calc(100% - var(--s) * 2) var(--s), calc(100% - var(--s)) var(--s), calc(100% - var(--s)) calc(var(--s) * 2), 100% calc(var(--s) * 2), 100% calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s)), calc(100% - var(--s) * 2) calc(100% - var(--s)), calc(100% - var(--s) * 2) 100%, calc(var(--s) * 2) 100%, calc(var(--s) * 2) calc(100% - var(--s)), var(--s) calc(100% - var(--s)), var(--s) calc(100% - var(--s) * 2), 0 calc(100% - var(--s) * 2)); }
 .badge-slot { position: absolute; left: 50%; top: 9px; width: 28px; height: 6px; margin-left: -14px; background: var(--d-bg); }
 .badge-card b { font: 400 18px/1.05 var(--f-px); letter-spacing: -.03em; }
 /* the bar code is drawn at its natural 128px; a narrower box simply shows less of it, so every bar stays on a whole pixel */
@@ -129,21 +139,22 @@
 .intro[data-read="go"] :is(.w, .say-link) { animation: word-in 1.1s var(--out) calc(var(--wait, 0ms) + var(--i, 0) * var(--beat, 30ms)) backwards; }
 @keyframes word-in { from { opacity: 0; transform: translateY(.55em); filter: blur(10px); } }
 
-/* on a wide screen the portrait stands on the left and the statement beside it, both inside the first screen */
-.intro-text { display: contents; }
+/* on a wide screen the two cards sit side by side, the narrow one on the left, and fill the first screen under the
+   bar. --tall is the height of the row: the screen less the padding above and below, within limits */
+.intro-text { justify-items: start; text-align: left; }
 @media (min-width: 1000px) {
-  .intro { display: grid; grid-template-columns: auto minmax(0, 720px); align-items: center; justify-content: center; column-gap: clamp(56px, 6vw, 112px); box-sizing: border-box; min-height: 100svh; padding: 104px var(--gut) 56px; text-align: left; }
-  /* the badge hangs about 88px below the portrait: the margin counts it into the figure, so the statement centres
-     on the portrait and badge together, and the pair sits in the middle of the screen under the bar */
-  .intro-figure { width: clamp(220px, calc((100svh - 330px) * .7466), 352px); margin: 0 0 88px; }
-  .intro-text { display: block; }
-  .intro .say { margin-top: 0; font-size: clamp(20px, 1.75vw, 26px); }
+  .intro { --tall: clamp(420px, calc(100svh - 160px), 640px); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); grid-template-rows: var(--tall); align-content: center; gap: 16px; min-height: 100svh; padding: 104px var(--gut) 56px; text-align: left; }
+  /* the portrait is as large as the card allows: its height (1.339 of its width), the 88px the badge hangs below
+     it and the card's padding all fit in the row */
+  .intro-figure { width: min(100%, clamp(200px, calc((var(--tall) - 150px) * .7466), 352px)); margin-bottom: 88px; }
+  .intro-text { --px: clamp(32px, 4vw, 64px); --py: 40px; }
+  .intro .say { max-width: 24em; font-size: clamp(20px, 1.75vw, 26px); }
 }
 @media (prefers-reduced-motion: reduce) { .intro[data-read] .w, .intro[data-read] .say-link { animation: none; } }
 
 /* the statement: three lines, the middle one lit */
 /* the written-out line with its live words; the chips flip to light boards with dark letters on this dark page */
-.say { --ink: var(--d-fg); --paper: var(--d-bg); --seal: var(--d-fg); max-width: 780px; margin-top: 200px; font: 400 clamp(21px, 2.7vw, 32px)/1.45 var(--font-text); letter-spacing: -.03em; color: var(--d-soft); text-wrap: pretty; }
+.say { --ink: var(--d-fg); --paper: var(--d-bg); --seal: var(--d-fg); max-width: 780px; margin: 0; font: 400 clamp(21px, 2.7vw, 32px)/1.45 var(--font-text); letter-spacing: -.03em; color: var(--d-soft); text-wrap: pretty; }
 .say em { font-style: italic; color: var(--d-fg); }
 .say .pill { background: rgba(242, 242, 240, .1); color: var(--d-fg); }
 .say .flap:focus-visible, .say .prompt:focus-visible { outline-color: var(--d-fg); }
@@ -151,6 +162,53 @@
 .say-link svg { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--out); }
 .say-link:hover, .say-link:focus-visible { text-decoration-color: var(--d-fg); }
 @media (hover: hover) and (pointer: fine) { .say-link:hover svg { transform: translate(2px, -2px); } }
+
+/* ---------- the build: the landing played as a team at work in a shared file ----------
+   build.ts sets data-build on the stage and adds a word to it for each pass; every rule here is keyed on a word
+   that is there or not yet there, so the finished state is simply the page as it is everywhere else.
+   frame-a, frame-b: a card's outline has been drawn.  bars: the statement shows as grey bars.  img: the portrait's
+   crossed box is in.  fill: the cards are solid.  art: the portrait is in.  chips: the live words are on.
+   fix: the portrait has been straightened.  skip: the build was cut short, so nothing transitions. */
+/* a card starts as a dashed outline with nothing in it, drawn from its top left corner; then it fills */
+.intro[data-build] .intro-card { outline: 1px dashed transparent; outline-offset: -1px; transition: background-color .5s, box-shadow .5s, outline-color .5s, clip-path .5s cubic-bezier(.4, 0, .2, 1); }
+.intro[data-build]:not([data-build~="fill"]) .intro-card { background-color: transparent; box-shadow: none; outline-color: rgba(255, 255, 255, .3); clip-path: inset(0); }
+.intro[data-build]:not([data-build~="frame-a"]) .is-me, .intro[data-build]:not([data-build~="frame-b"]) .intro-text { clip-path: inset(0 100% 100% 0); }
+/* the portrait's box is bright while it is the placeholder, and placed 12px off until it is straightened */
+.intro[data-build]:not([data-build~="img"]) .intro-ghost { opacity: 0; }
+.intro[data-build~="img"]:not([data-build~="art"]) .intro-ghost { opacity: .7; }
+.intro[data-build] .intro-figure { transition: translate 1.2s var(--out), transform .35s var(--out); }
+.intro[data-build]:not([data-build~="fix"]) .intro-figure { transform: translateX(-12px); }
+.intro-figure[data-state="built"]::before { animation: bloom 2.4s var(--out) both; }
+/* the statement is grey bars, one a word, until it is typed: then each word shows at its turn (--at), a little
+   later (--late) for everything after the rewritten phrase */
+.intro[data-build] :is(.w, .say-link) { --at: calc(var(--i) * var(--bb, 26ms) + var(--late, 0ms)); animation: none; }
+.intro[data-build] .is-plain ~ *, .intro[data-build] .say-link { --late: var(--hold, 700ms); }
+.intro[data-build] .w { border-radius: 4px; transition: opacity .3s, color .12s var(--at), background-color .12s var(--at); }
+.intro[data-build] .say-link { transition: opacity .3s var(--at), text-decoration-color .2s; }
+.intro[data-build][data-read="wait"] .w, .intro[data-build]:not([data-build~="chips"]) .is-live { color: transparent; background-color: rgba(255, 255, 255, .09); }
+.intro[data-build][data-read="wait"] .w { transition-delay: 0s; }
+.intro[data-build~="bars"][data-read="wait"] .w { opacity: 1; }
+/* a chip is a plain bar until its turn; the two live ones stay bars until they are switched on */
+.intro[data-build]:not([data-build~="chips"]) .is-chip > * { transition: visibility 0s var(--at); }
+.intro[data-build]:not([data-build~="chips"]) .is-plain > .pill { transition-delay: calc(var(--at) + var(--hold, 700ms)); }
+.intro[data-build][data-read="wait"] .is-chip > *, .intro[data-build]:not([data-build~="chips"]) .is-live > * { visibility: hidden; transition-delay: 0s; }
+.intro[data-build~="chips"] :is(.w, .say-link) { transition-delay: 0s; }
+/* the phrase that is typed first and then taken back, a letter at a time, where the pill will stand */
+.is-plain { position: relative; }
+.draft { display: none; }
+.intro[data-build]:not([data-build~="chips"]) .draft { display: block; position: absolute; left: .3em; top: 0; font-style: normal; white-space: nowrap; color: var(--d-soft); clip-path: inset(0 100% 0 0); }
+.intro[data-build][data-read="go"]:not([data-build~="chips"]) .draft { animation: draft .7s steps(7) var(--at) both; }
+@keyframes draft { 0%, 100% { clip-path: inset(0 100% 0 0); } 40%, 70% { clip-path: inset(0); } }
+.intro[data-build~="skip"], .intro[data-build~="skip"] * { transition: none !important; }
+/* the team: a pixel arrow with a name plate each (the owner's is lit), and research's note */
+.crew { position: absolute; z-index: 3; inset: 0; pointer-events: none; transition: opacity .3s; }
+.crew.is-off { opacity: 0; }
+.crew-ptr { position: absolute; left: 0; top: 0; opacity: 0; will-change: transform; }
+.crew-ptr svg { display: block; width: 14px; height: 18px; fill: var(--d-fg); stroke: var(--d-bg); stroke-width: 1; stroke-linejoin: round; }
+.crew-ptr b { --s: 2px; position: absolute; left: 13px; top: 17px; padding: 5px 8px 4px; background: #3a3a36; color: var(--d-fg); font: 400 13px/1 var(--f-px); white-space: nowrap; }
+.crew-ptr.is-own b { background: var(--d-fg); color: var(--d-bg); }
+.crew-note { --s: 2px; position: absolute; width: 132px; margin: 0; padding: 10px 12px 9px; background: var(--d-fg); color: var(--d-bg); font: 400 14px/1.15 var(--f-px); text-align: left; opacity: 0; scale: .9; transform-origin: 100% 0; transition: opacity .2s, scale .35s var(--out); }
+.crew.has-note .crew-note { opacity: 1; scale: 1; }
 
 /* ---------- sections ---------- */
 .block { padding-bottom: 190px; }
@@ -671,8 +729,6 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
   .bar-pill { justify-self: center; }
   .bar-link { width: auto; padding: 0 11px; }
   .intro { padding-top: 88px; }
-  /* the badge hangs about 92px below the portrait: the line starts clear of it */
-  .say { margin-top: 144px; }
   .block { padding-bottom: 110px; }
   .play-card { padding: 8px; }
   .play-cell { padding: 8px 8px 10px; }
