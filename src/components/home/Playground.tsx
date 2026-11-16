@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState, type RefObject } from 'react'
-import { scrollToSection } from '@/lib/me-section'
+import { scrollPageTo, scrollToSection } from '@/lib/me-section'
 import { SignIn } from './SignIn'
 
 /* The workspace is by far the heaviest thing on this page: the board, every card of work it holds and the icons
@@ -25,7 +25,11 @@ export function Playground() {
   const cell = useRef<HTMLElement>(null)
   const near = useNear(cell)
   const [inside, setInside] = useState(false)
-  const enter = useCallback(() => setInside(true), [])
+  const enter = useCallback(() => {
+    setInside(true)
+    // on a phone the app stands as tall as the screen under the menu, so signing in brings it there: its own lists then scroll in full view
+    if (cell.current && matchMedia('(max-width: 640px)').matches) scrollPageTo(cell.current, { gap: 72, duration: 0.8 })
+  }, [])
   const leave = useCallback(() => setInside(false), [])
 
   return (

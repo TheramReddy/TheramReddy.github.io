@@ -29,14 +29,21 @@ export const setSmoother = (l: Lenis | null) => (smoother = l)
 export const getSmoother = () => smoother
 
 /**
+ * Scrolls the page so `target` sits `gap` pixels under its top edge; with no target, to the very top.
+ */
+export function scrollPageTo(target: HTMLElement | null, { gap = 0, smooth = true, duration = 1.4 } = {}) {
+  const page = document.querySelector<HTMLElement>('.panel.me')
+  if (!page) return
+  const top = target ? target.getBoundingClientRect().top - page.getBoundingClientRect().top + page.scrollTop - gap : 0
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (smoother) smoother.scrollTo(top, { immediate: !smooth || still, duration })
+  else page.scrollTo({ top, behavior: smooth && !still ? 'smooth' : 'auto' })
+}
+
+/**
  * Scrolls the page to a section: Me is the top, the others are the blocks marked [data-nav].
  */
 export function scrollToSection(name: MeSection, smooth = true) {
-  const page = document.querySelector<HTMLElement>('.panel.me')
-  if (!page) return
-  const target = name === 'me' ? null : page.querySelector<HTMLElement>(`[data-nav="${name}"]`)
-  const top = target ? target.getBoundingClientRect().top - page.getBoundingClientRect().top + page.scrollTop : 0
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (smoother) smoother.scrollTo(top, { immediate: !smooth || still, duration: 1.4 })
-  else page.scrollTo({ top, behavior: smooth && !still ? 'smooth' : 'auto' })
+  const target = name === 'me' ? null : document.querySelector<HTMLElement>(`.panel.me [data-nav="${name}"]`)
+  scrollPageTo(target, { smooth })
 }

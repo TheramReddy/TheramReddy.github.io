@@ -160,3 +160,17 @@
   .hm-screen { max-width: 236px; }
   .wf-note, .jm-curve .ai-note { display: none; }
 }
+/* on a phone the template and the copilot share one scroll, the copilot under the template; the tabs stay at the top */
+@media (max-width: 640px) {
+  .st { display: block; overflow: hidden auto; }
+  .st-main { display: block; }
+  .st-tabs { position: sticky; z-index: 3; top: 0; padding: 4px 6px 0; background: #101012; }
+  .st-tabs button { height: 40px; font-size: 13px; }
+  .st-canvas { padding: 12px; overflow: visible; }
+  .jm { grid-template-columns: 108px repeat(5, minmax(120px, 1fr)); }
+  .jm-name { font-size: 10px; }
+  .st-ai { overflow: visible; }
+  .st-asks button { padding: 10px 11px; font-size: 13px; }
+  .lin .st-ask input, .st-ask button { height: 36px; }
+  .st-ask button { width: 36px; }
+}

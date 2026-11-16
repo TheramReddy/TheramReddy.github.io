@@ -289,7 +289,7 @@ function Timeline({ open }: { open: (p: number) => void }) {
         return (
           <div className="rm-row" key={place.key}>
             <button type="button" className="rm-name" aria-label={`${place.name}. Show that work`} onClick={() => open(p)}>
-              <PlaceLogo p={p} /><span>{place.name}<small>{place.role}</small></span>
+              <PlaceLogo p={p} /><span>{place.name}<small>{place.role}</small></span><em className="rm-when">{place.dates}</em>
             </button>
             <div className="rm-track">
               <button type="button" className="rm-bar" aria-label={`${place.name}, ${place.dates}. Show that work`} style={{ left: `${(place.start / SPAN) * 100}%`, width: `${((place.end - place.start) / SPAN) * 100}%`, '--hue': place.hue, '--p': 1 } as CSSProperties} onClick={() => open(p)}>
@@ -458,18 +458,18 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
   )
 
   return (
-    <div className="toy lin" ref={shell} onKeyDown={keys}>
+    <div className="toy lin" ref={shell} data-listing={listing || undefined} onKeyDown={keys}>
       <aside className="lin-side">
         <div className="lin-top">
           <img className="lin-sign" src="/brand/logo.svg" alt={site.name} width={84} height={22} draggable={false} />
           <button type="button" className="lin-icon" aria-label="Search and commands" data-tip="Search  Ctrl K" onClick={() => setCmd(true)}><Search size={15} /></button>
-          <button type="button" className="lin-icon" aria-label="Add a card" data-tip="Add a card  C" onClick={() => setDraft(here)}><SquarePen size={15} /></button>
+          <button type="button" className="lin-icon lin-add" aria-label="Add a card" data-tip="Add a card  C" onClick={() => setDraft(here)}><SquarePen size={15} /></button>
         </div>
-        <nav aria-label="Views">
+        <nav className="lin-views" aria-label="Views">
           {SCREENS.map(({ id, name, Icon }) => <button key={id} type="button" aria-current={view === id ? 'page' : undefined} onClick={() => go(id)}><Icon size={15} />{name}</button>)}
         </nav>
         <p className="lin-label">Where I did it</p>
-        <nav aria-label="Workplaces">
+        <nav className="lin-places" aria-label="Workplaces">
           {PLACES.map((place, p) => (
             <button key={place.key} type="button" aria-current={view === p ? 'page' : undefined} onClick={() => go(p)}>
               <PlaceLogo p={p} />{place.name}<span>{cards.filter((c) => c.place === p).length}</span>

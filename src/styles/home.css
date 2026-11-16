@@ -584,6 +584,8 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .rm.is-years .rm-track { background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .05) 0 1px, transparent 1px 16.6667%); }
 .rm.is-years .rm-today { bottom: 14px; }
 .rm.is-years .rm-bar span { white-space: nowrap; }
+/* the dates beside the name: only a phone shows them, where the bars are too short to carry them */
+.rm-when { display: none; }
 
 /* the applications are a plain list, not links: it takes the room that is left in the sidebar and scrolls there */
 .lin-apps { display: grid; flex: 1; align-content: start; gap: 1px; min-height: 0; margin-bottom: 8px; overflow: hidden auto; scrollbar-width: thin; scrollbar-color: #2c2c30 transparent; }
@@ -756,3 +758,112 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 
 /* over a case study the bar sits on a solid ground; on a phone the menu steps aside for the way back */
 @media (max-width: 760px) { .bar.is-case .bar-pill { display: none; } .bar.is-case { grid-template-columns: 1fr auto; padding-block: 16px; } .bar.is-case .bar-mark { display: block; } }
+
+/* ---------- the app on a phone ----------
+   The frame steps aside so the app runs the width of the column, and it stands as tall as the screen under the menu,
+   so its own lists scroll in full view. The sidebar comes apart: my sign and the account at the top, the workplaces
+   as a row of chips over the board, and the five screens as a tab bar at the foot, under the thumb. */
+@media (max-width: 640px) {
+  .play .play-card { padding: 0; background: none; box-shadow: none; }
+  .play-cell { padding: 0; }
+  .lin, .door, .play-hold { height: clamp(480px, calc(100svh - 84px), 800px); }
+
+  .lin { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto minmax(0, 1fr) auto; font-size: 14px; }
+  .lin-side { display: contents; }
+  .lin-top, .lin-me { border-bottom: 1px solid var(--line); background: #0c0c0e; }
+  .lin-top { grid-area: 1 / 1; padding: 8px 2px 8px 14px; }
+  .lin-add { display: none; }
+  .lin-me { grid-area: 1 / 2; display: flex; align-items: center; margin: 0; padding-right: 8px; }
+  .lin-me .pick { width: auto; }
+  .lin-me .pick-btn { width: 36px; height: 36px; padding: 0; justify-content: center; }
+  .lin-me .pick-btn > span, .lin-me .pick-btn > svg { display: none; }
+  .lin-me .av { width: 24px; height: 24px; }
+  .lin-me .pick-menu { top: calc(100% + 4px); right: 0; bottom: auto; left: auto; min-width: 0; }
+  /* keyboard shortcuts are no use without a keyboard */
+  .lin-me .pick-menu button:not(.lin-out) { display: none; }
+  .lin-main { grid-area: 3 / 1 / auto / -1; }
+
+  /* the workplaces: chips over the board and the list, the only screens they change */
+  .lin-side .lin-places { grid-area: 2 / 1 / auto / -1; display: none; gap: 6px; padding: 8px 10px; overflow: auto hidden; scrollbar-width: none; border-bottom: 1px solid var(--line); background: #0c0c0e; }
+  .lin-places::-webkit-scrollbar { display: none; }
+  .lin[data-listing] .lin-places { display: flex; }
+  .lin-side .lin-places button { flex: none; gap: 7px; height: 34px; padding: 0 11px 0 8px; border-radius: 999px; font-size: 13px; box-shadow: inset 0 0 0 1px var(--line); }
+  .lin-side .lin-places button > span:last-child { margin-left: 1px; }
+
+  /* the screens: a tab bar */
+  .lin-side .lin-views { grid-area: 4 / 1 / auto / -1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 5px 4px 6px; border-top: 1px solid var(--line); background: #0c0c0e; }
+  .lin-side .lin-views button { flex-direction: column; justify-content: center; gap: 4px; width: 100%; height: 48px; padding: 0; border-radius: 9px; font-size: 10.5px; letter-spacing: -.01em; }
+  .lin-side .lin-views button > :first-child { width: 18px; height: 18px; }
+
+  /* the bar holds only the board's own controls, so the other screens go without it */
+  .lin:not([data-listing]) .lin-bar { display: none; }
+  .lin-bar { justify-content: flex-start; height: 50px; padding: 0 10px; }
+  .lin-bar .pick-btn, .lin-primary { height: 34px; font-size: 13px; }
+  .lin-bar .lin-tabs { margin-left: auto; }
+  .lin-tabs button { height: 30px; }
+  .lin-tabs.is-icons button { padding: 0 10px; }
+  .lin-bar .pick-menu[data-end] { right: auto; left: 0; }
+
+  /* things to press are finger-sized, and nothing typed into is under 16px, so the screen does not zoom in on it */
+  .lin-icon { width: 34px; height: 34px; }
+  .lin-more { width: 30px; height: 30px; }
+  .lin-card .lin-key { height: 30px; }
+  .pick-menu { min-width: 190px; }
+  .pick-menu button { height: 40px; }
+  .lin :is(input, textarea, select):not(.lin-h) { font-size: 16px !important; }
+  .lin-say input { height: 36px; }
+  .lin-fields select { flex: 1; height: 38px; }
+  .lin-veil { padding-top: 20px; }
+  .lin-cmd input { height: 50px; }
+  .lin-cmd li button { height: 42px; }
+  .lin-props .pick-btn { height: 34px; font-size: 13px; }
+
+  /* board: one column at a time, the next one showing at the edge; a swipe lands on a column */
+  .lin-board { gap: 8px; padding: 10px; scroll-snap-type: x mandatory; scroll-padding-inline: 10px; }
+  .lin-col { flex: 0 0 86%; min-width: 0; scroll-snap-align: start; }
+  .lin-col > .lin-sub { min-height: 0; }
+  .lin-card { padding: 10px 12px 12px; }
+
+  /* list: the title gets the row, on two lines if it needs them; the key and the result wait in the card */
+  .lin-row { gap: 6px; height: auto; min-height: 50px; padding: 6px 10px 6px 6px; }
+  .lin-row .lin-key, .lin-row .lin-result { display: none; }
+  .lin-row .pick-btn { width: 32px; height: 32px; }
+  .lin-row .lin-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.35; white-space: normal; }
+  .lin-group { height: 42px; }
+  .lin-group .lin-sub { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+  /* the open card takes the whole screen; the card menu comes up from the foot */
+  .lin-detail { width: 100%; border-left: 0; }
+  .lin-ctx-veil { background: rgba(5, 5, 7, .55); animation: lin-fade .15s; }
+  .lin .lin-ctx { top: auto !important; right: 8px; bottom: 8px; left: 8px !important; animation: lin-rise .22s var(--out); }
+  .lin-toast { right: 10px; bottom: 70px; left: 10px; height: 44px; }
+  .lin-toast > button:first-of-type { margin-left: auto; }
+
+  /* results */
+  .lin-screen { padding: 12px; }
+  .in-tiles div { padding: 13px 14px; }
+  .in-tiles dd { font-size: 26px; }
+  .in-card header, .tk-sec > header { flex-wrap: wrap; gap: 2px 10px; }
+  /* each number on its own line with its bar under it, grouped under the place it came from */
+  .re-list li { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; height: auto; padding: 8px 0; }
+  .re-list li:has(.re-place:not(:empty)):not(:first-child) { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .re-place { grid-column: 1 / -1; font-weight: 500; }
+  .re-place:empty { display: none; }
+  .re-list .in-bar { display: block; grid-column: 1 / -1; order: 1; height: 6px; }
+
+  /* timeline: the name and its dates on one line, the bar across the full width under them */
+  .rm { --name: 0px; }
+  .rm-row { grid-template-columns: minmax(0, 1fr); height: auto; padding: 6px 0 10px; }
+  .rm-row.is-head { align-items: start; height: 46px; padding: 0; }
+  .rm-name { gap: 9px; height: 36px; margin: 0; padding: 0 4px; }
+  .rm-name > span:nth-child(2) { flex: none; }
+  .rm-when { display: block; font-size: 12px; font-style: normal; color: var(--faint); white-space: nowrap; }
+  .rm-track { height: 26px; }
+  .rm-bar { top: 3px; height: 20px; min-width: 6px; border-radius: 6px; }
+  .rm-bar span { display: none; }
+  .rm.is-years .rm-today { top: 58px; }
+}
+@media (max-width: 360px) { .lin-side .lin-views button { font-size: 9.5px; } }
+@keyframes lin-rise { from { opacity: 0; transform: translateY(16px); } }
+/* a label that shows under the pointer would stick after a tap */
+@media (hover: none) { .lin [data-tip]::after { display: none; } }
