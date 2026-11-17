@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { reducedMotion } from '@/lib/motion'
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const ROW = 40
@@ -28,7 +29,7 @@ export function Timeline({ from, to }: { from: [number, number]; to: [number, nu
   // idle: step a month at a time, only while on screen
   useEffect(() => {
     const el = well.current
-    if (!el || held || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!el || held || reducedMotion()) return
     let id = 0
     const io = new IntersectionObserver(([e]) => {
       window.clearInterval(id)
@@ -102,10 +103,10 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
     const cv = canvas.current
     const ctx = cv?.getContext('2d')
     if (!box || !cv || !ctx) return
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const still = reducedMotion()
     const glyph = GLYPHS[letter]
     const CELL = 14, GAP = 2, REACH = 78
-    let w = 0, h = 0, frame = 0, seen = false
+    let w = 0, h = 0, frame = 0, wait = 0, seen = false
     // the pointer, and where the ripple currently is (it eases after the pointer)
     let px = -999, py = -999, rx = -999, ry = -999
 
@@ -162,10 +163,13 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
           } else ctx.fillRect(cx - s / 2, cy - s / 2, s, s)
         }
       }
-      if (seen && !still && !document.querySelector('.detail.open')) frame = requestAnimationFrame(draw)
-      else frame = 0 // a case study covering the page pauses the field
+      // off screen, or under an open case study, the field pauses
+      if (!seen || still || document.querySelector('.detail.open')) return
+      // every frame while the ripple is catching up with the pointer; otherwise once per beat, when the twinkle changes
+      if (Math.abs(px - rx) > 0.5 || Math.abs(py - ry) > 0.5) frame = requestAnimationFrame(draw)
+      else wait = window.setTimeout(kick, 900 - (t % 900))
     }
-    const kick = () => { if (!frame) frame = requestAnimationFrame(draw) }
+    const kick = () => { clearTimeout(wait); if (!frame) frame = requestAnimationFrame(draw) }
 
     const move = (e: PointerEvent) => {
       const r = box.getBoundingClientRect()
@@ -185,6 +189,7 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
     box.addEventListener('pointerleave', leave)
     return () => {
       cancelAnimationFrame(frame)
+      clearTimeout(wait)
       ro.disconnect()
       io.disconnect()
       window.removeEventListener('home-uncovered', kick)

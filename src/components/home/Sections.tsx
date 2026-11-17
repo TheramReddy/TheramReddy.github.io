@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ArrowRight, ArrowUpRight, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { projects, type Project } from '@/data/projects'
@@ -8,12 +8,18 @@ import { PixelField, Timeline } from './WorkWells'
 
 /**
  * The well of a featured project: a paper card that leans toward the pointer and lifts a little under it. Pressing
- * the card turns it over to a link to the case study, and it holds still while turned. The arrow in the corner swaps the card for
- * a recording of the real screen, and back.
+ * the card turns it over to a link to the case study, and it holds still while turned.
  */
 function CardWell({ p }: { p: Project }) {
   const [turned, setTurned] = useState(false)
   const well = useRef<HTMLDivElement>(null)
+  const front = useRef<HTMLButtonElement>(null)
+  const read = useRef<HTMLAnchorElement>(null)
+  const flipped = useRef(false)
+  // focus follows the flip, so it never sits on the face that is hidden
+  useEffect(() => {
+    if (flipped.current) (turned ? read : front).current?.focus({ preventScroll: true })
+  }, [turned])
   const lean = (e: React.PointerEvent) => {
     const el = well.current
     // the turned card stays still, so the link on its back is easy to press
@@ -23,26 +29,24 @@ function CardWell({ p }: { p: Project }) {
     el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - 0.5) * 20).toFixed(2))
   }
   const rest = () => { well.current?.style.setProperty('--rx', '0'); well.current?.style.setProperty('--ry', '0') }
-  const turn = () => { rest(); setTurned((t) => !t) }
+  const turn = () => { rest(); flipped.current = true; setTurned((t) => !t) }
   return (
     <div className="tile-shot" ref={well} onPointerMove={lean} onPointerLeave={rest}>
-      {(
-          <div className="biz" data-turned={turned || undefined}>
-            <button type="button" className="biz-face" onClick={turn} tabIndex={turned ? -1 : 0} aria-hidden={turned} aria-label="Turn the card over">
-              <span className="biz-top">
-                {p.logo && <img src={p.logo} alt={p.client} draggable={false} />}
-                <span className="biz-state"><i />Live</span>
-              </span>
-              <span className="biz-name">{p.title}</span>
-              <span className="biz-line">{p.client}</span>
-              <span className="biz-line is-soft">{p.role}</span>
-            </button>
-            <div className="biz-face is-back" aria-hidden={!turned}>
-              <button type="button" className="biz-turn" onClick={turn} tabIndex={turned ? 0 : -1} aria-label="Turn the card back" />
-              <Link className="biz-read" to={`/project/${p.slug}`} tabIndex={turned ? 0 : -1}>Read case study<ArrowRight size={18} strokeWidth={1.6} aria-hidden="true" /></Link>
-            </div>
-          </div>
-        )}
+      <div className="biz" data-turned={turned || undefined}>
+        <button type="button" className="biz-face" ref={front} onClick={turn} tabIndex={turned ? -1 : 0} aria-hidden={turned} aria-label={`${p.title}, ${p.client}, ${p.role}. Turn the card over`}>
+          <span className="biz-top">
+            {p.logo && <img src={p.logo} alt={p.client} draggable={false} />}
+            <span className="biz-state"><i />Live</span>
+          </span>
+          <span className="biz-name">{p.title}</span>
+          <span className="biz-line">{p.client}</span>
+          <span className="biz-line is-soft">{p.role}</span>
+        </button>
+        <div className="biz-face is-back" aria-hidden={!turned}>
+          <button type="button" className="biz-turn" onClick={turn} tabIndex={turned ? 0 : -1} aria-label="Turn the card back" />
+          <Link className="biz-read" ref={read} to={`/project/${p.slug}`} tabIndex={turned ? 0 : -1}>Read case study<ArrowRight size={18} strokeWidth={1.6} aria-hidden="true" /></Link>
+        </div>
+      </div>
     </div>
   )
 }
@@ -50,7 +54,7 @@ function CardWell({ p }: { p: Project }) {
 /** Work: one wide card per project, the pitch on the left and its screen in a well on the right. */
 export function Work() {
   return (
-    <section className="block work" data-nav="projects" aria-labelledby="work-h">
+    <section className="block" data-nav="projects" aria-labelledby="work-h">
       <div className="col">
         <h2 className="px" id="work-h">work</h2>
         <ol className="tiles">

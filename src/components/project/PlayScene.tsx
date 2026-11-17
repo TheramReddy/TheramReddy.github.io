@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { reducedMotion } from '@/lib/motion'
 import { H, W, floor, render, scenes, type Gfx } from './playScenes'
 
 const FRAME_MS = 83
@@ -52,7 +53,7 @@ export function PlayScene({ scene }: { scene: string }) {
 
     // stills are drawn once; reduced motion gets a calm solved frame
     if (spec.still !== undefined) { frame(spec.still); return }
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { frame(spec.loop - FADE - 0.2); return }
+    if (reducedMotion()) { frame(spec.loop - FADE - 0.2); return }
 
     const detail = cv.closest('.detail')
     let t = 0

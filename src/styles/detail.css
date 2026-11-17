@@ -14,6 +14,8 @@
 .px-plate::before, .px-plate::after { content: ""; position: absolute; z-index: -1; inset: 0; background: var(--k-edge); clip-path: polygon(0 calc(var(--s) * 2), var(--s) calc(var(--s) * 2), var(--s) var(--s), calc(var(--s) * 2) var(--s), calc(var(--s) * 2) 0, calc(100% - var(--s) * 2) 0, calc(100% - var(--s) * 2) var(--s), calc(100% - var(--s)) var(--s), calc(100% - var(--s)) calc(var(--s) * 2), 100% calc(var(--s) * 2), 100% calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s)), calc(100% - var(--s) * 2) calc(100% - var(--s)), calc(100% - var(--s) * 2) 100%, calc(var(--s) * 2) 100%, calc(var(--s) * 2) calc(100% - var(--s)), var(--s) calc(100% - var(--s)), var(--s) calc(100% - var(--s) * 2), 0 calc(100% - var(--s) * 2)); }
 .px-plate::after { inset: 1px; background: var(--k-fill); }
 .detail.open { opacity: 1; visibility: visible; transition: opacity .6s var(--ease); }
+/* the sheet takes focus when a case study opens, so the keyboard starts there; it is not a control, so no ring */
+.sheet:focus { outline: none; }
 .sheet {
   position: absolute; inset: 0; background: var(--sheet);
   overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
@@ -58,7 +60,7 @@
 .chip img { display: block; width: 18px; height: 18px; object-fit: contain; filter: contrast(1.1); }
 @media (hover: hover) and (pointer: fine) { .chip:hover { transform: translateY(-2px); } }
 .gallery { display: flex; flex-direction: column; gap: 120px; padding-top: 8px; }
-.gallery > .problems, .gallery > .metrics, .gallery > .action { position: relative; }
+.gallery > .problems, .gallery > .metrics { position: relative; }
 .gallery > .metrics + .problems::before, .gallery > .problems + .problems::before { content: ""; position: absolute; left: 0; top: -62px; width: 28px; height: 2px; border-radius: 1px; background: var(--muted); opacity: .45; }
 .proj-logo { display: block; align-self: flex-start; height: 40px; width: auto; margin-bottom: 24px; }
 .proj-logo[src$="scobin.svg"] { height: 28px; }
@@ -158,7 +160,7 @@
 .chapter.flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
 .chapter.flip .chapter-art { order: 2; }
 .chapter-art { min-width: 0; display: grid; align-content: center; }
-.chapter-art > svg { display: block; width: 100%; height: auto; color: var(--fg); overflow: visible; }
+.chapter-art > svg { display: block; width: 100%; height: auto; overflow: visible; }
 .chapter-art img { display: block; width: 100%; height: auto; }
 .chapter-art .d-label { font-size: 1.5rem; }
 .chapter-art .d-small { font-size: 1.25rem; }
@@ -202,7 +204,6 @@
 .figma-link { margin-top: 28px; align-self: flex-start; display: inline-flex; align-items: center; gap: 14px; padding: 12px 20px 12px 14px; --k-edge: #8c8c89; --k-fill: #f2f2f0; color: var(--sheet); text-decoration: none; transition: transform .25s var(--ease), filter .25s var(--ease); }
 .figma-link img { display: block; width: 28px; height: 28px; padding: 5px; box-sizing: content-box; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
 .figma-link > span:not(.sr-only) { display: flex; flex-direction: column; gap: 2px; font-size: 1rem; line-height: 1.25; letter-spacing: 0; }
-.figma-link { --tint: .68; }
 .figma-link small { font-size: 0.8125rem; color: color-mix(in srgb, var(--sheet) 70%, transparent); }
 .figma-link svg { flex: none; margin-left: 6px; transition: transform .3s var(--ease); }
 .figma-link:active { transform: scale(.97); }
@@ -234,21 +235,17 @@
 .shots-grid { list-style: none; margin: 32px 0 0; padding: 0; columns: 2; column-gap: 12px; }
 .shots-grid li { break-inside: avoid; margin-bottom: 12px; }
 @media (max-width: 600px) { .shots-grid { columns: 1; } }
-.shots-tile { padding: 10px; background: var(--bg); user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.shots-tile { padding: 10px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 .shots-tile img { display: block; width: 100%; height: auto; pointer-events: none; }
-.figma-link.page-link { display: flex; align-self: stretch; justify-content: space-between; padding: 18px 22px; gap: 24px; border-radius: 14px; background: transparent; color: var(--fg); border: 1px solid rgba(243,241,234,.14); transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease); }
+.figma-link.page-link { display: flex; align-self: stretch; justify-content: space-between; padding: 20px 20px 20px 22px; gap: 16px; transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease); }
 .figma-link.page-link small { color: var(--muted); }
-@media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { background: rgba(243,241,234,.03); border-color: rgba(243,241,234,.32); transform: none; } }
-.figma-link.page-link:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
-.figma-link.page-link { padding: 20px 20px 20px 22px; border-radius: 18px; border-color: rgba(243,241,234,.12); }
+@media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { transform: none; } }
 .figma-link.page-link > span:not(.sr-only) { gap: 5px; font-size: 1.0625rem; letter-spacing: 0; }
 .figma-link.page-link small { font-size: 0.875rem; letter-spacing: 0; }
-.figma-link.page-link .link-arrow { box-sizing: content-box; width: 18px; height: 18px; margin: 0; padding: 11px; border-radius: 50%; border: 1px solid rgba(243,241,234,.14); color: var(--fg); transition: transform .35s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease); }
+.figma-link.page-link .link-arrow { box-sizing: content-box; width: 18px; height: 18px; margin: 0; padding: 11px; border: 1px solid rgba(243,241,234,.14); color: var(--fg); transition: transform .35s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease); }
 @media (hover: hover) and (pointer: fine) {
-  .figma-link.page-link:hover { background: transparent; border-color: rgba(243,241,234,.28); }
   .figma-link.page-link:hover .link-arrow { background: var(--fg); border-color: var(--fg); color: var(--sheet); transform: translate(0, 0) rotate(45deg); }
 }
-.figma-link.page-link { gap: 16px; }
 .figma-link.page-link > span:not(.sr-only) { flex: 1; }
 .figma-link.page-link .link-info { flex: none; margin: 0; color: var(--muted); }
 .metric-group { order: -1; margin: 0 0 10px; font: 400 0.875rem/1 var(--f-px); letter-spacing: 0; text-transform: lowercase; color: var(--muted); }
@@ -271,7 +268,6 @@
 
 /* the thinking behind a decision (see .law in home.css), sized for the case study */
 .detail .law { margin-top: 16px; padding: 12px 14px; font-size: .9375rem; line-height: 1.55; letter-spacing: 0; color: var(--muted); max-width: 40rem; }
-.detail .law-name { font-size: .9375rem; margin-bottom: 6px; }
 .detail .law-here { color: var(--fg); }
 .rulebook li .law, .diagram .law, .d-label-tag + .law { margin-top: 12px; }
 .rulebook li .law { padding-block: 8px; }

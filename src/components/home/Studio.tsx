@@ -38,7 +38,7 @@ function JourneyMap() {
     </>
   )
   return (
-    <div className="tpl jm" role="table" aria-label="Journey map">
+    <div className="tpl jm" role="group" aria-label="Journey map">
       <div className="jm-name" />
       {STAGES.map((s, i) => <div key={s} className="jm-stage"><small>{i + 1}</small>{s}</div>)}
       {row('Doing', JOURNEY.doing)}
@@ -154,7 +154,7 @@ const HEAT = [
 function Heatmap() {
   return (
     <div className="tpl hm">
-      <div className="hm-screen" aria-label="A booking screen with taps shown as heat">
+      <div className="hm-screen" role="img" aria-label="A booking screen with taps shown as heat">
         <div className="hm-ui">
           <div className="hm-bar" />
           <div className="hm-title" /><div className="hm-text" />

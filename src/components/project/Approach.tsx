@@ -1,5 +1,6 @@
 import { Law } from '@/components/Law'
 import type { LawId } from '@/data/laws'
+import { pad2 } from '@/lib/utils'
 
 /** five rules, each with a line of what I did, the principle it leans on, and how the principle shows up here */
 const rules: { rule: string; why: string; law: LawId; here: string }[] = [
@@ -21,7 +22,7 @@ export function Approach() {
         <ol>
           {rules.map((r, i) => (
             <li key={r.rule}>
-              <span className="rb-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span className="rb-num" aria-hidden="true">{pad2(i + 1)}</span>
               <div>
                 <h4>{r.rule}</h4>
                 <p>{r.why}</p>

@@ -1,6 +1,6 @@
 import type { ToolId } from './tools'
 
-export type Job = {
+type Job = {
   role: string
   product: string
   /** what I did in the role: each line starts with the verb, and ends with the number where one was measured */

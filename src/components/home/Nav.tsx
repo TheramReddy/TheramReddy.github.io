@@ -44,7 +44,7 @@ export function Nav() {
           </button>
         ))}
       </nav>
-      {inCase && <button type="button" className="key bar-back" onClick={() => go('projects')}>back to work</button>}
+      {inCase && <button type="button" className="key" onClick={() => go('projects')}>back to work</button>}
     </div>
   )
 }

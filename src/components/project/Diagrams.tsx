@@ -5,7 +5,7 @@ import { PlayScene } from './PlayScene'
 import { Law } from '@/components/Law'
 import type { LawId } from '@/data/laws'
 
-/** Arrowhead marker shared by the Scobin and Telemetric chapter drawings. */
+/** Arrowhead marker for the Telemetric chapter drawings. */
 export const Defs = ({ id }: { id: string }) => (
   <defs>
     <marker id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
@@ -32,31 +32,29 @@ const items: { tag: string; title: string; before: string; fix: string; law: Law
 
 export function Diagrams() {
   return (
-    <>
-      <Carousel id="cs-problems" title="Nine problems, nine fixes" noun="problem" labels={items.map((d) => d.tag)}>
-        {(active) => items.map((d, i) => {
-          const o = Math.max(-2, Math.min(2, i - active))
-          return (
-            <article
-              className={cn('diagram px-plate', o === 0 && 'is-active')}
-              key={d.title}
-              style={{ '--o': o } as CSSProperties}
-              aria-hidden={o !== 0}
-            >
-              <div className="d-art">{o === 0 && <PlayScene scene={d.tag} />}</div>
-              <div className="d-copy">
-                <h4>{d.title}</h4>
-                <span className="d-label-tag">before</span>
-                <p>{d.before}</p>
-                <span className="d-label-tag">what I did</span>
-                <p>{d.fix}</p>
-                <span className="d-label-tag">why it works</span>
-                <Law id={d.law} here={d.here} />
-              </div>
-            </article>
-          )
-        })}
-      </Carousel>
-    </>
+    <Carousel id="cs-problems" title="Nine problems, nine fixes" noun="problem" labels={items.map((d) => d.tag)}>
+      {(active) => items.map((d, i) => {
+        const o = Math.max(-2, Math.min(2, i - active))
+        return (
+          <article
+            className={cn('diagram px-plate', o === 0 && 'is-active')}
+            key={d.title}
+            style={{ '--o': o } as CSSProperties}
+            aria-hidden={o !== 0}
+          >
+            <div className="d-art">{o === 0 && <PlayScene scene={d.tag} />}</div>
+            <div className="d-copy">
+              <h4>{d.title}</h4>
+              <span className="d-label-tag">before</span>
+              <p>{d.before}</p>
+              <span className="d-label-tag">what I did</span>
+              <p>{d.fix}</p>
+              <span className="d-label-tag">why it works</span>
+              <Law id={d.law} here={d.here} />
+            </div>
+          </article>
+        )
+      })}
+    </Carousel>
   )
 }

@@ -1,29 +1,19 @@
-import { Suspense, lazy, useCallback, useEffect, useRef, useState, type RefObject } from 'react'
+import { Suspense, lazy, useCallback, useRef, useState } from 'react'
+import { fresh } from '@/lib/fresh'
 import { scrollPageTo, scrollToSection } from '@/lib/me-section'
+import { useSeen } from '@/lib/use-seen'
 import { SignIn } from './SignIn'
 
 /* The workspace is by far the heaviest thing on this page: the board, every card of work it holds and the icons
    it draws them with. It is a chunk of its own that only loads once someone signs in; until then the page carries
    the door alone. The placeholder is the same height as the board, so nothing shifts when it arrives. */
-const Workspace = lazy(() => import('./Workspace'))
-
-/** True once the element has come within `margin` of the viewport. */
-function useNear(target: RefObject<HTMLElement | null>, margin = '800px') {
-  const [near, setNear] = useState(false)
-  useEffect(() => {
-    const el = target.current
-    if (!el || near) return
-    const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) setNear(true) }, { rootMargin: margin })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [target, near, margin])
-  return near
-}
+const Workspace = lazy(fresh(() => import('./Workspace')))
 
 /** Playground: my work laid out as a small working app, behind a sign-in screen that asks for nothing. */
 export function Playground() {
   const cell = useRef<HTMLElement>(null)
-  const near = useNear(cell)
+  // the door is built once the cell is within 800px of the viewport
+  const near = useSeen(cell, { rootMargin: '800px' })
   const [inside, setInside] = useState(false)
   const enter = useCallback(() => {
     setInside(true)

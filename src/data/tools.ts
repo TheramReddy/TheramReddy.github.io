@@ -36,7 +36,7 @@ export type ToolId = keyof typeof tools
 
 /** What each tool is for; the toolkit groups a role's tools under these, in this order. */
 export const TOOL_KINDS = ['Design', 'Research', 'Build', 'Test', 'Team'] as const
-export type ToolKind = (typeof TOOL_KINDS)[number]
+type ToolKind = (typeof TOOL_KINDS)[number]
 export const toolKind: Record<ToolId, ToolKind> = {
   figma: 'Design', sketch: 'Design', xd: 'Design', framer: 'Design', illustrator: 'Design', photoshop: 'Design', aftereffects: 'Design', rive: 'Design', lottie: 'Design', storybook: 'Design',
   miro: 'Research', ga4: 'Research', hotjar: 'Research',

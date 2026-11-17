@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
+import { reducedMotion } from '@/lib/motion'
 
 type Stat = { to: number; suffix?: string; label: string }
 
 /** A row of big pixel numbers that count up once, when they first scroll into view. */
 export function StatTiles({ stats }: { stats: Stat[] }) {
   const ref = useRef<HTMLUListElement>(null)
-  const [k, setK] = useState(() => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0))
+  const [k, setK] = useState(() => (reducedMotion() ? 1 : 0))
 
+  // runs once: depending on `k` would restart the count on every frame
   useEffect(() => {
     const el = ref.current
-    if (!el || k >= 1) return
+    if (!el || reducedMotion()) return
     let raf = 0
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return
@@ -24,7 +26,7 @@ export function StatTiles({ stats }: { stats: Stat[] }) {
     }, { threshold: 0.4 })
     io.observe(el)
     return () => { io.disconnect(); cancelAnimationFrame(raf) }
-  }, [k])
+  }, [])
 
   return (
     <ul className="stat-tiles" ref={ref}>

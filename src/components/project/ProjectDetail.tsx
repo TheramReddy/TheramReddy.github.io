@@ -102,7 +102,7 @@ function SectionNav({ root }: { root: RefObject<HTMLDivElement | null> }) {
 }
 
 /** Custom page scrollbar for the sheet: draggable thumb, click the track to jump. */
-function SheetScrollbar({ root }: { root: RefObject<HTMLDivElement | null> }) {
+function SheetScrollbar({ root, slug }: { root: RefObject<HTMLDivElement | null>; slug?: string }) {
   const bar = useRef<HTMLDivElement>(null)
   const thumb = useRef<HTMLSpanElement>(null)
 
@@ -123,7 +123,8 @@ function SheetScrollbar({ root }: { root: RefObject<HTMLDivElement | null> }) {
     for (const c of Array.from(sheet.children)) ro.observe(c)
     sync()
     return () => { sheet.removeEventListener('scroll', sync); ro.disconnect() }
-  }, [root])
+    // observe again when a case study opens: its content was not there to observe at mount
+  }, [root, slug])
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const sheet = root.current, b = bar.current, t = thumb.current
@@ -171,6 +172,8 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
   useEffect(() => {
     if (open && sheet.current) {
       sheet.current.scrollTop = 0
+      // the page underneath is inert now, so the keyboard starts from the sheet
+      sheet.current.focus({ preventScroll: true })
     }
   }, [open, p?.slug])
 
@@ -179,13 +182,13 @@ export function ProjectDetail({ project, open }: { project?: Project; open: bool
       className={cn('detail', open && 'open')}
       inert={!open}
     >
-      <div className="sheet" ref={sheet}>
-        <SheetScrollbar root={sheet} />
+      <div className="sheet" ref={sheet} tabIndex={-1}>
+        <SheetScrollbar root={sheet} slug={p?.slug} />
         {p?.features && <SectionNav root={sheet} />}
         {p && (
           <div className="cols">
             <div className="info" id="cs-overview">
-              {p.slug === 'telemetric' && <Mission className="info-crew" away={null} />}
+              {p.slug === 'telemetric' && <Mission className="info-crew" />}
               {p.logo && <img className="proj-logo" src={p.logo} alt={p.client} />}
               <h2>{p.title}</h2>
               <p className="cs-lede">{p.summary}</p>

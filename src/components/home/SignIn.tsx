@@ -16,7 +16,7 @@ export function SignIn({ onEnter }: { onEnter: () => void }) {
   }, [going, onEnter])
 
   return (
-    <div className="toy door" data-way={going || undefined} aria-label="Sign in">
+    <div className="toy door" role="group" data-way={going || undefined} aria-label="Sign in">
       <div className="door-glow" aria-hidden="true" />
       <div className="door-grid" aria-hidden="true" />
       <div className="door-body">

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { reducedMotion } from '@/lib/motion'
 import { smoothScroll } from '@/lib/sheets'
 import { getSmoother, setMeSection, type MeSection } from '@/lib/me-section'
 import { Intro } from './Intro'
@@ -16,7 +17,7 @@ export function Home({ covered }: { covered: boolean }) {
   useEffect(() => {
     const root = panel.current
     const content = root?.querySelector<HTMLElement>('.inner')
-    if (!root || !content || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!root || !content || reducedMotion()) return
     return smoothScroll(root, content)
   }, [])
 

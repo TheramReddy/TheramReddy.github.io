@@ -37,7 +37,7 @@ export function Gallery({ features }: { features: Feature[] }) {
       <ul className="shots-grid">
         {features.map((f) => (
           <li key={f.gif} className="shots-tile" onContextMenu={(e) => e.preventDefault()}>
-            <img loading="lazy" decoding="async" draggable={false} src={f.gif} alt={f.alt} />
+            <img loading="lazy" decoding="async" draggable={false} src={f.gif} width={f.w} height={f.h} alt={f.alt} />
           </li>
         ))}
       </ul>

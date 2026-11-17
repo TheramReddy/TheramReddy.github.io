@@ -12,7 +12,7 @@
  */
 
 /** What the landing does for the build when its moment comes. */
-export type Hooks = { type(): void; art(): void; chips(): void; badge(): void }
+type Hooks = { type(): void; art(): void; chips(): void; badge(): void }
 
 /* the statement is typed a word every BEAT; after the rewritten phrase it holds for HOLD (ms) */
 const BEAT = 26, HOLD = 700
@@ -122,7 +122,9 @@ export function build(root: HTMLElement, hooks: Hooks): () => void {
   function finish(early: boolean) {
     if (early) {
       show('skip')
-      window.setTimeout(() => { root.dataset.build = root.dataset.build?.replace(' skip', '') }, 300)
+      window.setTimeout(() => {
+        if (root.dataset.build !== undefined) root.dataset.build = root.dataset.build.split(' ').filter((w) => w !== 'skip').join(' ')
+      }, 300)
     }
     clear()
     while (next < steps.length - 1) steps[next++][1]()

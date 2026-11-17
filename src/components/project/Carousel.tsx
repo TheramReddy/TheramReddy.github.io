@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { pad2 } from '@/lib/utils'
 
 type CarouselProps = {
   id: string
@@ -7,7 +8,7 @@ type CarouselProps = {
   noun: string
   /** one accessible name per item */
   labels: string[]
-  children: (active: number, go: (n: number) => void) => ReactNode
+  children: (active: number) => ReactNode
 }
 
 /**
@@ -18,17 +19,16 @@ export function Carousel({ id, title, noun, labels, children }: CarouselProps) {
   const [active, setActive] = useState(0)
   const last = labels.length - 1
   const go = (n: number) => setActive(Math.max(0, Math.min(last, n)))
-  const pad = (n: number) => String(n).padStart(2, '0')
   return (
     <section className="problems" id={id} aria-label={title}>
       <div>
         <h3 className="in-action-title">{title}</h3>
-        <div className="coverflow">{children(active, go)}</div>
+        <div className="coverflow">{children(active)}</div>
         <div className="cf-controls">
-          <p className="cf-count" aria-live="polite">{pad(active + 1)} / {pad(labels.length)}</p>
+          <p className="cf-count" aria-live="polite">{pad2(active + 1)} / {pad2(labels.length)}</p>
           <div className="cf-keys">
             <button type="button" className="key is-tall" aria-label={`Previous ${noun}`} disabled={active === 0} onClick={() => go(active - 1)}><span aria-hidden="true">←</span>back</button>
-            <button type="button" className="key is-tall is-lit cf-next" aria-label={active === last ? `Back to the first ${noun}` : `Next ${noun}`} onClick={() => setActive(active === last ? 0 : active + 1)}>
+            <button type="button" className="key is-tall is-lit" aria-label={active === last ? `Back to the first ${noun}` : `Next ${noun}`} onClick={() => setActive(active === last ? 0 : active + 1)}>
               {active === last ? 'start over' : `next ${noun}`}<span className="cf-arrow" aria-hidden="true">{active === last ? '↺' : '→'}</span>
             </button>
           </div>

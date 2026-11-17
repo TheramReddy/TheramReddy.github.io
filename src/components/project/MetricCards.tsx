@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Metric } from '@/data/projects'
+import { reducedMotion } from '@/lib/motion'
 import { Bot } from './crew/Bot'
-import { reducedMotion } from './crew/crew'
 import './crew/crew.css'
 
 const WALK = 1200
@@ -27,9 +27,15 @@ export function MetricCards({ items }: { items: Metric[] }) {
   useEffect(() => {
     const el = grid.current
     if (!el || calm) return
-    const io = new IntersectionObserver(([e]) => setLive(e.isIntersecting), { threshold: 0.25 })
+    // a closed case study stays mounted and hidden, and still counts as on screen, so its open state is checked too
+    const detail = el.closest('.detail')
+    let seen = false
+    const sync = () => setLive(seen && (!detail || detail.classList.contains('open')))
+    const io = new IntersectionObserver(([e]) => { seen = e.isIntersecting; sync() }, { threshold: 0.25 })
     io.observe(el)
-    return () => io.disconnect()
+    const mo = new MutationObserver(sync)
+    if (detail) mo.observe(detail, { attributes: true, attributeFilter: ['class'] })
+    return () => { io.disconnect(); mo.disconnect() }
   }, [calm])
 
   // stand on the top edge of the current card, and re-measure when the layout changes

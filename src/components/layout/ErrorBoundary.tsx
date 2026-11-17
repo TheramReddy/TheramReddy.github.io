@@ -1,14 +1,19 @@
 import { Component } from 'react'
 import type { ReactNode } from 'react'
 
-/** Keeps a runtime error from blanking the page: logs nothing to the visitor and renders nothing for the failed part. */
+/** A runtime error replaces the page with one plain line and a way to load it again, instead of a blank screen. */
 export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() {
     return { failed: true }
   }
-  componentDidCatch() {}
   render() {
-    return this.state.failed ? null : this.props.children
+    if (!this.state.failed) return this.props.children
+    return (
+      <p className="crash" role="alert">
+        Something went wrong on this page.
+        <button type="button" className="key" onClick={() => location.reload()}>Reload</button>
+      </p>
+    )
   }
 }

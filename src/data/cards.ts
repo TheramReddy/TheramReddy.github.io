@@ -14,7 +14,7 @@ import type { LawId } from './laws'
  * - `why` is what people saw or had to do before. `how` is three short moves. `out` is the number, or the change.
  * - Nothing here is invented: every fact is from the resume or the case studies.
  */
-export type Work = {
+type Work = {
   place: number
   stage: number
   title: string

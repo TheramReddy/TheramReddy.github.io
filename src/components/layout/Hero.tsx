@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react'
+import { reducedMotion } from '@/lib/motion'
 import { flapSound, keySound, tick } from '@/lib/sfx'
 
-const still = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const SPINS = 12
 const press = (go: () => void) => (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go() } }
@@ -25,7 +25,7 @@ export function Flap({ word, delay = 1700, armed = true }: { word: string; delay
 
   useLayoutEffect(() => {
     if (!run) return
-    const moving = !still()
+    const moving = !reducedMotion()
     const lands: number[] = []
     const at = (n: number) => `translateY(calc(${-n} * var(--cell)))`
     cols.current.forEach((col, i) => {

@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react'
+import { reducedMotion } from '@/lib/motion'
 
-export type Act = 'idle' | 'sit' | 'type' | 'draw' | 'search' | 'find' | 'pass' | 'catch'
+export type Act = 'sit' | 'type' | 'draw' | 'search' | 'find' | 'pass' | 'catch'
 export type Dir = 'l' | 'r' | 'u' | 'd'
 export type AgentId = 'converter' | 'structurer' | 'linker' | 'organizer'
 export type Id = 'boss' | AgentId
 
 export type Beat = { from: number; to: number; act: Act; label: string; target?: Id; dir?: Dir }
-export type Convo = { id: number; from: Id; to: Id; at: number; end: number; text: string }
-export type Snapshot = {
+type Convo = { id: number; from: Id; to: Id; at: number; end: number; text: string }
+type Snapshot = {
   beats: Record<Id, Beat & { index: number }>
   piles: Record<Id, { in: number; out: number }>
   sent: Record<Id, number>
   says: Partial<Record<Id, Convo>>
   looks: Partial<Record<Id, Dir>>
 }
-
-export const reducedMotion = () => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const beat = (from: number, to: number, act: Act, label: string, extra: Partial<Beat> = {}): Beat => ({ from, to, act, label, ...extra })
 
@@ -26,7 +25,7 @@ const STAGGER = 160 * SLOW
 const WINDUP = 350 * SLOW
 
 export const AGENTS: AgentId[] = ['converter', 'structurer', 'linker', 'organizer']
-export const ALL: Id[] = ['boss', ...AGENTS]
+const ALL: Id[] = ['boss', ...AGENTS]
 
 /** Where each agent sits on the 2x2 desk grid, used to work out which way to face. */
 const SPOT: Record<Id, [number, number]> = { boss: [0.5, -1], converter: [0, 0], structurer: [1, 0], linker: [0, 1], organizer: [1, 1] }
@@ -150,7 +149,7 @@ function simulate() {
 }
 
 const sim = simulate()
-export const CYCLE = Math.max(12000, sim.end + 1800)
+const CYCLE = Math.max(12000, sim.end + 1800)
 
 function timeline(id: Id): Beat[] {
   const watching = id === 'boss'

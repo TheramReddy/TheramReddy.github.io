@@ -1,9 +1,10 @@
-import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { Fragment, useCallback, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { site } from '@/data/site'
 import { scrollToSection } from '@/lib/me-section'
+import { reducedMotion } from '@/lib/motion'
+import { useSeen } from '@/lib/use-seen'
 import { Flap, Pill, Prompt, WAYS } from '@/components/layout/Hero'
 
-const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
 /* under the pointer the portrait turns to blocks: this many across */
@@ -42,7 +43,7 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
     const cord = el?.querySelector('.badge-cord path')
     const card = el?.querySelector<HTMLElement>('.badge-card')
     const px = cv?.getContext('2d')
-    if (!root || !el || !img || !cv || !cord || !card || !px || still()) return
+    if (!root || !el || !img || !cv || !cord || !card || !px || reducedMotion()) return
 
     const timers: number[] = []
     const later = (fn: () => void, ms: number) => { timers.push(window.setTimeout(fn, ms)) }
@@ -237,30 +238,18 @@ function useLanding(stage: RefObject<HTMLElement | null>, fig: RefObject<HTMLDiv
   }, [stage, fig, onOpen, onArm])
 }
 
-/** True once the element has been on screen. With reduced motion it is true from the start. */
-function useSeen(target: RefObject<HTMLElement | null>) {
-  const [seen, setSeen] = useState(still)
-  useEffect(() => {
-    const el = target.current
-    if (!el || seen) return
-    const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) setSeen(true) }, { threshold: 0.25 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [target, seen])
-  return seen
-}
-
 /** The opening screen, as two cards: the portrait wearing the role on an ID badge, and the statement beside it. */
 export function Intro() {
   const stage = useRef<HTMLElement>(null)
   const fig = useRef<HTMLDivElement>(null)
   const say = useRef<HTMLParagraphElement>(null)
-  const [opened, setOpened] = useState(still)
-  const [arm, setArm] = useState<Arm | null>(() => (still() ? 'paced' : null))
+  const [opened, setOpened] = useState(reducedMotion)
+  const [arm, setArm] = useState<Arm | null>(() => (reducedMotion() ? 'paced' : null))
   const open = useCallback(() => setOpened(true), [])
   useLanding(stage, fig, open, setArm)
   // the statement lands once the portrait has started to develop and it is on screen (on a phone, once scrolled to)
-  const go = useSeen(say) && opened
+  // with reduced motion the line counts as seen from the start
+  const go = useSeen(say, { threshold: 0.25, start: reducedMotion() }) && opened
 
   // every word, chip and the link below take a number, in reading order
   let i = 0

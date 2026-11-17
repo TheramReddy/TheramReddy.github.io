@@ -10,14 +10,12 @@
   --d-fg: #f2f2f0;
   --d-soft: #b4b4b1;
   --d-mute: #8c8c89;
-  --d-dim: #626260;
   --f-px: 'Geist Pixel', 'Geist Variable', system-ui, sans-serif;
   --gut: clamp(16px, 2.6vw, 40px);
   --out: cubic-bezier(.16, 1, .3, 1);
   /* a raised card: a lit top edge, a hairline, a dark rim, a soft drop */
   --lift: inset 0 1px 0 rgba(255, 255, 255, .09), inset 0 0 0 1px rgba(255, 255, 255, .035), 0 0 0 1px rgba(0, 0, 0, .65), 0 1px 1px rgba(0, 0, 0, .3), 0 24px 48px -24px rgba(0, 0, 0, .7);
   /* a key: lit on top, shaded underneath, sitting just off the surface */
-  --press: inset 0 1px 0 rgba(255, 255, 255, .18), inset 0 -1px 0 rgba(0, 0, 0, .5), 0 0 0 1px rgba(0, 0, 0, .7), 0 1px 1px rgba(0, 0, 0, .4), 0 2px 4px rgba(0, 0, 0, .3);
   /* a well: shaded at the top, lit along the bottom */
   --sink: inset 0 1px 1px rgba(0, 0, 0, .5), inset 0 2px 6px rgba(0, 0, 0, .35), inset 0 -1px 0 rgba(255, 255, 255, .05);
 }
@@ -255,6 +253,7 @@
 /* the tracker: the one place on the page with colour. A sidebar, a list or board, and a panel for the open issue. */
 .lin { --ac: #d4d4d8; --line: rgba(255, 255, 255, .07); --ink: #e6e6e9; --dim: #9a9ea7; --faint: #6f747d; position: relative; display: grid; grid-template-columns: 216px minmax(0, 1fr); height: 800px; overflow: hidden; background: #101012; color: var(--ink); font: 400 13px/1.4 var(--font-text); }
 /* the window's edge: one hairline, drawn over everything inside so it never breaks, and a soft drop under it */
+.toy.lin:focus { outline: none; }
 .toy.lin { border-radius: 14px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .8); }
 .lin::after { content: "";  position: absolute; z-index: 40; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); pointer-events: none; }
 .lin button:not(:disabled), .lin select { cursor: pointer; }
@@ -338,7 +337,7 @@
 .lin-card .lin-labels { flex-wrap: wrap; }
 
 /* the open issue */
-.lin-detail { position: absolute; z-index: 8; inset: 0 0 0 auto; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; width: min(380px, 100%); padding: 10px 16px 14px; overflow: auto; border-left: 1px solid var(--line); background: #141417; box-shadow: -20px 0 40px rgba(0, 0, 0, .45); scrollbar-width: thin; scrollbar-color: #2c2c30 transparent; animation: lin-slide .28s var(--out); }
+.lin-detail { position: absolute; z-index: 8; inset: 0 0 0 auto; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; width: min(430px, 100%); padding: 10px 16px 14px; overflow: auto; border-left: 1px solid var(--line); background: #141417; box-shadow: -20px 0 40px rgba(0, 0, 0, .45); scrollbar-width: thin; scrollbar-color: #2c2c30 transparent; animation: lin-slide .28s var(--out); }
 .lin-detail header, .lin-new header { display: flex; align-items: center; justify-content: space-between; }
 .lin-detail .lin-key { display: flex; align-items: center; gap: 7px; width: auto; }
 .lin-detail .lin-key i { width: 9px; height: 9px; border-radius: 3px; }
@@ -404,7 +403,6 @@ button.tag[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 0 0 1px
 /* logos: the company, and a tile for each team and project */
 .lin-bar h3 { display: flex; align-items: center; gap: 8px; }
 .lin-detail .lin-link { width: 100%; color: var(--ink); text-align: left; transition: background .15s; }
-.av.is-big { width: 40px; height: 40px; font-size: 14px; }
 
 /* the extra screens share one scrolling area */
 .lin-screen { flex: 1; min-height: 0; padding: 14px; overflow: hidden auto; scrollbar-width: thin; scrollbar-color: #2c2c30 transparent; }
@@ -555,7 +553,6 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .lin-detail a.lin-link { box-sizing: border-box; text-decoration: none; }
 
 /* the detail of a card: the problem, what I did as numbered steps, and what changed */
-.lin-detail { width: min(430px, 100%); }
 .lin-detail > header { position: sticky; z-index: 2; top: -10px; flex: none; margin: -10px -16px 0; padding: 10px 16px 6px; background: #141417; }
 .lin-part { display: grid; gap: 8px; }
 .lin-part p, .lin-part li { font-size: 13px; line-height: 1.55; color: var(--ink); }
@@ -563,11 +560,9 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .lin-part li { position: relative; padding-left: 26px; counter-increment: step; }
 .lin-part li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255, 255, 255, .08); color: var(--dim); font: 500 10.5px/18px var(--font-text); text-align: center; }
 
-/* the thinking behind a decision: the principle's name in pixel type, then what it means in plain words. The case
-   studies and the work app's cards both use it; each sets its own size and colour. */
+/* the thinking behind a decision: what the principle means in plain words. The case studies and the work app's
+   cards both use it; each sets its own size and colour. */
 .law { margin: 0; padding: 0 0 0 12px; border-left: 2px solid rgba(255, 255, 255, .14); }
-.law-name { display: block; margin-bottom: 4px; font: 400 1em/1 var(--f-px); text-transform: lowercase; color: var(--ink); text-decoration: none; }
-.law-name:hover, .law-name:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
 /* what the principle says is the quieter line; how it shows up in this piece of work is the one to read */
 .law-says, .law-here { display: block; }
 .law-here { margin-top: 6px; color: var(--ink); }
@@ -700,7 +695,7 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .tl-ruler b:nth-of-type(2) { top: 20px; }
 .tl-ruler b:nth-of-type(3) { top: 30px; }
 .tl-ruler li[data-year] i { width: 236px; margin-left: -118px; background: rgba(242, 242, 240, .5); }
-.tl-ruler li > span { left: 0; top: -10px; height: auto; background: none; font: 400 19px/1 var(--font-text); letter-spacing: -.02em; color: var(--d-mute); translate: -100% 0; margin-left: -26px; left: calc(50% - 118px); }
+.tl-ruler li > span { top: -10px; height: auto; background: none; font: 400 19px/1 var(--font-text); letter-spacing: -.02em; color: var(--d-mute); translate: -100% 0; margin-left: -26px; left: calc(50% - 118px); }
 .tl-ruler li[data-off] { opacity: .35; }
 /* the pill is outside the mask's blind band only because the band is drawn for it: it sits in a sibling layer */
 .tl-pill { position: absolute; left: 50%; top: 50%; box-sizing: border-box; width: 304px; height: 66px; margin: -33px 0 0 -178px; padding: 0 30px; border-radius: 999px; background: linear-gradient(#fbfbf9, #dededa); color: #1b1b1a; font: 400 28px/66px var(--font-text); letter-spacing: -.03em; font-variant-numeric: tabular-nums; text-align: left; box-shadow: inset 0 2px 0 #fff, inset 0 -2px 3px rgba(0, 0, 0, .12), 0 14px 26px -8px rgba(0, 0, 0, .7), 0 2px 4px rgba(0, 0, 0, .4); }
@@ -709,7 +704,7 @@ span.av { background: #2a2a30; color: var(--ink); box-shadow: inset 0 0 0 1px rg
 .pixels { padding: 0; }
 .pixels canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .pixels-note { position: absolute; left: 14px; bottom: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; background: var(--d-well); font: 400 11px/1 var(--font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--d-soft); }
-.pixels-note i { width: 5px; height: 5px; border-radius: 50%; background: var(--d-fg); animation: now 1.6s ease-in-out infinite; }
+.pixels-note i { width: 5px; height: 5px; border-radius: 50%; background: var(--d-fg); animation: in-pulse 1.6s ease-in-out infinite; }
 
 /* ---------- footer ---------- */
 .foot { padding-top: 100px; overflow: hidden; border-radius: 20px 20px 0 0; background: var(--d-card); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .09); }

@@ -7,8 +7,6 @@
 @import './detail.css';
 @import './responsive.css';
 
-@custom-variant dark (&:is(.dark *));
-
 /* Custom arrow everywhere; text fields keep the I-beam. Clickables swap to the arrow with the click burst.
    Both carry a light outline so they read on dark panels. Hotspot is the arrow tip. */
 html, html *:not(input, textarea, [contenteditable="true"]) { cursor: url('/cursor.svg') 11 10, auto !important; }
@@ -26,14 +24,11 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   /* One sans for everything that is read: Geist stays clear from 12px labels up to headings. */
   --font-text: 'Geist Variable', system-ui, sans-serif;
-  --font-passenger: var(--font-text);
-  --font-pixel: var(--font-passenger);
   --font-mono: var(--font-text);
   --seal: #0a0a0a;
   /* warm-black ink for drawings and type, and the off-white paper it sits on */
   --ink: #1d1d1d;
   --paper: #f1f1f1;
-  --underline-offset: 3px;
 
   /* Spacing: everything on the home page steps in multiples of 8px. */
   --s-1: 8px;
@@ -48,56 +43,21 @@ html :is(button:disabled, [aria-disabled="true"]), html :is(button:disabled, [ar
   --fs-14: 14px;  --lh-14: 24px;  /* nav, captions, secondary lines */
   --fs-16: 16px;  --lh-16: 24px;  /* body, links */
   --fs-20: 20px;  --lh-20: 32px;  /* hero note */
-  --fs-display: clamp(48px, 8vw, 128px);
 
   /* Frame: one centred column with hairline grid lines, like a sheet of layout paper */
   --frame: 1232px;
   --gutter: var(--s-4);
-  --bar: var(--s-8);
-  --grid: rgba(10, 10, 10, 0.07);
 
   --radius: 0.625rem;
   --background: #ffffff;
   --foreground: #0a0a0a;
-  --primary: #0a0a0a;
-  --primary-foreground: #ffffff;
-  --secondary: #eeeeee;
-  --secondary-foreground: #0a0a0a;
-  --muted-foreground: rgba(10, 10, 10, 0.72);
-  --accent: #eeeeee;
-  --accent-foreground: #0a0a0a;
-  --destructive: #797979;
-  --border: rgba(10, 10, 10, 0.12);
-  --input: rgba(10, 10, 10, 0.12);
-  --ring: rgba(10, 10, 10, 0.4);
-  --popover: #ffffff;
-  --popover-foreground: #0a0a0a;
 }
 
 @theme inline {
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: #ffffff;
-  --color-card-foreground: var(--foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--secondary);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
 }
 
 *,
@@ -183,8 +143,7 @@ button {
 ul {
   list-style: none;
 }
-.label {
-  font-size: var(--fs-14);
-  letter-spacing: 0;
-}
+
+/* what the error boundary shows in place of a page that crashed */
+.crash { display: grid; justify-items: center; gap: 16px; padding: 30vh 24px 0; font: 400 var(--fs-16)/var(--lh-16) var(--font-text); text-align: center; }
 

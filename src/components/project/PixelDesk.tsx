@@ -1,18 +1,19 @@
 import { useEffect, useRef } from 'react'
+import { reducedMotion } from '@/lib/motion'
 
-export const W = 64
-export const H = 48
+const W = 64
+const H = 48
 const FRAME_MS = 140 // slow, chunky typing
 const BLINK_MS = 280
 
-export const INK = '#0a0a0a'
-export const SHIRT = '#3a3a3a'
-export const SKIN = '#eeeeee'
-export const LIGHT = '#d3d3d3'
-export const MID = '#979797'
-export const SCREEN = '#f6f6f6'
+const INK = '#0a0a0a'
+const SHIRT = '#3a3a3a'
+const SKIN = '#eeeeee'
+const LIGHT = '#d3d3d3'
+const MID = '#979797'
+const SCREEN = '#f6f6f6'
 
-export function drawDesk(ctx: CanvasRenderingContext2D, tick: number, blink: boolean) {
+function drawDesk(ctx: CanvasRenderingContext2D, tick: number, blink: boolean) {
   const r = (c: string, x: number, y: number, w: number, h: number) => {
     ctx.fillStyle = c
     ctx.fillRect(x, y, w, h)
@@ -108,7 +109,7 @@ export function PixelDesk() {
     }
 
     frame(performance.now())
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (reducedMotion()) return
 
     const id = window.setInterval(() => {
       tick++

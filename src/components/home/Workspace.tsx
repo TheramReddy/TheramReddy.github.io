@@ -7,8 +7,10 @@ import { projects } from '@/data/projects'
 import { site } from '@/data/site'
 import { LOGOLESS, TOOL_KINDS, type ToolId, apps, logoScale, toolKind, tools } from '@/data/tools'
 import { jobs } from '@/data/work'
+import { fresh } from '@/lib/fresh'
+import { useModal } from '@/lib/use-modal'
 // the deliverables screen, its templates and its copilot, is a chunk of its own, fetched the first time it is opened
-const Studio = lazy(() => import('./Studio').then((m) => ({ default: m.Studio })))
+const Studio = lazy(fresh(() => import('./Studio').then((m) => ({ default: m.Studio }))))
 
 /* ---------- the content: where I have worked, how I work, and what I did, all from the resume and data/ ---------- */
 
@@ -19,9 +21,9 @@ const month = (year: number, m: number) => (year - 2021) * 12 + m - 1
 const today = new Date()
 const NOW = Math.min(month(today.getFullYear(), today.getMonth() + 1) + 1, month(2027, 1))
 const PLACES = [
-  { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', role: jobs[0].role, dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, product: jobs[0].product, highlights: jobs[0].highlights, tools: jobs[0].tools },
-  { key: 'SCO', name: 'Scobin', hue: '#e879c7', role: jobs[1].role, dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), product: jobs[1].product, highlights: jobs[1].highlights, tools: jobs[1].tools },
-  { key: 'WIP', name: 'Wipro', hue: '#4cb782', role: jobs[2].role, dates: 'Apr 2021 to Dec 2022', start: month(2021, 4), end: month(2022, 12), product: jobs[2].product, highlights: jobs[2].highlights, tools: jobs[2].tools },
+  { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, ...jobs[0] },
+  { key: 'SCO', name: 'Scobin', hue: '#e879c7', dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), ...jobs[1] },
+  { key: 'WIP', name: 'Wipro', hue: '#4cb782', dates: 'Apr 2021 to Dec 2022', start: month(2021, 4), end: month(2022, 12), ...jobs[2] },
   { key: 'TEL', name: 'Telemetric', hue: '#f2994a', role: telemetric.role, dates: '2026, co-founder', start: month(2026, 1), end: NOW, product: 'A workspace where your files become a map, and AI agents work on it with you', highlights: ['Designed the product concept, the end-to-end experience and the interface, alongside the two engineers who built the agent engine', 'Turned a folder into a map of connected notes that both you and the AI can move through', 'Designed a panel that shows several small agents each taking one task, and what each one did'], tools: (telemetric.tools ?? []) as ToolId[] },
   { key: 'UMBC', name: 'UMBC', hue: '#febb00', role: 'Graduate Student', dates: '2023', start: month(2023, 1), end: month(2023, 12), product: 'Master of Science, Information Systems', highlights: ['Master of Science in Information Systems', 'Coursework in UX research methods, information architecture and usability', 'Interaction design and human-computer interaction'], tools: [] as ToolId[] },
 ]
@@ -106,12 +108,20 @@ function Close({ label = 'Close', onClick, tip, small, autoFocus }: { label?: st
   return <button type="button" className="lin-icon" aria-label={label} data-tip={tip} data-tip-end={tip ? '' : undefined} autoFocus={autoFocus} onClick={(e) => { e.stopPropagation(); onClick() }}><X size={small ? 13 : 15} /></button>
 }
 
-/** A button that opens a small panel beside itself. Closes on Escape, or when focus leaves; the content is handed a way to close it. */
+/** A button that opens a small panel beside itself. Closes on Escape, on a press outside, or when focus leaves; the content is handed a way to close it. */
 function Pop({ label, face, end, up, children }: { label: string; face: ReactNode; end?: boolean; up?: boolean; children: (close: () => void) => ReactNode }) {
   const [open, setOpen] = useState(false)
+  const box = useRef<HTMLSpanElement>(null)
+  // Safari and Firefox on a Mac don't focus a button when it is clicked, so blur alone can't be relied on to close the menu
+  useEffect(() => {
+    if (!open) return
+    const away = (e: PointerEvent) => { if (!box.current?.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('pointerdown', away)
+    return () => document.removeEventListener('pointerdown', away)
+  }, [open])
   return (
     <span
-      className="pick" onClick={(e: MouseEvent) => e.stopPropagation()}
+      className="pick" ref={box} onClick={(e: MouseEvent) => e.stopPropagation()}
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpen(false) }}
       onKeyDown={(e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); setOpen(false) } }}
     >
@@ -122,9 +132,9 @@ function Pop({ label, face, end, up, children }: { label: string; face: ReactNod
 }
 
 /** A Pop that offers one choice from a list, with a tick on the current one. */
-function Pick({ label, options, at, onPick, end, children }: { label: string; options: ReactNode[]; at: number; onPick: (i: number) => void; end?: boolean; children: ReactNode }) {
+function Pick({ label, options, at, onPick, children }: { label: string; options: ReactNode[]; at: number; onPick: (i: number) => void; children: ReactNode }) {
   return (
-    <Pop label={label} face={children} end={end}>
+    <Pop label={label} face={children}>
       {(close) => options.map((node, i) => (
         <button key={i} type="button" role="menuitemradio" aria-checked={at === i} onClick={() => { onPick(i); close() }}>{node}{at === i && <Check className="pick-tick" size={13} />}</button>
       ))}
@@ -179,19 +189,35 @@ function Command({ actions, close }: { actions: Action[]; close: () => void }) {
   const [q, setQ] = useState('')
   const [at, setAt] = useState(0)
   const hits = useMemo(() => actions.filter((a) => a.label.toLowerCase().includes(q.trim().toLowerCase())).slice(0, 8), [actions, q])
+  const veil = useRef<HTMLDivElement>(null)
+  useModal(veil)
   const run = (a?: Action) => { if (!a) return; close(); a.run() }
   const keys = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); setAt((n) => (n + (e.key === 'ArrowDown' ? 1 : hits.length - 1)) % Math.max(1, hits.length)) }
     if (e.key === 'Enter') { e.preventDefault(); run(hits[Math.min(at, hits.length - 1)]) }
   }
   return (
-    <div className="lin-veil" onClick={close}>
-      <div className="lin-cmd" role="dialog" aria-label="Command menu" onClick={(e) => e.stopPropagation()} onKeyDown={keys}>
+    <div className="lin-veil" ref={veil} onClick={close}>
+      <div className="lin-cmd" role="dialog" aria-modal="true" aria-label="Command menu" onClick={(e) => e.stopPropagation()} onKeyDown={keys}>
         <input autoFocus value={q} onChange={(e) => { setQ(e.target.value); setAt(0) }} placeholder="Search cards, or run a command" aria-label="Search cards, or run a command" />
         <ul>
           {hits.map((a, i) => <li key={a.label}><button type="button" data-on={i === Math.min(at, hits.length - 1) || undefined} onMouseEnter={() => setAt(i)} onClick={() => run(a)}>{a.icon}<span>{a.label}</span>{a.hint && <kbd>{a.hint}</kbd>}</button></li>)}
           {!hits.length && <li className="is-none">No matches</li>}
         </ul>
+      </div>
+    </div>
+  )
+}
+
+/** The list of keyboard shortcuts, opened with ? */
+function Shortcuts({ close }: { close: () => void }) {
+  const veil = useRef<HTMLDivElement>(null)
+  useModal(veil)
+  return (
+    <div className="lin-veil" ref={veil} onClick={close}>
+      <div className="lin-new lin-help" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" onClick={(e) => e.stopPropagation()}>
+        <header>Keyboard shortcuts<Close autoFocus onClick={close} /></header>
+        <dl>{SHORTCUTS.map(([combo, what]) => <div key={what}><dt>{what}</dt><dd>{combo.map((k) => <kbd key={k}>{k}</kbd>)}</dd></div>)}</dl>
       </div>
     </div>
   )
@@ -203,10 +229,12 @@ type Draft = { title: string; place: number; stage: number }
 
 function NewCard({ start, create, close }: { start: Partial<Draft>; create: (d: Draft) => void; close: () => void }) {
   const [d, setD] = useState<Draft>({ title: '', place: 0, stage: 0, ...start })
+  const veil = useRef<HTMLDivElement>(null)
+  useModal(veil)
   const num = (key: 'place' | 'stage') => ({ value: d[key], onChange: (e: { target: { value: string } }) => setD({ ...d, [key]: Number(e.target.value) }) })
   return (
-    <div className="lin-veil" onClick={close}>
-      <form className="lin-new" role="dialog" aria-label="New card" onClick={(e) => e.stopPropagation()} onSubmit={(e) => { e.preventDefault(); if (d.title.trim()) create({ ...d, title: d.title.trim() }) }}>
+    <div className="lin-veil" ref={veil} onClick={close}>
+      <form className="lin-new" role="dialog" aria-modal="true" aria-label="New card" onClick={(e) => e.stopPropagation()} onSubmit={(e) => { e.preventDefault(); if (d.title.trim()) create({ ...d, title: d.title.trim() }) }}>
         <header>Add a card<Close onClick={close} /></header>
         <input autoFocus className="lin-h" value={d.title} onChange={(e) => setD({ ...d, title: e.target.value })} placeholder="What should I do next?" aria-label="Card title" />
         <div className="lin-fields">
@@ -366,7 +394,7 @@ const SCREENS = [
 const SHORTCUTS: [string[], string][] = [[['C'], 'Add a card'], [['Ctrl', 'K'], 'Search and commands'], [['?'], 'This list'], [['Esc'], 'Close whatever is open'], [['Right-click'], 'Card menu'], [['↑', '↓', 'Enter'], 'Move through the command menu']]
 type Toast = { text: string; action?: string; run?: () => void }
 
-/** My work laid out as a small working app: the board is how I work; the tabs are results, timeline and toolkit. `onSignOut` goes back to the door. */
+/** My work laid out as a small working app: the board is how I work; the other screens are results, timeline, toolkit and deliverables. `onSignOut` goes back to the door. */
 export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
   const shell = useRef<HTMLDivElement>(null)
   const [cards, setCards] = useState(SEED)
@@ -399,7 +427,7 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
     if (tell) setToast({ text: `${c.key} moved to ${STAGES[s].name}`, action: 'Undo', run: () => change(c.id, { stage: c.stage }, `moved this back to ${STAGES[c.stage].name}`) })
   }
   const create = (d: Draft) => {
-    const id = Math.max(...cards.map((c) => c.id)) + 1
+    const id = Math.max(-1, ...cards.map((c) => c.id)) + 1
     const n = Math.max(0, ...cards.filter((c) => c.place === d.place).map((c) => Number(c.key.split('-')[1]))) + 1
     const key = `${PLACES[d.place].key}-${n}`
     setCards((old) => [...old, { ...d, id, key, desc: '', labels: [], yours: true, log: [{ who: 1, text: 'added this card' }] }])
@@ -412,7 +440,11 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
     if (openId === c.id) setOpenId(null)
     setToast({ text: `${c.key} removed`, action: 'Undo', run: () => setCards((old) => [...old.slice(0, at), c, ...old.slice(at)]) })
   }
-  const copy = (text: string, what: string) => { navigator.clipboard?.writeText(text).catch(() => {}); setToast({ text: `${what} copied` }) }
+  const copy = (text: string, what: string) => {
+    const say = (ok: boolean) => setToast({ text: ok ? `${what} copied` : `Couldn’t copy: ${text}` })
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => say(true), () => say(false))
+    else say(false)
+  }
   // the card menu opens where the pointer is, kept inside the window
   const openMenu = (e: MouseEvent, id: number) => {
     e.preventDefault()
@@ -435,6 +467,8 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
     { label: 'Keyboard shortcuts', hint: '?', icon: <Keyboard size={14} />, run: () => setHelp(true) },
     ...cards.map((c) => ({ label: `${c.key} ${c.title}`, icon: <StageIcon s={c.stage} />, run: () => setOpenId(c.id) })),
   ]
+  // the shell takes focus, so the shortcuts work before anything inside it has been focused
+  useEffect(() => { shell.current?.focus({ preventScroll: true }) }, [])
   const keys = (e: KeyboardEvent<HTMLDivElement>) => {
     const typing = (e.target as HTMLElement).closest('input, textarea, select')
     const plain = !typing && !cmd && !draft && !help && !e.ctrlKey && !e.metaKey && !e.altKey
@@ -458,7 +492,7 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
   )
 
   return (
-    <div className="toy lin" ref={shell} data-listing={listing || undefined} onKeyDown={keys}>
+    <div className="toy lin" ref={shell} tabIndex={-1} data-listing={listing || undefined} onKeyDown={keys}>
       <aside className="lin-side">
         <div className="lin-top">
           <img className="lin-sign" src="/brand/logo.svg" alt={site.name} width={84} height={22} draggable={false} />
@@ -580,14 +614,7 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
 
       {cmd && <Command actions={actions} close={() => setCmd(false)} />}
       {draft && <NewCard start={draft} create={create} close={() => setDraft(null)} />}
-      {help && (
-        <div className="lin-veil" onClick={() => setHelp(false)}>
-          <div className="lin-new lin-help" role="dialog" aria-label="Keyboard shortcuts" onClick={(e) => e.stopPropagation()}>
-            <header>Keyboard shortcuts<Close autoFocus onClick={() => setHelp(false)} /></header>
-            <dl>{SHORTCUTS.map(([combo, what]) => <div key={what}><dt>{what}</dt><dd>{combo.map((k) => <kbd key={k}>{k}</kbd>)}</dd></div>)}</dl>
-          </div>
-        </div>
-      )}
+      {help && <Shortcuts close={() => setHelp(false)} />}
       {menu && picked && (
         <div className="lin-ctx-veil" onClick={() => setMenu(null)} onContextMenu={(e) => { e.preventDefault(); setMenu(null) }}>
           <div className="pick-menu lin-ctx" role="menu" aria-label={`${picked.key} menu`} style={{ left: menu.x, top: menu.y }} onClick={() => setMenu(null)}>

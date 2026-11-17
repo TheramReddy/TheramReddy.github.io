@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from 'react'
+import { reducedMotion } from '@/lib/motion'
 import type Lenis from 'lenis'
 
 /** Which nav item the section on screen in the Me page belongs to, so the nav can mark it while you scroll. */
-export type MeSection = 'me' | 'about' | 'projects' | 'experience' | 'contact'
+export type MeSection = 'me' | 'about' | 'projects' | 'contact'
 
 let current: MeSection = 'me'
 const listeners = new Set<() => void>()
@@ -35,7 +36,7 @@ export function scrollPageTo(target: HTMLElement | null, { gap = 0, smooth = tru
   const page = document.querySelector<HTMLElement>('.panel.me')
   if (!page) return
   const top = target ? target.getBoundingClientRect().top - page.getBoundingClientRect().top + page.scrollTop - gap : 0
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+  const still = reducedMotion()
   if (smoother) smoother.scrollTo(top, { immediate: !smooth || still, duration })
   else page.scrollTo({ top, behavior: smooth && !still ? 'smooth' : 'auto' })
 }

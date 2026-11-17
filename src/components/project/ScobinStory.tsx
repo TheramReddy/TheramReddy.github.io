@@ -1,4 +1,6 @@
 import { Fragment, useEffect, useRef, type ReactNode } from 'react'
+import { reducedMotion } from '@/lib/motion'
+import { pad2 } from '@/lib/utils'
 import { JourneyMap } from './JourneyMap'
 import { PlayScene } from './PlayScene'
 import { StatTiles } from './StatTiles'
@@ -248,7 +250,6 @@ const principles = [
   'Design for every meaningful interaction state',
   'Document decisions so others can use the system confidently',
 ]
-const num = (n: number) => String(n).padStart(2, '0')
 
 export function ChapterBlock({ c, level = 3 }: { c: Chapter; level?: 3 | 4 }) {
   const H = level === 4 ? 'h4' : 'h3'
@@ -258,7 +259,7 @@ export function ChapterBlock({ c, level = 3 }: { c: Chapter; level?: 3 | 4 }) {
   useEffect(() => {
     const el = ref.current
     if (!el || !('IntersectionObserver' in window)) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (reducedMotion()) return
     const root = el.closest('.sheet')
     el.classList.add('pre')
     const io = new IntersectionObserver(([e]) => {
@@ -300,7 +301,7 @@ export function ScobinStory() {
         <ol aria-label="My approach">
           {principles.map((x, i) => (
             <li key={x}>
-              <span className="rb-num" aria-hidden="true">{num(i + 1)}</span>
+              <span className="rb-num" aria-hidden="true">{pad2(i + 1)}</span>
               <h4>{x}</h4>
             </li>
           ))}
@@ -310,7 +311,7 @@ export function ScobinStory() {
       {chapters.map((c, i) => (
         <Fragment key={c.id}>
           {c.part && c.part !== chapters[i - 1]?.part && (
-            <h3 className="story-part"><span className="story-num">{num(c.part)}</span>{principles[c.part - 1]}</h3>
+            <h3 className="story-part"><span className="story-num">{pad2(c.part)}</span>{principles[c.part - 1]}</h3>
           )}
           <ChapterBlock c={c} level={c.part ? 4 : 3} />
           {c.id === 'sc-flow' && (

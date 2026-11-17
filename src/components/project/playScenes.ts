@@ -4,7 +4,7 @@
  * calls. A scene is a pure function of time, which keeps it easy to loop, pause and test.
  */
 export type Gfx = { rect: (x: number, y: number, w: number, h: number, c: string) => void }
-export type Scene = { draw: (g: Gfx, t: number) => void; loop: number; /** draw once at this time and stay still */ still?: number }
+type Scene = { draw: (g: Gfx, t: number) => void; loop: number; /** draw once at this time and stay still */ still?: number }
 
 export const W = 144
 export const H = 76
@@ -97,7 +97,6 @@ const G = {
   check: ['.....#', '....##', '#..##.', '###...', '.#....'],
   q: ['.###.', '#...#', '...#.', '..#..', '.....', '..#..'],
   bang: ['#', '#', '#', '#', '.', '#'],
-  coin: ['.###.', '#.#.#', '#.###', '#.#.#', '.###.'],
   lens: ['.###.', '#...#', '#...#', '.###.', '....##'],
   person: ['.##.', '.##.', '####', '####'],
   dots: ['#.#.#'],
@@ -156,9 +155,8 @@ function bot(g: Gfx, gx: number, gy: number, o: { z?: number; step?: number; fac
   const swing = moving ? (o.step as number) % 2 : 0
   g.rect(x, y + (o.carry ? 3 : 4 + swing), 1, 2, MID)
   g.rect(x + 6, y + (o.carry ? 3 : 5 - swing), 1, 2, MID)
-  const s = moving ? (o.step as number) % 2 : 0
-  g.rect(x + 2, y + 7 + bob, 1, s ? 1 : 2, MID)
-  g.rect(x + 4, y + 7 + bob, 1, s ? 2 : 1, MID)
+  g.rect(x + 2, y + 7 + bob, 1, swing ? 1 : 2, MID)
+  g.rect(x + 4, y + 7 + bob, 1, swing ? 2 : 1, MID)
 }
 
 /** Walk along a polyline of floor points; u runs 0 to 1 over its whole length. */
@@ -289,7 +287,7 @@ const maze = (g: Gfx, t: number) => {
 // 4. trail: a coin goes through three stages leaving dots, then an auditor rewinds the whole trail in seconds
 
 const TRAIL: Pt[] = [[1.2, 1.2], [4.2, 3.6], [6.6, 6.6]]
-const TRAIL_BACK: Pt[] = [[6.6, 6.6], [4.2, 3.6], [1.2, 1.2]]
+const TRAIL_BACK: Pt[] = [...TRAIL].reverse()
 const trail = (g: Gfx, t: number) => {
   const u = ease(T(t, 0.6, 5.2))
   const c = along(TRAIL, u)

@@ -1,9 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { Bot, BossBot } from './Bot'
-import { AGENTS, FLIGHT, dirBetween, reducedMotion, throwTarget, useCrew, type AgentId, type Beat, type Id } from './crew'
+import { reducedMotion } from '@/lib/motion'
+import { AGENTS, FLIGHT, dirBetween, throwTarget, useCrew, type Beat, type Id } from './crew'
 import './crew.css'
-
-export const NAMES: Record<AgentId, string> = { converter: 'Converter', structurer: 'Structurer', linker: 'Linker', organizer: 'Organizer' }
 
 /** Natural width of the strip; it scales down to fit narrower columns. */
 const NATURAL = 724
@@ -37,7 +36,7 @@ function arc(from: Pt, to: Pt, lift: number, spin: number, miss = false): Keyfra
 const working = (b: Beat) => b.act !== 'sit' && b.act !== 'pass' && b.act !== 'catch'
 
 /** The boss hands documents to four agents, who work, talk and pass them along. */
-export function Mission({ className, away }: { className?: string; away?: AgentId | null }) {
+export function Mission({ className }: { className?: string }) {
   const root = useRef<HTMLDivElement>(null)
   const fit = useRef<HTMLDivElement>(null)
   const body = useRef<HTMLDivElement>(null)
@@ -141,7 +140,6 @@ export function Mission({ className, away }: { className?: string; away?: AgentI
                   data-working={working(b) ? 'true' : undefined}
                   style={{ '--c': `var(--a-${id})` } as CSSProperties}
                   ref={(el) => { cards.current[id] = el }}
-                  data-name={NAMES[id]}
                 >
                   <span className="ap-piles" data-kind={id}>
                     {(['in', 'out'] as const).map((side) => {
@@ -153,7 +151,7 @@ export function Mission({ className, away }: { className?: string; away?: AgentI
                       )
                     })}
                   </span>
-                  <span className="ap-tile-stage" style={away === id ? { visibility: 'hidden' } : undefined}>
+                  <span className="ap-tile-stage">
                     <span className="ap-bubble" key={text} data-say={say ? dirBetween(id, say.to) : undefined}>{text}</span>
                     <Bot act={b.act} dir={b.dir} look={crew.looks[id]} />
                   </span>
