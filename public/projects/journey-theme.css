@@ -1,4 +1,5 @@
-/* The journey maps in the site's dark pixel theme. Loaded after each map's own styles, so it wins. */
+/* The journey maps in the site's pixel theme, dark and light. Loaded after each map's own styles, so it wins.
+   <html data-theme> says which is on: each map sets it as it loads, and the case study carries a change to it. */
 @font-face { font-family: "Geist Pixel"; src: url("/fonts/geist-pixel-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Geist"; src: url("/fonts/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 
@@ -6,15 +7,22 @@
   --bg: #0c0c0b; --canvas: #0c0c0b; --card: #1a1a19; --ink: #f2f2f0; --muted: #b4b4b1;
   --coral: #f2f2f0; --violet: #b4b4b1; --blue: #f2f2f0; --line: #33332f;
   --mute: #8c8c89; --edge: #45453f; --well: #242423;
+  --stripe: #131312; --stripe-alt: #0f0f0e; --drop: rgba(0, 0, 0, .65);
   --px: "Geist Pixel", "Geist", system-ui, sans-serif;
+}
+:root[data-theme="light"] {
+  --bg: #ffffff; --canvas: #ffffff; --card: #f7f7f5; --ink: #0c0c0b; --muted: #4d4d4a;
+  --coral: #0c0c0b; --violet: #4d4d4a; --blue: #0c0c0b; --line: #deded9;
+  --mute: #6e6e6a; --edge: #c8c8c3; --well: #eaeae7;
+  --stripe: #f9f9f7; --stripe-alt: #ffffff; --drop: rgba(12, 12, 11, .16);
 }
 html, body { background: var(--bg); color: var(--ink); font: 15px/1.5 "Geist", ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
 ::selection { background: var(--ink); color: var(--bg); }
 
 /* the map: swim-lane stripes, labels, connectors */
 .canvas { background: var(--bg); }
-.stripe, .stripe.alt { background: #131312; border-radius: 0; box-shadow: none; }
-.stripe.alt { background: #0f0f0e; }
+.stripe, .stripe.alt { background: var(--stripe); border-radius: 0; box-shadow: none; }
+.stripe.alt { background: var(--stripe-alt); }
 .phase, .lane { font: 400 14px/1 var(--px); letter-spacing: 0; text-transform: lowercase; color: var(--mute); }
 .edge { stroke: var(--edge); }
 .edge.hot { stroke: var(--ink); }
@@ -30,7 +38,7 @@ html, body { background: var(--bg); color: var(--ink); font: 15px/1.5 "Geist", u
 .card .bars i { background: var(--ink); border-radius: 0; }
 
 /* the popover */
-.panel { background: var(--card); -webkit-backdrop-filter: none; backdrop-filter: none; border-radius: 0; box-shadow: 0 0 0 1px var(--edge), 0 24px 60px rgba(0, 0, 0, .65); }
+.panel { background: var(--card); -webkit-backdrop-filter: none; backdrop-filter: none; border-radius: 0; box-shadow: 0 0 0 1px var(--edge), 0 24px 60px var(--drop); }
 .panel .anchor { background: var(--card); box-shadow: -1px 1px 0 var(--edge); }
 .panel .path { color: var(--mute); }
 .panel h3 { font: 400 22px/1.15 var(--px); letter-spacing: -.01em; }

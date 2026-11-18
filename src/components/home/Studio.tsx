@@ -66,7 +66,7 @@ function JourneyMap() {
 /* ---------- the persona ---------- */
 
 const PERSONA = {
-  name: 'Priya N.', who: '34 · Working parent · Books for the whole family',
+  name: 'Priya N.', who: '34, working parent, books for the whole family',
   quote: 'I do this on my phone between meetings. If it needs a desktop, it waits a week.',
   goals: ['Book the soonest slot that insurance covers', 'Know what to bring before the day', 'See everyone in the family in one place'],
   pains: ['Coverage only shows up at the end', 'Reminders say when, never what', 'Forms arrive on paper at the desk'],
@@ -190,22 +190,22 @@ const TRACK: { name: string; state: 'done' | 'now' | 'next' }[] = [
 ]
 const COPILOT: Record<Tpl, { links: string[]; notes: string[]; asks: [string, string][] }> = {
   journey: {
-    links: ['Persona · Priya N.', 'Workflow · Choose a time', 'Heatmap · time picker'],
+    links: ['Persona: Priya N.', 'Workflow: Choose a time', 'Heatmap: time picker'],
     notes: ['Prepare is the lowest point of the curve. The reminder says when, never what.', 'Follow-up has no touchpoint in the workflow yet.'],
     asks: [['What should the next round cover?', 'The Prepare stage. Test a reminder that carries a checklist, with five people who booked in the last month.'], ['Which stage changed since last week?', 'Book went up half a point after the slots were sorted by soonest. Everything else is the same.']],
   },
   persona: {
-    links: ['Journey map · all stages', 'Heatmap · mobile sessions', 'Interviews 3, 5, 8, 11'],
+    links: ['Journey map: all stages', 'Heatmap: mobile sessions', 'Interviews 3, 5, 8, 11'],
     notes: ['Priya is phone first, and 71% of sessions in the heatmap are on a phone. The two agree.', 'A second persona is missing: someone booking once, for themselves.'],
     asks: [['Who is not covered yet?', 'People booking once for themselves, about 40% of bookings. Interviews 2 and 9 are the closest; a persona needs three more.'], ['What does she need first?', 'Coverage on the first screen. It is her top goal and the first pain point on the journey map.']],
   },
   workflow: {
-    links: ['Heatmap · Book button', 'Journey map · Book', 'Persona · goals'],
+    links: ['Heatmap: Book button', 'Journey map: Book', 'Persona: goals'],
     notes: ['Add insurance is the only step without a way back. 41% leave there.', 'The path ends at the reminder, but the journey map has two stages after it.'],
     asks: [['Where does the flow lose people?', 'At Add insurance. The heatmap shows 58% reach the button and far fewer finish; the branch is the gap.'], ['What would shorten it?', 'Ask about insurance on the first screen, before the service. Then the branch happens while people still have momentum.']],
   },
   heatmap: {
-    links: ['Workflow · Add insurance', 'Journey map · Prepare', 'Persona · phone first'],
+    links: ['Workflow: Add insurance', 'Journey map: Prepare', 'Persona: phone first'],
     notes: ['Attention drops right below the button. The what-to-bring section is under the fold on most phones.', 'The middle time chip gets the most taps, which suggests people want the soonest slot.'],
     asks: [['What is below the fold?', 'What to bring, and the two cards after it. Only 31% reach it, and it is the content the journey map says people miss most.'], ['Is this enough data?', '1,284 sessions over two weeks is enough for the pattern. Segment it by device before deciding anything about the layout.']],
   },

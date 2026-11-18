@@ -3,30 +3,18 @@ import { ArrowDown, ArrowUp, CalendarRange, ChartColumn, Check, ChevronRight, Ch
 import { Law } from '@/components/Law'
 import { WORK } from '@/data/cards'
 import type { LawId } from '@/data/laws'
-import { projects } from '@/data/projects'
 import { site } from '@/data/site'
-import { LOGOLESS, TOOL_KINDS, type ToolId, apps, logoScale, toolKind, tools } from '@/data/tools'
-import { jobs } from '@/data/work'
+import { TOOL_IDS, type ToolId, apps, tools } from '@/data/tools'
 import { fresh } from '@/lib/fresh'
 import { useModal } from '@/lib/use-modal'
+import { Close, NOW, PLACES, PlaceLogo, SPAN, ToolLogo, YEARS } from './parts'
 // the deliverables screen, its templates and its copilot, is a chunk of its own, fetched the first time it is opened
+// so is the toolkit: its code and its seventy logos wait until that screen is opened
+const Toolkit = lazy(fresh(() => import('./Toolkit').then((m) => ({ default: m.Toolkit }))))
 const Studio = lazy(fresh(() => import('./Studio').then((m) => ({ default: m.Studio }))))
 
 /* ---------- the content: where I have worked, how I work, and what I did, all from the resume and data/ ---------- */
 
-const telemetric = projects.find((p) => p.slug === 'telemetric')!
-// months are counted from January 2021; `end` is the month after the last one. The present is read from the clock, held within
-// the years the timeline draws
-const month = (year: number, m: number) => (year - 2021) * 12 + m - 1
-const today = new Date()
-const NOW = Math.min(month(today.getFullYear(), today.getMonth() + 1) + 1, month(2027, 1))
-const PLACES = [
-  { key: 'GA', name: 'Georgia DHS', hue: '#4ea7fc', dates: 'Feb 2025 to now', start: month(2025, 2), end: NOW, ...jobs[0] },
-  { key: 'SCO', name: 'Scobin', hue: '#e879c7', dates: 'Jan 2024 to Feb 2025', start: month(2024, 1), end: month(2025, 2), ...jobs[1] },
-  { key: 'WIP', name: 'Wipro', hue: '#4cb782', dates: 'Apr 2021 to Dec 2022', start: month(2021, 4), end: month(2022, 12), ...jobs[2] },
-  { key: 'TEL', name: 'Telemetric', hue: '#f2994a', role: telemetric.role, dates: '2026, co-founder', start: month(2026, 1), end: NOW, product: 'A workspace where your files become a map, and AI agents work on it with you', highlights: ['Designed the product concept, the end-to-end experience and the interface, alongside the two engineers who built the agent engine', 'Turned a folder into a map of connected notes that both you and the AI can move through', 'Designed a panel that shows several small agents each taking one task, and what each one did'], tools: (telemetric.tools ?? []) as ToolId[] },
-  { key: 'UMBC', name: 'UMBC', hue: '#febb00', role: 'Graduate Student', dates: '2023', start: month(2023, 1), end: month(2023, 12), product: 'Master of Science, Information Systems', highlights: ['Master of Science in Information Systems', 'Coursework in UX research methods, information architecture and usability', 'Interaction design and human-computer interaction'], tools: [] as ToolId[] },
-]
 // the five stages my work moves through; the board has one column for each
 const STAGES = [
   { name: 'Research', hue: '#4ea7fc', Icon: Microscope, what: 'Watch the real work' },
@@ -55,58 +43,16 @@ const RESULTS = [
   { place: 2, what: 'Engagement', v: 15 },
   { place: 2, what: 'Conversion', v: 10 },
 ]
-// each area borrows the icon and colour of the matching stage on the board
-const EXPERTISE = [
-  { name: 'Research', hue: '#4ea7fc', Icon: Microscope, list: ['Contextual inquiry', 'Ride-alongs', 'Stakeholder interviews', 'Usability testing', 'Personas', 'Journey maps', 'GA4', 'Hotjar'] },
-  { name: 'Product', hue: '#f2c94c', Icon: Workflow, list: ['Information architecture', 'User flows', 'Task analysis', 'Workflow and form design', 'State logic', 'Design strategy'] },
-  { name: 'Design', hue: '#e879c7', Icon: PenTool, list: ['Interaction design', 'Prototyping', 'Design systems', 'Design tokens', 'Microcopy', 'WCAG 2.1 AA', 'Section 508', 'Design QA'] },
-  { name: 'Build', hue: '#4cb782', Icon: Code, list: ['Figma', 'Dev Mode', 'Miro', 'Jira', 'Angular', 'Bootstrap', 'HTML', 'CSS', 'JavaScript', 'ARIA', 'REST APIs', 'axe', 'WAVE', 'Lighthouse'] },
-]
-
 /* ---------- small pieces ---------- */
 
 const StageIcon = ({ s }: { s: number }) => { const { Icon, hue } = STAGES[s]; return <Icon className="ico" size={15} strokeWidth={1.9} color={hue} aria-hidden="true" /> }
 const Tag = ({ name }: { name: string }) => <span className="tag"><i style={{ background: LABELS[name] }} />{name}</span>
-
-// the emblem of each workplace, without its wordmark: the seal cut from the Georgia DHS logo, the hexagon of the Scobin one (the same
-// drawing with a tighter view box), and the Wipro logo whole, since its name sits inside its ring of dots
-const MARKS: Record<string, string> = {
-  GA: '/logos/georgia-dhs-mark.png',
-  SCO: '/logos/scobin-mark.svg',
-  WIP: '/logos/wipro.webp',
-  UMBC: '/logos/umbc-mark.svg',
-}
-
-// the Georgia DHS and Scobin emblems are dark single-colour marks, so they sit straight on the dark page with their colours inverted
-const BARE = ['GA', 'SCO', 'UMBC']
-
-// Wipro keeps its real colours on a small light tile, the ground the logo was drawn for; Telemetric has none yet, so it gets a small map of three joined notes
-function PlaceLogo({ p }: { p: number }) {
-  const { hue, key } = PLACES[p]
-  if (MARKS[key]) return <img className={BARE.includes(key) ? 'plogo is-bare' : 'plogo'} src={MARKS[key]} alt="" width={18} height={18} draggable={false} />
-  return (
-    <svg className="ico" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke={hue} strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-      <path d="M4.2 10.4l3-5.4M9.4 5.2l2.6 4.2M5.4 12h5.2" /><circle cx="8.3" cy="3.6" r="1.7" /><circle cx="3.4" cy="12" r="1.7" /><circle cx="12.6" cy="11" r="1.7" />
-    </svg>
-  )
-}
-
-// a tool shows its real logo straight on the page, with no tile behind it; one with no logo file shows its first letter
-function ToolLogo({ id }: { id: ToolId }) {
-  if (LOGOLESS.includes(id)) return <span className="plogo is-tool is-mono" aria-hidden="true">{tools[id][0].toUpperCase()}</span>
-  return <img className="plogo is-tool" src={`/tools/color/${id}.svg`} alt="" width={18} height={18} draggable={false} style={{ scale: logoScale[id] }} />
-}
 
 function Avatar({ who }: { who: number }) {
   return who ? <span className="av" aria-hidden="true"><User size={11} strokeWidth={2.2} /></span> : <img className="av" src="/me/portrait.webp" alt="" width={18} height={18} draggable={false} />
 }
 
 const STAGE_OPTS = STAGES.map((s, i) => <><StageIcon s={i} />{s.name}</>)
-
-/** The cross that closes whatever is open: the card, a dialog or a toast. One button, so it looks and works the same everywhere. */
-function Close({ label = 'Close', onClick, tip, small, autoFocus }: { label?: string; onClick: () => void; tip?: string; small?: boolean; autoFocus?: boolean }) {
-  return <button type="button" className="lin-icon" aria-label={label} data-tip={tip} data-tip-end={tip ? '' : undefined} autoFocus={autoFocus} onClick={(e) => { e.stopPropagation(); onClick() }}><X size={small ? 13 : 15} /></button>
-}
 
 /** A button that opens a small panel beside itself. Closes on Escape, on a press outside, or when focus leaves; the content is handed a way to close it. */
 function Pop({ label, face, end, up, children }: { label: string; face: ReactNode; end?: boolean; up?: boolean; children: (close: () => void) => ReactNode }) {
@@ -261,22 +207,40 @@ function Results({ cards }: { cards: Card[] }) {
     ['Portals shipped', '3', '', 'Residents, caseworkers and vendors'],
     ['Accessibility', 'AA', '', 'WCAG 2.1, checked in the build'],
   ]
+  // the places that have a measured result, in the order the numbers are listed
+  const shops = [...new Set(RESULTS.map((r) => r.place))]
   return (
     <div className="lin-screen in">
       <dl className="in-tiles">{tiles.map(([label, value, unit, note]) => <div key={label}><dt>{label}</dt><dd>{value}{unit && <small>{unit}</small>}</dd><p>{note}</p></div>)}</dl>
+      {/* one column for each place: its name and dates, then each number with the share it changed by drawn under it */}
+      <section className="in-card is-full">
+        <header><h4>Measured results</h4><p>Percent change, from my resume</p></header>
+        <div className="re-cols">
+          {shops.map((p) => (
+            <div key={PLACES[p].key} className="re-col">
+              <h5><PlaceLogo p={p} />{PLACES[p].name}<small>{PLACES[p].dates}</small></h5>
+              <ul>
+                {RESULTS.filter((r) => r.place === p).map((r) => {
+                  const Way = r.v < 0 ? ArrowDown : ArrowUp
+                  return (
+                    <li key={r.what}>
+                      <span>{r.what}</span>
+                      <b><Way size={15} strokeWidth={2.4} aria-hidden="true" />{Math.abs(r.v)}%<small>{r.v < 0 ? 'lower' : 'higher'}</small></b>
+                      <span className="in-bar"><i style={{ width: `${Math.abs(r.v)}%` }} /></span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
       <section className="in-card is-wide">
-        <header><h4>Measured results</h4><p className="in-keys"><span>Percent change, from my resume</span></p></header>
-        <ul className="re-list">
-          {RESULTS.map((r, i) => {
-            const Way = r.v < 0 ? ArrowDown : ArrowUp
-            return (
-              <li key={r.place + r.what}>
-                <span className="re-place">{(!i || RESULTS[i - 1].place !== r.place) && <><PlaceLogo p={r.place} />{PLACES[r.place].name}</>}</span>
-                <span>{r.what}</span>
-                <span className="in-bar"><i style={{ width: `${(Math.abs(r.v) / 40) * 100}%` }} /></span>
-                <b><Way size={13} strokeWidth={2.4} aria-hidden="true" />{Math.abs(r.v)}% {r.v < 0 ? 'lower' : 'higher'}</b>
-              </li>
-            )
+        <h4>Years in each role</h4>
+        <ul className="in-load">
+          {months.map((n, p) => {
+            const live = PLACES[p].end === NOW
+            return <li key={PLACES[p].key} data-live={live || undefined}><PlaceLogo p={p} /><span>{PLACES[p].name}<small>{PLACES[p].role}</small></span><span className="in-bar"><i style={{ width: `${(n / Math.max(...months)) * 100}%` }} /></span><b>{live && <em><i />now</em>}{(n / 12).toFixed(1)} yr</b></li>
           })}
         </ul>
       </section>
@@ -289,23 +253,11 @@ function Results({ cards }: { cards: Card[] }) {
           {STAGES.map((st, s) => <li key={st.name} data-dim={(hot != null && hot !== s) || undefined} onMouseEnter={() => setHot(s)} onMouseLeave={() => setHot(null)}><StageIcon s={s} />{st.name}<b>{by[s]}</b><span>{Math.round((by[s] / Math.max(1, cards.length)) * 100)}%</span></li>)}
         </ul>
       </section>
-      <section className="in-card is-full">
-        <h4>Years in each role</h4>
-        <ul className="in-load">
-          {months.map((n, p) => {
-            const live = PLACES[p].end === NOW
-            return <li key={PLACES[p].key} data-live={live || undefined}><PlaceLogo p={p} /><span>{PLACES[p].name}</span><span className="in-bar"><i style={{ width: `${(n / Math.max(...months)) * 100}%` }} /></span><b>{(n / 12).toFixed(1)} yr{live && <em><i />now</em>}</b></li>
-          })}
-        </ul>
-      </section>
     </div>
   )
 }
 
 /* ---------- timeline: each role as a bar across the years ---------- */
-
-const YEARS = [2021, 2022, 2023, 2024, 2025, 2026]
-const SPAN = YEARS.length * 12
 
 function Timeline({ open }: { open: (p: number) => void }) {
   const order = [2, 4, 1, 0, 3] // oldest first
@@ -332,54 +284,6 @@ function Timeline({ open }: { open: (p: number) => void }) {
   )
 }
 
-/* ---------- toolkit: what I used in each role, and what I am good at ---------- */
-
-function PlaceHead({ p, open }: { p: number; open: (p: number) => void }) {
-  const place = PLACES[p]
-  return <button type="button" className="tk-head" aria-label={`${place.name}. Show that work`} onClick={() => open(p)}><PlaceLogo p={p} /><span>{place.name}<small>{place.role} · {place.dates}</small></span><ChevronRight size={14} aria-hidden="true" /></button>
-}
-
-function Toolkit({ open }: { open: (p: number) => void }) {
-  return (
-    <div className="lin-screen tk">
-      <section className="tk-sec">
-        <header><h4>Experience</h4><span>Each role, what I did, and what with</span></header>
-        <div className="tk-roles">
-          {PLACES.map((place, p) => (
-            <article key={place.key} className="tk-role">
-              <header><PlaceHead p={p} open={open} /><p>{place.product}</p></header>
-              <div>
-                <h5>What I did</h5>
-                <ul className="tk-did">{place.highlights.map((line) => <li key={line}>{line}</li>)}</ul>
-              </div>
-              <div>
-                <h5>Tools</h5>
-                <dl className="tk-kinds">
-                  {TOOL_KINDS.map((kind) => {
-                    const mine = place.tools.filter((id) => toolKind[id] === kind)
-                    return mine.length > 0 && <div key={kind}><dt>{kind}</dt><dd><ul className="tk-tools">{mine.map((id) => <li key={id}><ToolLogo id={id} />{tools[id]}</li>)}</ul></dd></div>
-                  })}
-                </dl>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-      <section className="tk-sec">
-        <header><h4>Skills</h4><span>Methods and tools, by area</span></header>
-        <dl className="tk-rows">
-          {EXPERTISE.map(({ name, hue, Icon, list }) => (
-            <div key={name} className="tk-row">
-              <dt className="tk-name"><Icon size={15} strokeWidth={1.9} color={hue} aria-hidden="true" />{name}<small>{list.length}</small></dt>
-              <dd><ul className="tk-tools is-plain">{list.map((skill) => <li key={skill}>{skill}</li>)}</ul></dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-    </div>
-  )
-}
-
 /* ---------- the workspace ---------- */
 
 // a number is one workplace
@@ -391,7 +295,7 @@ const SCREENS = [
   { id: 'toolkit', name: 'Toolkit', Icon: Wrench },
   { id: 'make', name: 'Deliverables', Icon: LayoutTemplate },
 ] as const
-const SHORTCUTS: [string[], string][] = [[['C'], 'Add a card'], [['Ctrl', 'K'], 'Search and commands'], [['?'], 'This list'], [['Esc'], 'Close whatever is open'], [['Right-click'], 'Card menu'], [['↑', '↓', 'Enter'], 'Move through the command menu']]
+const SHORTCUTS: [string[], string][] = [[['C'], 'Add a card'], [['Ctrl', 'K'], 'Search and commands'], [['/'], 'Find a tool, in the toolkit'], [['?'], 'This list'], [['Esc'], 'Close whatever is open'], [['Right-click'], 'Card menu'], [['↑', '↓', 'Enter'], 'Move through the command menu']]
 type Toast = { text: string; action?: string; run?: () => void }
 
 /** My work laid out as a small working app: the board is how I work; the other screens are results, timeline, toolkit and deliverables. `onSignOut` goes back to the door. */
@@ -408,6 +312,8 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
   const [menu, setMenu] = useState<{ id: number; x: number; y: number } | null>(null)
   const [folded, setFolded] = useState<number[]>([])
   const [appsOpen, setAppsOpen] = useState(false)
+  const [tool, setTool] = useState<ToolId>('figma')
+  const [tkKey, setTkKey] = useState(0)
   const [drag, setDrag] = useState<number | null>(null)
   const [over, setOver] = useState<number | null>(null)
   const [toast, setToast] = useState<Toast | null>(null)
@@ -453,6 +359,8 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
     setMenu({ id, x: Math.max(8, Math.min(e.clientX - b.left, b.width - 216)), y: Math.max(8, Math.min(e.clientY - b.top, b.height - 330)) })
   }
   const go = (v: View) => { setView(v); setOpenId(null) }
+  // from outside the toolkit: it opens fresh, on that tool
+  const openTool = (id: ToolId) => { setTool(id); setTkKey((k) => k + 1); go('toolkit') }
 
   const listing = view === 'work' || typeof view === 'number'
   const shown = cards.filter((c) => (typeof view === 'number' ? c.place === view : true) && (!only.length || c.labels.some((l) => only.includes(l))))
@@ -465,6 +373,7 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
     { label: board ? 'Show as a list' : 'Show as a board', icon: board ? <Rows3 size={14} /> : <Columns3 size={14} />, run: () => setBoard(!board) },
     { label: 'Add a card', hint: 'C', icon: <SquarePen size={14} />, run: () => setDraft(here) },
     { label: 'Keyboard shortcuts', hint: '?', icon: <Keyboard size={14} />, run: () => setHelp(true) },
+    ...TOOL_IDS.map((id) => ({ label: `Open ${tools[id]} in the toolkit`, icon: <ToolLogo id={id} />, run: () => openTool(id) })),
     ...cards.map((c) => ({ label: `${c.key} ${c.title}`, icon: <StageIcon s={c.stage} />, run: () => setOpenId(c.id) })),
   ]
   // the shell takes focus, so the shortcuts work before anything inside it has been focused
@@ -514,14 +423,14 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
         <button type="button" className="lin-label lin-fold" aria-expanded={appsOpen} aria-controls="lin-apps" onClick={() => setAppsOpen(!appsOpen)}><ChevronRight size={12} />Applications<span>{apps.length}</span></button>
         {appsOpen && (
           <ul className="lin-apps" id="lin-apps" aria-label="Applications">
-            {apps.map((id) => <li key={id}><ToolLogo id={id} />{tools[id]}</li>)}
+            {apps.map((id) => <li key={id}><button type="button" aria-current={view === 'toolkit' && tool === id ? 'true' : undefined} onClick={() => openTool(id)}><ToolLogo id={id} />{tools[id]}</button></li>)}
           </ul>
         )}
         <div className="lin-me">
           <Pop up label="Contact and help" face={<><Avatar who={0} /><span>{site.name}</span><ChevronsUpDown size={13} /></>}>
             {(close) => (
               <>
-                <p>{site.role} · {site.location}</p>
+                <p>{site.role}<br />{site.location}</p>
                 <button type="button" role="menuitem" onClick={() => { close(); setHelp(true) }}><Keyboard size={14} />Keyboard shortcuts<kbd>?</kbd></button>
                 {onSignOut && <button type="button" role="menuitem" className="lin-out" onClick={() => { close(); onSignOut() }}><LogOut size={14} />Sign out</button>}
               </>
@@ -532,7 +441,7 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
 
       <section className="lin-main">
         <header className="lin-bar">
-          {typeof view === 'number' ? <h3><PlaceLogo p={view} />{PLACES[view].name}<small>{PLACES[view].role} · {PLACES[view].dates}</small></h3>
+          {typeof view === 'number' ? <h3><PlaceLogo p={view} />{PLACES[view].name}<small>{PLACES[view].role}, {PLACES[view].dates}</small></h3>
             : <h3>{SCREENS.find((sc) => sc.id === view)!.name}</h3>}
           {listing && (
             <>
@@ -557,7 +466,7 @@ export default function Workspace({ onSignOut }: { onSignOut?: () => void }) {
           )}
         </header>
 
-        {view === 'results' ? <Results cards={cards} /> : view === 'timeline' ? <Timeline open={go} /> : view === 'toolkit' ? <Toolkit open={go} /> : view === 'make' ? <Suspense fallback={<div className="lin-screen" />}><Studio /></Suspense> : board ? (
+        {view === 'results' ? <Results cards={cards} /> : view === 'timeline' ? <Timeline open={go} /> : view === 'toolkit' ? <Suspense fallback={<div className="lin-screen" />}><Toolkit key={tkKey} at={tool} pick={setTool} open={go} /></Suspense> : view === 'make' ? <Suspense fallback={<div className="lin-screen" />}><Studio /></Suspense> : board ? (
           <div className="lin-board">
             {STAGES.map((stage, s) => {
               const mine = shown.filter((c) => c.stage === s)

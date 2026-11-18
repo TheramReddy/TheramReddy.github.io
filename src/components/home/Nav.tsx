@@ -1,4 +1,6 @@
+import type { MouseEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { setTheme, useTheme } from '@/lib/theme'
 import { site } from '@/data/site'
 import { scrollToSection, useMeSection, type MeSection } from '@/lib/me-section'
 
@@ -7,6 +9,10 @@ const LINKS: { id: MeSection; label: string; icon: string[] }[] = [
   { id: 'about', label: 'Playground', icon: ['.#######.', '#########', '##.###.##', '#########', '###...###', '##.....##'] },
   { id: 'projects', label: 'Work', icon: ['...###...', '...#.#...', '#########', '####.####', '#########', '#########'] },
 ]
+
+// the theme key shows the theme it turns to: a moon while the page is light, a sun while it is dark
+const MOON = ['...####..', '..###....', '.###.....', '.###.....', '.###.....', '.####...#', '..#######', '...#####.']
+const SUN = ['....#....', '.#.....#.', '...###...', '..#####..', '#.#####.#', '..#####..', '...###...', '.#.....#.', '....#....']
 
 /** A bitmap drawn as two-pixel squares with hard edges, in the colour of the text beside it. */
 function PixelIcon({ rows }: { rows: string[] }) {
@@ -18,12 +24,20 @@ function PixelIcon({ rows }: { rows: string[] }) {
   )
 }
 
-/** Fixed top bar: the wordmark on the left, the section links in a pixel menu in the middle. Over a case study it stays, with a way back on the right. */
+/** Fixed top bar: the wordmark on the left, the section links and the theme key in a pixel menu in the middle. Over a case study it stays, with a way back on the right. */
 export function Nav() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const section = useMeSection()
   const inCase = pathname.startsWith('/project/')
+  const theme = useTheme()
+  const other = theme === 'light' ? 'dark' : 'light'
+
+  // the new theme opens out of the middle of the key
+  const turn = (e: MouseEvent<HTMLButtonElement>) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    setTheme(other, { x: r.left + r.width / 2, y: r.top + r.height / 2 })
+  }
 
   // from a case study, go home first and then to the section once the page is uncovered
   const go = (id: MeSection) => {
@@ -43,6 +57,9 @@ export function Nav() {
             <PixelIcon rows={l.icon} />{l.label}
           </button>
         ))}
+        <button type="button" className="bar-link bar-theme" aria-label={`Switch to ${other} theme`} title={`Switch to ${other} theme`} onClick={turn}>
+          <PixelIcon key={other} rows={other === 'dark' ? MOON : SUN} />
+        </button>
       </nav>
       {inCase && <button type="button" className="key" onClick={() => go('projects')}>back to work</button>}
     </div>

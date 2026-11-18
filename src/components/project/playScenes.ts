@@ -13,17 +13,38 @@ const HH = 4
 const OX = 72
 const OY = 8
 
-const INK = '#0c0c0b'
-const LIT = '#f2f2f0'
-const SOFT = '#b4b4b1'
-const MID = '#8c8c89'
-const DIM = '#626260'
-const WHITE = '#ffffff'
-
 type Tone = { top: string; l: string; r: string; e: string }
+/** Every colour a scene is painted in. The light set is the dark one turned over: what was brightest is darkest. */
+type Palette = { ink: string; lit: string; soft: string; mid: string; dim: string; white: string; lo: Tone; tiles: [string, string]; rule: string; shade: string; shadeSoft: string; plate: string }
+const DARK: Palette = {
+  ink: '#0c0c0b', lit: '#f2f2f0', soft: '#b4b4b1', mid: '#8c8c89', dim: '#626260', white: '#ffffff',
+  lo: { top: '#4a4a47', l: '#363634', r: '#2a2a28', e: '#5c5c58' },
+  tiles: ['#212120', '#272725'], rule: '#33332f', shade: 'rgba(0,0,0,.5)', shadeSoft: 'rgba(0,0,0,.35)', plate: '#1a1a19',
+}
+const LIGHT: Palette = {
+  ink: '#ffffff', lit: '#0c0c0b', soft: '#4d4d4a', mid: '#6e6e6a', dim: '#9a9a96', white: '#000000',
+  lo: { top: '#c4c4bf', l: '#d2d2ce', r: '#dcdcd8', e: '#b2b2ad' },
+  tiles: ['#eeeeeb', '#e8e8e5'], rule: '#d0d0cb', shade: 'rgba(0,0,0,.16)', shadeSoft: 'rgba(0,0,0,.1)', plate: '#f7f7f5',
+}
+
+let INK = DARK.ink, LIT = DARK.lit, SOFT = DARK.soft, MID = DARK.mid, DIM = DARK.dim, WHITE = DARK.white
+let TILES = DARK.tiles, RULE = DARK.rule, SHADE = DARK.shade, SHADE_SOFT = DARK.shadeSoft
+/** the card colour behind a scene, so a fade lands on the plate */
+export let PLATE = DARK.plate
+// the three tones are objects the scenes hold on to, so a change of palette is written into them
 const HI: Tone = { top: LIT, l: SOFT, r: MID, e: WHITE }
 const MD: Tone = { top: SOFT, l: MID, r: DIM, e: LIT }
-const LO: Tone = { top: '#4a4a47', l: '#363634', r: '#2a2a28', e: '#5c5c58' }
+const LO: Tone = { ...DARK.lo }
+
+/** Paint in the palette of this theme from now on. A scene on screen has to be drawn again to show it. */
+export function setPalette(light: boolean) {
+  const p = light ? LIGHT : DARK
+  INK = p.ink; LIT = p.lit; SOFT = p.soft; MID = p.mid; DIM = p.dim; WHITE = p.white
+  TILES = p.tiles; RULE = p.rule; SHADE = p.shade; SHADE_SOFT = p.shadeSoft; PLATE = p.plate
+  Object.assign(HI, { top: LIT, l: SOFT, r: MID, e: WHITE })
+  Object.assign(MD, { top: SOFT, l: MID, r: DIM, e: LIT })
+  Object.assign(LO, p.lo)
+}
 
 type Pt = [number, number]
 const P = (gx: number, gy: number, z = 0): Pt => [Math.round(OX + (gx - gy) * HW), Math.round(OY + (gx + gy) * HH - z)]
@@ -143,7 +164,7 @@ function bot(g: Gfx, gx: number, gy: number, o: { z?: number; step?: number; fac
   const x = sx - 3, y = sy - 9 - bob
   const face = o.face ?? 1
   const blink = (clock * 0.9 + gx) % 3.1 < 0.14
-  g.rect(sx - 3, sy, 7, 1, 'rgba(0,0,0,.5)')
+  g.rect(sx - 3, sy, 7, 1, SHADE)
   g.rect(x + 3, y, 1, 2, MID)
   if (Math.floor(clock * 2 + gx) % 4 === 0) g.rect(x + 3, y - 1, 1, 1, LIT)
   g.rect(x + 1, y + 2, 5, 5, o.tone ?? SOFT)
@@ -177,7 +198,7 @@ function along(pts: Pt[], u: number) {
 function stack(items: [number, () => void][]) { items.sort((a, b) => a[0] - b[0]).forEach(([, f]) => f()) }
 
 export function floor(g: Gfx) {
-  for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) tile(g, i, j, 1, 1, (i + j) % 2 ? '#212120' : '#272725')
+  for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) tile(g, i, j, 1, 1, TILES[(i + j) % 2 ? 0 : 1])
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -196,7 +217,7 @@ const wall = (g: Gfx, t: number) => {
   if (rip > 0 && rip < 1) { ring(g, 0.8, 1, rip * 6.5, 0, rip < 0.6 ? LIT : MID); ring(g, 0.8, 1, rip * 6.5 - 1.2, 0, DIM) }
   const menu = (gx: number, gy: number, d: number) => {
     if (wh < 6) return
-    for (let k = 0; k < 3; k++) faceR(g, gx + 1, gy + 0.5, gy + d - 0.5 - (k % 2) * 1.2, wh - 3 - k * 3, 'rgba(0,0,0,.35)')
+    for (let k = 0; k < 3; k++) faceR(g, gx + 1, gy + 0.5, gy + d - 0.5 - (k % 2) * 1.2, wh - 3 - k * 3, SHADE_SOFT)
   }
   const px = lerp(6, 1.3, fly), py = lerp(6, 3.3, fly), pz = Math.sin(fly * Math.PI) * 7
   stack([
@@ -331,7 +352,7 @@ const story = (g: Gfx, t: number) => {
   const stateOf = (i: number) => (prog > i + 0.02 ? 'done' : prog >= i - 0.001 ? 'now' : 'next')
   for (let i = 0; i < 2; i++) {
     const a = P(STORY[i][0] + 0.6, STORY[i][1] + 0.6, 0), z = P(STORY[i + 1][0] + 0.6, STORY[i + 1][1] + 0.6, 0)
-    line(g, a, z, '#33332f')
+    line(g, a, z, RULE)
     const fill = clamp(prog - i)
     if (fill > 0) line(g, a, [Math.round(lerp(a[0], z[0], fill)), Math.round(lerp(a[1], z[1], fill))], LIT)
     // chevrons pointing on: what comes next is always visible
@@ -467,7 +488,7 @@ const hidden = (g: Gfx, t: number) => {
   if (sweep > 0 && sweep < 16) for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) {
     const d = Math.abs(i + j + 1 - sweep)
     if (d < 0.6) tile(g, i, j, 1, 1, MID)
-    else if (d < 1.4) tile(g, i, j, 1, 1, '#33332f')
+    else if (d < 1.4) tile(g, i, j, 1, 1, RULE)
   }
   const seen = sweep > 6 && t < 6.0
   const cx = lerp(3.3, 5.4, fly), cy = lerp(1.7, 5.0, fly), cz = Math.sin(fly * Math.PI) * 6
@@ -534,7 +555,7 @@ const layers = (g: Gfx, t: number) => {
     for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) box(g, gx + i * step, gy + j * step, 0.6, 0.6, 0.6, tones[(i + j) % tones.length], z)
   }
   // posts that tie the layers together
-  for (const [px, py] of [[1, 1], [6, 1], [6, 6], [1, 6]] as Pt[]) line(g, P(px, py, 1.5), P(px, py, 7), '#33332f')
+  for (const [px, py] of [[1, 1], [6, 1], [6, 6], [1, 6]] as Pt[]) line(g, P(px, py, 1.5), P(px, py, 7), RULE)
   box(g, 1, 1, 5, 5, 1.5, LO)
   cubes(1.6, 1.6, 3, 1.5, 1.5, [MD, HI, LO])
   box(g, 1.8, 1.8, 3.4, 3.4, 1.4, MD, 7)

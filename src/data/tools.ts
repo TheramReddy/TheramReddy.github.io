@@ -30,23 +30,73 @@ export const tools = {
   notion: 'Notion',
   confluence: 'Confluence',
   vscode: 'VS Code',
+  figjam: 'FigJam',
+  protopie: 'ProtoPie',
+  webflow: 'Webflow',
+  axure: 'Axure RP',
+  indesign: 'InDesign',
+  blender: 'Blender',
+  spline: 'Spline',
+  canva: 'Canva',
+  maze: 'Maze',
+  usertesting: 'UserTesting',
+  dovetail: 'Dovetail',
+  optimal: 'Optimal Workshop',
+  amplitude: 'Amplitude',
+  linear: 'Linear',
+  slack: 'Slack',
+  trello: 'Trello',
+  invision: 'InVision',
+  balsamiq: 'Balsamiq',
+  whimsical: 'Whimsical',
+  zeroheight: 'zeroheight',
+  lightroom: 'Lightroom',
+  premiere: 'Premiere Pro',
+  procreate: 'Procreate',
+  lookback: 'Lookback',
+  typeform: 'Typeform',
+  mixpanel: 'Mixpanel',
+  clarity: 'Microsoft Clarity',
+  airtable: 'Airtable',
+  react: 'React',
+  tailwind: 'Tailwind CSS',
+  github: 'GitHub',
+  stark: 'Stark',
+  nvda: 'NVDA',
+  voiceover: 'VoiceOver',
+  browserstack: 'BrowserStack',
+  asana: 'Asana',
+  loom: 'Loom',
+  teams: 'Microsoft Teams',
+  zoom: 'Zoom',
 } as const
 
 export type ToolId = keyof typeof tools
+export const TOOL_IDS = Object.keys(tools) as ToolId[]
 
 /** What each tool is for; the toolkit groups a role's tools under these, in this order. */
 export const TOOL_KINDS = ['Design', 'Research', 'Build', 'Test', 'Team'] as const
 type ToolKind = (typeof TOOL_KINDS)[number]
 export const toolKind: Record<ToolId, ToolKind> = {
   figma: 'Design', sketch: 'Design', xd: 'Design', framer: 'Design', illustrator: 'Design', photoshop: 'Design', aftereffects: 'Design', rive: 'Design', lottie: 'Design', storybook: 'Design',
-  miro: 'Research', ga4: 'Research', hotjar: 'Research',
-  angular: 'Build', bootstrap: 'Build', html: 'Build', css: 'Build', javascript: 'Build', typescript: 'Build', git: 'Build', rust: 'Build', vscode: 'Build', claude: 'Build',
-  axe: 'Test', wave: 'Test', lighthouse: 'Test',
-  jira: 'Team', confluence: 'Team', notion: 'Team', zeplin: 'Team',
+  figjam: 'Design', protopie: 'Design', webflow: 'Design', axure: 'Design', indesign: 'Design', blender: 'Design', spline: 'Design', canva: 'Design',
+  invision: 'Design', balsamiq: 'Design', whimsical: 'Design', zeroheight: 'Design', lightroom: 'Design', premiere: 'Design', procreate: 'Design',
+  miro: 'Research', ga4: 'Research', hotjar: 'Research', maze: 'Research', usertesting: 'Research', dovetail: 'Research', optimal: 'Research', amplitude: 'Research', lookback: 'Research', typeform: 'Research', mixpanel: 'Research', clarity: 'Research', airtable: 'Research',
+  angular: 'Build', bootstrap: 'Build', html: 'Build', css: 'Build', javascript: 'Build', typescript: 'Build', git: 'Build', rust: 'Build', vscode: 'Build', claude: 'Build', react: 'Build', tailwind: 'Build', github: 'Build',
+  axe: 'Test', wave: 'Test', lighthouse: 'Test', stark: 'Test', nvda: 'Test', voiceover: 'Test', browserstack: 'Test',
+  jira: 'Team', confluence: 'Team', notion: 'Team', zeplin: 'Team', linear: 'Team', slack: 'Team', trello: 'Team', asana: 'Team', loom: 'Team', teams: 'Team', zoom: 'Team',
 }
 
-/** Tools with no logo file: they show their first letter on the tile instead. */
-export const LOGOLESS: ToolId[] = ['axe', 'wave']
+/** Every tool has a logo in /public/tools/color/: an SVG, except the ones listed here, which only exist as pictures. */
+export const RASTER: Partial<Record<ToolId, 'png' | 'jpg'>> = {
+  axe: 'png', wave: 'png', axure: 'png', lookback: 'png', nvda: 'png', optimal: 'png', procreate: 'png', protopie: 'png', spline: 'png', stark: 'png', whimsical: 'png', balsamiq: 'jpg',
+}
+
+/** Logos drawn in black: on the dark app they are inverted, so they read as white. */
+export const INKY: ToolId[] = ['rust', 'framer']
+
+/** Logos drawn in white: on the light app they are the ones inverted, so they read as black. */
+export const PALE: ToolId[] = ['clarity', 'github', 'notion', 'rive', 'typeform', 'voiceover']
 
 /**
  * Optical size of each logo. Every logo is fitted into the same square, so a tall or wide mark ends up smaller than a square one,

@@ -1,7 +1,7 @@
 /* ---------- project detail ---------- */
 .detail {
   /* dark sheet: the site tokens are swapped here, so everything inside reads light on near-black */
-  --sheet: var(--d-bg, #0c0c0b); --bg: var(--d-card, #1a1a19); --fg: var(--d-fg, #f2f2f0); --muted: var(--d-soft, #b4b4b1); --line: rgba(242,242,240,.14);
+  --sheet: var(--d-bg, #0c0c0b); --bg: var(--d-card, #1a1a19); --fg: var(--d-fg, #f2f2f0); --muted: var(--d-soft, #b4b4b1); --line: rgb(var(--d-fg-c) / .14);
   --ink: var(--d-fg, #f2f2f0); --paper: var(--d-card, #1a1a19); --seal: var(--d-fg, #f2f2f0);
   --f-px: 'Geist Pixel', 'Geist Variable', system-ui, sans-serif;
   position: fixed; inset: 0; z-index: 35;
@@ -10,7 +10,7 @@
   transition: opacity .6s var(--ease), visibility 0s .8s;
 }
 /* pixel plate: the home page's stepped corners and one-pixel edge (see .key in home.css), for the buttons here */
-.px-plate { --s: 2px; --k-edge: #45453f; --k-fill: #232321; position: relative; isolation: isolate; }
+.px-plate { --s: 2px; --k-edge: var(--d-edge); --k-fill: var(--d-key); position: relative; isolation: isolate; }
 .px-plate::before, .px-plate::after { content: ""; position: absolute; z-index: -1; inset: 0; background: var(--k-edge); clip-path: polygon(0 calc(var(--s) * 2), var(--s) calc(var(--s) * 2), var(--s) var(--s), calc(var(--s) * 2) var(--s), calc(var(--s) * 2) 0, calc(100% - var(--s) * 2) 0, calc(100% - var(--s) * 2) var(--s), calc(100% - var(--s)) var(--s), calc(100% - var(--s)) calc(var(--s) * 2), 100% calc(var(--s) * 2), 100% calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s) * 2), calc(100% - var(--s)) calc(100% - var(--s)), calc(100% - var(--s) * 2) calc(100% - var(--s)), calc(100% - var(--s) * 2) 100%, calc(var(--s) * 2) 100%, calc(var(--s) * 2) calc(100% - var(--s)), var(--s) calc(100% - var(--s)), var(--s) calc(100% - var(--s) * 2), 0 calc(100% - var(--s) * 2)); }
 .px-plate::after { inset: 1px; background: var(--k-fill); }
 .detail.open { opacity: 1; visibility: visible; transition: opacity .6s var(--ease); }
@@ -27,7 +27,7 @@
 #cs-overview, #cs-glance, #cs-problems, #cs-journey, #cs-action { scroll-margin-top: 120px; }
 /* journey maps: the standalone map in a pannable frame */
 .journey-lede { margin: 12px 0 0; max-width: 40rem; font-size: 1.0625rem; line-height: 1.6; color: var(--muted); }
-.journey-frame { margin-top: 28px; height: min(720px, 78vh); overflow: hidden; background: #0c0c0b; outline: 1px solid #45453f; outline-offset: -1px; }
+.journey-frame { margin-top: 28px; height: min(720px, 78vh); overflow: hidden; background: var(--d-bg); outline: 1px solid var(--d-edge); outline-offset: -1px; }
 .journey-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 /* phones: leave room above and below so the page can still be scrolled past the map */
 @media (max-width: 768px) { .journey-frame { height: min(520px, 64vh); } }
@@ -43,9 +43,9 @@
 /* overview: the one-line pitch, then role, client and year as a ruled row */
 .cs-lede { margin-top: 20px; max-width: 34rem; font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.35; letter-spacing: -.015em; color: var(--fg); }
 /* the overview as an ID card, like the badge on the home page: a slot, the role, client and year, the tools on it, a barcode */
-.id-card { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; align-self: stretch; margin-top: 40px; padding: 38px 28px 22px; box-sizing: border-box; }
+.id-card { --s: 4px; --k-edge: var(--d-edge); --k-fill: var(--d-card); align-self: stretch; margin-top: 40px; padding: 38px 28px 22px; box-sizing: border-box; }
 .id-slot { position: absolute; left: 50%; top: 14px; width: 44px; height: 8px; margin-left: -22px; background: var(--sheet); }
-.cs-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; padding-bottom: 20px; border-bottom: 1px dashed #45453f; }
+.cs-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--d-edge); }
 .id-bars { display: block; height: 18px; margin-top: 22px; background: repeating-linear-gradient(90deg, var(--fg) 0 2px, transparent 2px 4px, var(--fg) 4px 5px, transparent 5px 8px, var(--fg) 8px 11px, transparent 11px 13px); opacity: .85; }
 .cs-meta dt { font: 400 .875rem/1.4 var(--f-px); text-transform: lowercase; color: var(--muted); }
 .cs-meta dd { margin-top: 6px; font: 400 1.25rem/1.25 var(--f-px); letter-spacing: -.01em; }
@@ -53,7 +53,7 @@
 .sheet .stack { margin-top: 20px; }
 .stack-title { font: 400 .875rem/1.4 var(--f-px); text-transform: lowercase; color: var(--muted); margin-bottom: 12px; }
 .sheet .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { --k-edge: #8c8c89; --k-fill: #f2f2f0; position: relative; isolation: isolate; height: 36px; padding: 1px 14px 0 11px; display: inline-flex; align-items: center; gap: 8px; color: #0c0c0b; font: 400 1rem/1 var(--f-px); text-transform: lowercase; letter-spacing: 0; transition: transform .2s var(--ease); }
+.chip { --k-edge: var(--d-mute); --k-fill: var(--d-fg); position: relative; isolation: isolate; height: 36px; padding: 1px 14px 0 11px; display: inline-flex; align-items: center; gap: 8px; color: var(--d-bg); font: 400 1rem/1 var(--f-px); text-transform: lowercase; letter-spacing: 0; transition: transform .2s var(--ease); }
 .chip::before, .chip::after { content: ""; position: absolute; z-index: -1; inset: 0; background: var(--k-edge); clip-path: polygon(0 4px, 2px 4px, 2px 2px, 4px 2px, 4px 0, calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px)); }
 .chip::after { inset: 1px; background: var(--k-fill); }
 .chip:active { transform: scale(.97); }
@@ -76,7 +76,7 @@
 /* cards share one grid cell, so the stage is as tall as the tallest card instead of a fixed guess */
 /* the problems as case files: one file open at a time, the picture on the left, the decision on the right */
 .coverflow { position: relative; display: grid; margin-top: 28px; }
-.diagram { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; position: relative; isolation: isolate; grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 36px; align-items: stretch; padding: 28px; box-sizing: border-box; transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s; }
+.diagram { --s: 4px; --k-edge: var(--d-edge); --k-fill: var(--d-card); position: relative; isolation: isolate; grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 36px; align-items: stretch; padding: 28px; box-sizing: border-box; transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s; }
 .diagram[aria-hidden="true"] { opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(calc(var(--o) * 24px)); transition: opacity .3s var(--ease), transform .45s var(--ease), visibility 0s .45s; }
 .diagram .d-art { display: grid; place-items: center; min-height: 0; min-width: 0; align-self: center; }
 .play-scene { display: block; width: 100%; max-width: 576px; height: auto; aspect-ratio: 144 / 76; image-rendering: pixelated; }
@@ -109,12 +109,12 @@
 /* the numbers as pixel cards, with a small agent patrolling their top edges */
 .metric-grid { position: relative; margin-top: 28px; }
 .metrics dl { margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 64px 24px; padding-top: 44px; }
-.metric { --s: 3px; --k-edge: #45453f; --k-fill: #1a1a19; display: flex; flex-direction: column; padding: 26px 26px 30px; }
-.metric[data-on] { --k-edge: #f2f2f0; }
+.metric { --s: 3px; --k-edge: var(--d-edge); --k-fill: var(--d-card); display: flex; flex-direction: column; padding: 26px 26px 30px; }
+.metric[data-on] { --k-edge: var(--d-fg); }
 .metric[data-on] dd { background: var(--fg); color: var(--sheet); }
 .metric-bot { position: absolute; left: 0; top: 0; width: auto; overflow: visible; pointer-events: none; will-change: transform; transition: transform 1.2s cubic-bezier(.45, 0, .25, 1); }
 .metric-bot .bot-bob, .metric-bot .bot-antenna, .metric-bot .bot-pupils { animation: none; }
-.metric dd { order: 0; align-self: flex-start; margin: 0 0 14px; padding: 5px 9px 4px; border: 1px solid #45453f; border-radius: 0; font: 400 0.9375rem/1 var(--f-px); letter-spacing: 0; transition: background .3s, color .3s; }
+.metric dd { order: 0; align-self: flex-start; margin: 0 0 14px; padding: 5px 9px 4px; border: 1px solid var(--d-edge); border-radius: 0; font: 400 0.9375rem/1 var(--f-px); letter-spacing: 0; transition: background .3s, color .3s; }
 .metric dt { order: 1; font: 400 1.375rem/1.25 var(--f-px); text-transform: none; font-size: 1.375rem; font-weight: 400; line-height: 1.3; letter-spacing: -.02em; color: var(--fg); }
 .metric p { order: 2; margin: 8px 0 0; font-size: 1rem; line-height: 1.5; letter-spacing: 0; color: var(--muted); max-width: 46ch; }
 @media (max-width: 560px) { .metrics dl { grid-template-columns: 1fr; } }
@@ -141,9 +141,9 @@
 /* custom page scrollbar, set inside the content column */
 /* dark note stuck to the top of the sheet, in the content column, rounded on its top edges only */
 .sheet-bar-rail { position: sticky; top: 0; height: 0; z-index: 4; }
-.sheet-bar { position: absolute; left: min(calc(50% + 650px), calc(100% - 24px)); top: max(120px, calc(50vh - 280px)); height: 56vh; width: 4px; border-radius: 0; background: rgba(243,241,234,.05); cursor: pointer; touch-action: none; }
-.sheet-bar-thumb { position: absolute; left: 0; width: 100%; border-radius: 0; background: rgba(243,241,234,.25); transition: background .3s; }
-.sheet-bar:hover .sheet-bar-thumb, .sheet-bar.drag .sheet-bar-thumb { background: rgba(243,241,234,.5); }
+.sheet-bar { position: absolute; left: min(calc(50% + 650px), calc(100% - 24px)); top: max(120px, calc(50vh - 280px)); height: 56vh; width: 4px; border-radius: 0; background: rgb(var(--d-fg-c) / .05); cursor: pointer; touch-action: none; }
+.sheet-bar-thumb { position: absolute; left: 0; width: 100%; border-radius: 0; background: rgb(var(--d-fg-c) / .25); transition: background .3s; }
+.sheet-bar:hover .sheet-bar-thumb, .sheet-bar.drag .sheet-bar-thumb { background: rgb(var(--d-fg-c) / .5); }
 @media (max-width: 768px) { .sheet-bar-rail { display: none; } }
 
 /* ---------- design system story: real Figma frames and drawn process work ---------- */
@@ -201,7 +201,7 @@
   .chapter-art, .chapter-copy { transition: none; }
   .chapter.pre .chapter-art, .chapter.pre .chapter-copy { opacity: 1; transform: none; }
 }
-.figma-link { margin-top: 28px; align-self: flex-start; display: inline-flex; align-items: center; gap: 14px; padding: 12px 20px 12px 14px; --k-edge: #8c8c89; --k-fill: #f2f2f0; color: var(--sheet); text-decoration: none; transition: transform .25s var(--ease), filter .25s var(--ease); }
+.figma-link { margin-top: 28px; align-self: flex-start; display: inline-flex; align-items: center; gap: 14px; padding: 12px 20px 12px 14px; --k-edge: var(--d-mute); --k-fill: var(--d-fg); color: var(--sheet); text-decoration: none; transition: transform .25s var(--ease), filter .25s var(--ease); }
 .figma-link img { display: block; width: 28px; height: 28px; padding: 5px; box-sizing: content-box; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
 .figma-link > span:not(.sr-only) { display: flex; flex-direction: column; gap: 2px; font-size: 1rem; line-height: 1.25; letter-spacing: 0; }
 .figma-link small { font-size: 0.8125rem; color: color-mix(in srgb, var(--sheet) 70%, transparent); }
@@ -242,7 +242,7 @@
 @media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { transform: none; } }
 .figma-link.page-link > span:not(.sr-only) { gap: 5px; font-size: 1.0625rem; letter-spacing: 0; }
 .figma-link.page-link small { font-size: 0.875rem; letter-spacing: 0; }
-.figma-link.page-link .link-arrow { box-sizing: content-box; width: 18px; height: 18px; margin: 0; padding: 11px; border: 1px solid rgba(243,241,234,.14); color: var(--fg); transition: transform .35s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease); }
+.figma-link.page-link .link-arrow { box-sizing: content-box; width: 18px; height: 18px; margin: 0; padding: 11px; border: 1px solid rgb(var(--d-fg-c) / .14); color: var(--fg); transition: transform .35s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease); }
 @media (hover: hover) and (pointer: fine) {
   .figma-link.page-link:hover .link-arrow { background: var(--fg); border-color: var(--fg); color: var(--sheet); transform: translate(0, 0) rotate(45deg); }
 }
@@ -256,15 +256,15 @@
 
 /* ---------- dark sheet: the things that stay on paper ---------- */
 /* logos and ink drawings were made for a light ground, so each keeps a paper tile of its own */
-.proj-logo { box-sizing: content-box; padding: 10px 14px; border-radius: 12px; background: #f3f1ea; }
-.chapter-art > svg, .shots-tile { --ink: #1d1d1d; --fg: #0a0a0a; --bg: #fff; --muted: rgba(10,10,10,.72); background: #f3f1ea; color: #0a0a0a; }
+.proj-logo { box-sizing: content-box; padding: 10px 14px; border-radius: 12px; background: var(--d-paper); }
+.chapter-art > svg, .shots-tile { --ink: #1d1d1d; --fg: #0a0a0a; --bg: #fff; --muted: rgba(10,10,10,.72); background: var(--d-paper); color: #0a0a0a; }
 .chapter-art > svg { box-sizing: border-box; padding: 20px; }
 
 .detail .walkthrough-end p { font: 400 1.5rem/1.2 var(--f-px); color: var(--fg); }
 /* the page link is a dark pixel plate; its arrow badge is square */
-.figma-link.page-link { --k-edge: #45453f; --k-fill: #1a1a19; border: 0; border-radius: 0; background: none; color: var(--fg); }
+.figma-link.page-link { --k-edge: var(--d-edge); --k-fill: var(--d-card); border: 0; border-radius: 0; background: none; color: var(--fg); }
 .figma-link.page-link .link-arrow { border-radius: 0; }
-@media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { --k-edge: #8c8c89; background: none; } }
+@media (hover: hover) and (pointer: fine) { .figma-link.page-link:hover { --k-edge: var(--d-mute); background: none; } }
 
 /* the thinking behind a decision (see .law in home.css), sized for the case study */
 .detail .law { margin-top: 16px; padding: 12px 14px; font-size: .9375rem; line-height: 1.55; letter-spacing: 0; color: var(--muted); max-width: 40rem; }
@@ -274,23 +274,23 @@
 
 /* the approach as a rulebook: one plate, five numbered rules with a line of why, the takeaway at the foot */
 .approach { position: relative; }
-.rulebook { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; margin-top: 28px; padding: 40px 32px 28px; max-width: 46rem; }
+.rulebook { --s: 4px; --k-edge: var(--d-edge); --k-fill: var(--d-card); margin-top: 28px; padding: 40px 32px 28px; max-width: 46rem; }
 .rb-head { font: 400 .875rem/1 var(--f-px); text-transform: lowercase; color: var(--muted); }
 .rulebook ol { margin: 18px 0 0; padding: 0; list-style: none; }
-.rulebook li { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 20px 0; border-top: 1px dashed #45453f; }
+.rulebook li { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 20px 0; border-top: 1px dashed var(--d-edge); }
 .rb-num { font: 400 2rem/1 var(--f-px); color: var(--fg); }
 .rulebook h4 { font: 400 1.375rem/1.25 var(--f-px); letter-spacing: -.01em; }
 .rulebook li p { margin: 8px 0 0; font-size: 1rem; line-height: 1.55; letter-spacing: 0; color: var(--muted); max-width: 40rem; }
-.rb-take { margin: 4px 0 0; padding-top: 20px; border-top: 1px dashed #45453f; font-size: 1rem; line-height: 1.55; color: var(--muted); }
+.rb-take { margin: 4px 0 0; padding-top: 20px; border-top: 1px dashed var(--d-edge); font-size: 1rem; line-height: 1.55; color: var(--muted); }
 .rb-take b { display: block; margin-bottom: 6px; font: 400 1.25rem/1.25 var(--f-px); color: var(--fg); }
 @media (max-width: 560px) { .rulebook { padding: 36px 20px 24px; } .rulebook li { grid-template-columns: 44px 1fr; } .rb-num { font-size: 1.5rem; } }
 @media (max-width: 760px) { .diagram { grid-template-columns: 1fr; gap: 22px; padding: 18px; } .diagram h4 { font-size: 1.375rem; } }
 
 /* a scene on a dark pixel plate, in place of a drawing */
-.scene-plate { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; display: grid; place-items: center; padding: 18px 14px; }
+.scene-plate { --s: 4px; --k-edge: var(--d-edge); --k-fill: var(--d-card); display: grid; place-items: center; padding: 18px 14px; }
 /* the big numbers: pixel tiles in a row */
 .stat-tiles { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.stat { --s: 3px; --k-edge: #45453f; --k-fill: #1a1a19; display: flex; flex-direction: column; gap: 10px; padding: 22px 20px 20px; }
+.stat { --s: 3px; --k-edge: var(--d-edge); --k-fill: var(--d-card); display: flex; flex-direction: column; gap: 10px; padding: 22px 20px 20px; }
 .stat b { font: 400 clamp(2rem, 4vw, 3rem)/1 var(--f-px); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .stat span { font: 400 .9375rem/1.2 var(--f-px); text-transform: lowercase; color: var(--muted); }
 @media (max-width: 760px) { .stat-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -301,13 +301,13 @@
 
 
 /* a dark pixel window around each Figma frame and scene: three squares and a lowercase title */
-.frame { --s: 4px; --k-edge: #45453f; --k-fill: #1a1a19; margin: 0; min-width: 0; }
+.frame { --s: 4px; --k-edge: var(--d-edge); --k-fill: var(--d-card); margin: 0; min-width: 0; }
 .frame figcaption { display: flex; align-items: center; gap: 6px; padding: 12px 16px 10px; }
-.frame figcaption i { width: 6px; height: 6px; background: #45453f; }
+.frame figcaption i { width: 6px; height: 6px; background: var(--d-edge); }
 .frame figcaption i:first-child { background: var(--fg); }
 .frame figcaption span { margin-left: 8px; font: 400 .9375rem/1 var(--f-px); text-transform: lowercase; color: var(--muted); }
 .frame-body { padding: 0 14px 14px; }
 .frame-body > .play-scene { margin: 0 auto; }
 .scene-plate .play-scene, .frame .play-scene { width: 100%; max-width: 576px; }
 /* the done mark: a dark plate with a bright check (its colours must outrank the plate defaults) */
-.detail .contact-done-icon.px-plate { --k-edge: #8c8c89; --k-fill: #1a1a19; color: #f2f2f0; }
+.detail .contact-done-icon.px-plate { --k-edge: var(--d-mute); --k-fill: var(--d-card); color: var(--d-fg); }

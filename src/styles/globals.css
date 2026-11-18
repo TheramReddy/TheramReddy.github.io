@@ -6,6 +6,7 @@
 @import './home.css';
 @import './detail.css';
 @import './responsive.css';
+@import './theme.css';
 
 /* Custom arrow everywhere; text fields keep the I-beam. Clickables swap to the arrow with the click burst.
    Both carry a light outline so they read on dark panels. Hotspot is the arrow tip. */
@@ -80,7 +81,7 @@ html {
   html { font-size: 16px; }
 }
 body {
-  background: #0c0c0b;
+  background: var(--d-bg);
   color: var(--fg);
   font-family: var(--font-text);
   font-size: var(--fs-16);

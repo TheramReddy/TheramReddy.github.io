@@ -76,7 +76,7 @@ function Control() {
       <path d="M414 62 H446" className="d-line" markerEnd="url(#arr-control)" />
       <path d="M540 150 Q320 215 100 150" className="d-line d-dash" markerEnd="url(#arr-control)" />
       <text x="320" y="214" textAnchor="middle" className="d-small">other domains re-run too</text>
-      <text x="320" y="260" textAnchor="middle" className="d-label d-em">see it · change it · run again</text>
+      <text x="320" y="260" textAnchor="middle" className="d-label d-em">see it, change it, run again</text>
     </svg>
   )
 }

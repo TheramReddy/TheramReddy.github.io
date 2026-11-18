@@ -11,8 +11,8 @@ const img = (name: string) => `/projects/scobin/${name}.png`
 
 /** What each Figma frame is, for the title of its window. */
 const CAPS: Record<string, string> = {
-  dashboard: 'dashboard · sample screen', semantic: 'semantic colors', typography: 'typography', contrast: 'color contrast',
-  'button-states': 'button · states', 'button-docs': 'button · docs', accordion: 'accordion', properties: 'accordion · properties',
+  dashboard: 'dashboard, sample screen', semantic: 'semantic colors', typography: 'typography', contrast: 'color contrast',
+  'button-states': 'button states', 'button-docs': 'button docs', accordion: 'accordion', properties: 'accordion properties',
 }
 
 /** A dark pixel window around a picture or a scene: three little squares and a lowercase title. */
@@ -297,7 +297,7 @@ export function ScobinStory() {
       ]} />
       <div className="rulebook px-plate">
         <span className="id-slot" aria-hidden="true" />
-        <p className="rb-head">how i worked · 5 principles</p>
+        <p className="rb-head">how i worked, 5 principles</p>
         <ol aria-label="My approach">
           {principles.map((x, i) => (
             <li key={x}>

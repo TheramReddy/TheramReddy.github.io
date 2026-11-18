@@ -109,6 +109,9 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
     let w = 0, h = 0, frame = 0, wait = 0, seen = false
     // the pointer, and where the ripple currently is (it eases after the pointer)
     let px = -999, py = -999, rx = -999, ry = -999
+    // the squares are the page's type colour, whichever theme is on
+    let tint = '242 242 240'
+    const retint = () => { tint = getComputedStyle(box).getPropertyValue('--d-fg-c').trim() || tint; kick() }
 
     const size = () => {
       const r = box.getBoundingClientRect()
@@ -153,7 +156,7 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
             a *= 1 - k * 0.55
           }
           const s = (CELL - GAP) * scale
-          ctx.fillStyle = `rgba(242, 242, 240, ${a.toFixed(3)})`
+          ctx.fillStyle = `rgb(${tint} / ${a.toFixed(3)})`
           if (turn) {
             ctx.save()
             ctx.translate(cx, cy)
@@ -182,9 +185,11 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
     const ro = new ResizeObserver(() => { size(); kick() })
     const io = new IntersectionObserver(([e]) => { seen = e.isIntersecting; if (seen) kick() })
     size()
+    retint()
     ro.observe(box)
     io.observe(box)
     window.addEventListener('home-uncovered', kick)
+    window.addEventListener('themechange', retint)
     box.addEventListener('pointermove', move)
     box.addEventListener('pointerleave', leave)
     return () => {
@@ -193,6 +198,7 @@ export function PixelField({ letter, note }: { letter: keyof typeof GLYPHS; note
       ro.disconnect()
       io.disconnect()
       window.removeEventListener('home-uncovered', kick)
+      window.removeEventListener('themechange', retint)
       box.removeEventListener('pointermove', move)
       box.removeEventListener('pointerleave', leave)
     }

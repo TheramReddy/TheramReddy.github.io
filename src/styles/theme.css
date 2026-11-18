@@ -1,0 +1,110 @@
+/* ==========================================================================
+   The light theme, and the turn from one theme to the other.
+   The dark theme is the page as it is written everywhere else: its colours are the tokens in home.css. Here every
+   one of them gets its light value, the same idea turned over: a white ground, cards a step down from it, near-black
+   type, no colour. <html data-theme> says which one is on (index.html sets it before the first paint; light unless
+   the visitor chose dark), and lib/theme.ts changes it.
+   ========================================================================== */
+html { background: var(--d-bg); color-scheme: var(--scheme); }
+
+:root[data-theme="light"] {
+  --d-bg: #ffffff;
+  --d-card: #f7f7f5;
+  --d-well: #eeeeeb;
+  --d-fg: #0c0c0b;
+  --d-fg-c: 12 12 11;
+  --d-soft: #4d4d4a;
+  --d-mute: #6e6e6a;
+  --d-edge: #c8c8c3; --d-edge-off: #dcdcd8;
+  --d-key: #ffffff;
+  --d-plate: #deded9;
+  --d-paper: #f7f7f5;
+  --lit-a: #2b2b2a; --lit-b: #0c0c0b;
+  --tile-a: #fafaf8; --tile-b: #f5f5f3;
+  --cord: #1b1b1a;
+  --pool: 255 255 255;
+  --key-hov: .95;
+  --w: 0 0 0; --wa: 1.5;
+  --sh: .14;
+  --inv: 0; --rest: .7; --scheme: light;
+  /* a raised card: a lit top edge, a hairline rim, a soft drop. A well: shaded at the top, lit along the bottom */
+  --lift: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(255, 255, 255, .5), 0 0 0 1px rgba(12, 12, 11, .075), 0 2px 4px -2px rgba(12, 12, 11, .06), 0 36px 64px -44px rgba(12, 12, 11, .2);
+  --sink: inset 0 0 0 1px rgba(12, 12, 11, .04), inset 0 2px 5px rgba(12, 12, 11, .045), inset 0 -1px 0 #fff;
+  /* the work app, on the values of Linear's light theme: one white sheet from edge to edge, greys with no hue in them,
+     black for the accent. The screen is parted from the sidebar by the faintest edge and a short drop, nothing more */
+  --a-bg: #ffffff; --a-side: #ffffff; --a-rail: #ffffff; --a-rail-b: #ffffff; --a-door: #fafafa; --a-panel: #ffffff;
+  --a-card: #ffffff; --a-card-on: #f8f8f8; --a-pop: #ffffff; --a-tip: #ffffff; --a-av: #ebebeb; --a-thumb: #ffffff;
+  --a-scroll: #d9d9d9; --a-choice: #ffffff; --a-wire: #b5b5b5; --a-veil: rgba(0, 0, 0, .22);
+  --a-ico-a: #ffffff; --a-ico-b: #f8f8f8; --a-ico-on-a: #ffffff; --a-ico-on-b: #f1f1f1;
+  --a-ink: #1b1b1b; --a-dim: #606060; --a-faint: #737373; --ac-c: 27 27 27; --a-on: #ffffff;
+  --a-good: #1a7f4f; --a-good-ink: #1a7f4f; --a-bad: #d1242f;
+  --a-bar: #ffffff; --a-raise: #ffffff;
+  --a-rim: 0 0 0 1px rgba(0, 0, 0, .07), 0 3px 6px -2px rgba(0, 0, 0, .02), 0 1px 1px rgba(0, 0, 0, .04);
+}
+
+/* the few things a token cannot turn over */
+/* the app's hairlines are lighter than the page's, so the white reads as one sheet with few lines across it */
+:root[data-theme="light"] .lin { --line: rgb(0 0 0 / .07); }
+:root[data-theme="light"] .lin::after { box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); }
+:root[data-theme="light"] .lin-main { box-shadow: 0 0 0 1px rgb(0 0 0 / .06), 0 3px 6px -2px rgb(0 0 0 / .03), 0 1px 1px rgb(0 0 0 / .04); }
+/* the picked item in the sidebar: a pale grey fill, as light as the head of a group in the list */
+:root[data-theme="light"] :is(.lin-side nav button, .lin-apps button)[aria-current] { background: #f3f3f3; }
+/* the search field is white like the sheet it is on, held by a hairline and a short drop, not a grey fill */
+:root[data-theme="light"] .tk-find { background: #fff; box-shadow: inset 0 0 0 1px var(--line), 0 1px 1px rgb(0 0 0 / .04); }
+:root[data-theme="light"] .tk-find:focus-within { box-shadow: inset 0 0 0 1px rgb(0 0 0 / .32); }
+/* in a case study the plates are white like the page, held by their edge alone; the slot cut in one shows as a shaded hole */
+:root[data-theme="light"] .detail { --d-card: #ffffff; }
+:root[data-theme="light"] .id-slot { background: var(--d-well); box-shadow: inset 0 1px 1px rgb(12 12 11 / .1); }
+/* the portrait stands on a pool of white */
+:root[data-theme="light"] .intro-figure::before { background: radial-gradient(closest-side, rgb(255 255 255 / .95), rgb(255 255 255 / .45) 55%, transparent); }
+/* the wireframe ghost behind the portrait is drawn in ink here, so it is let down further to stay a ghost */
+:root[data-theme="light"] .intro-ghost { opacity: .07; }
+:root[data-theme="light"] .intro[data-build~="img"]:not([data-build~="art"]) .intro-ghost { opacity: .45; }
+:root[data-theme="light"] .intro-text::before { --g: linear-gradient(rgb(12 12 11 / .045) 0 0); }
+/* the grey mark on a lit key is brought up to read on its dark fill */
+:root[data-theme="light"] .key.is-lit img { filter: brightness(1.9); }
+/* the menu and the app sit on white, so their drop is longer and fainter than a band under the edge */
+:root[data-theme="light"] .bar-pill { filter: drop-shadow(0 8px 12px rgb(12 12 11 / .07)); }
+:root[data-theme="light"] :is(.toy.lin, .door, .play-hold) { box-shadow: 0 2px 4px -2px rgb(12 12 11 / .06), 0 36px 64px -44px rgb(12 12 11 / .22); }
+:root[data-theme="light"] .play-hold { box-shadow: inset 0 0 0 1px rgb(12 12 11 / .1), 0 36px 64px -44px rgb(12 12 11 / .22); }
+:root[data-theme="light"] .tile-shot img { box-shadow: 0 2px 4px -2px rgb(12 12 11 / .08), 0 28px 48px -28px rgb(12 12 11 / .24); }
+/* the soft light over the app's front door is white on a ground a step down from it */
+:root[data-theme="light"] .door-glow { background: radial-gradient(circle 720px at 50% 44%, #fff, rgb(255 255 255 / .6) 35%, rgb(255 255 255 / .2) 65%, transparent 100%); }
+/* the app's main button and the month pill are the inverse surface: dark, with light type */
+:root[data-theme="light"] .door-btn.is-main { background: linear-gradient(#2e2e2d, #1b1b1a); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 1px rgba(0, 0, 0, .4), 0 1px 2px rgba(0, 0, 0, .2), 0 8px 24px -12px rgba(0, 0, 0, .35); }
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="light"] .door-btn.is-main:not(:disabled):hover { filter: brightness(1.18); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 1px rgba(0, 0, 0, .4), 0 1px 2px rgba(0, 0, 0, .2), 0 10px 30px -12px rgba(0, 0, 0, .45); }
+}
+:root[data-theme="light"] .tl-pill { background: linear-gradient(#2e2e2d, #0c0c0b); color: #f2f2f0; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .16), inset 0 -2px 3px rgba(0, 0, 0, .4), 0 14px 26px -8px rgba(0, 0, 0, .3), 0 2px 4px rgba(0, 0, 0, .14); }
+:root[data-theme="light"] .tl-pill::before { opacity: .22; }
+/* the paper card is whiter than the well it stands in */
+:root[data-theme="light"] .biz-face { background: linear-gradient(150deg, #ffffff, #f6f6f4 60%, #fbfbf9); }
+:root[data-theme="light"] .biz-face.is-back { background: linear-gradient(210deg, #ffffff, #f6f6f4 60%, #fbfbf9); }
+/* tool chips carry logos drawn for a light ground, so they stay light plates */
+:root[data-theme="light"] .chip { --k-edge: var(--d-edge); --k-fill: var(--d-key); color: var(--d-fg); }
+
+/* ---------- the theme key in the menu ---------- */
+/* a square link at the end of the menu, parted from the sections by a hairline; it shows the theme it turns to */
+.bar-link.bar-theme { width: 34px; margin-left: 7px; padding: 1px 0 0; }
+.bar-theme::after { content: ""; position: absolute; left: -6px; top: 6px; bottom: 6px; width: 1px; background: var(--d-edge); }
+.bar-theme .bar-icon { margin-top: 0; animation: theme-icon .6s var(--out) both; }
+@keyframes theme-icon { from { opacity: 0; rotate: -90deg; scale: .4; } }
+@media (prefers-reduced-motion: reduce) { .bar-theme .bar-icon { animation: none; } }
+/* over a case study on a phone the sections step aside for the way back, and the theme key stays */
+@media (max-width: 760px) {
+  .bar.is-case { grid-template-columns: 1fr auto auto; gap: 10px; }
+  .bar.is-case .bar-pill { display: flex; }
+  .bar.is-case .bar-link:not(.bar-theme) { display: none; }
+  .bar.is-case .bar-theme { margin-left: 0; }
+  .bar.is-case .bar-theme::after { content: none; }
+}
+
+/* ---------- the turn ----------
+   The new theme opens out of the key that was pressed, as a circle that grows until it covers the page
+   (lib/theme.ts draws it over a snapshot of the old one). While it runs nothing else transitions, so every colour
+   inside the circle is already the new one. Without view transitions the colours cross-fade in place instead. */
+html.theme-turn *, html.theme-turn *::before, html.theme-turn *::after { transition: none !important; }
+html.theme-turn::view-transition-old(root), html.theme-turn::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.theme-turn::view-transition-old(root) { z-index: 0; }
+html.theme-turn::view-transition-new(root) { z-index: 1; }
+html.theme-fade, html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after { transition: background-color .45s ease, color .45s ease, border-color .45s ease, fill .45s ease, stroke .45s ease, box-shadow .45s ease, outline-color .45s ease !important; }

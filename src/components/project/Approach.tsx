@@ -18,7 +18,7 @@ export function Approach() {
       <h3 className="in-action-title">How I worked</h3>
       <div className="rulebook px-plate">
         <span className="id-slot" aria-hidden="true" />
-        <p className="rb-head">rulebook · 5 rules</p>
+        <p className="rb-head">rulebook, 5 rules</p>
         <ol>
           {rules.map((r, i) => (
             <li key={r.rule}>

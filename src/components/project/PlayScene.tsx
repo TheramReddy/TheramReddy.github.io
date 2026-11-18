@@ -1,20 +1,22 @@
 import { useEffect, useRef } from 'react'
 import { reducedMotion } from '@/lib/motion'
-import { H, W, floor, render, scenes, type Gfx } from './playScenes'
+import { useTheme } from '@/lib/theme'
+import { H, PLATE, W, floor, render, scenes, setPalette, type Gfx } from './playScenes'
 
 const FRAME_MS = 83
 const FADE = 0.45
-/** the card colour behind the canvas, so a fade lands on the plate */
-const PLATE = '#1a1a19'
 
 /**
  * One problem acted out as a small isometric pixel scene. It loops, fading through the card colour
  * between rounds, and it only runs while it is on screen, in a case study that is open, in a visible tab.
+ * It is painted in the palette of the theme that is on, and painted again when the theme changes.
  */
 export function PlayScene({ scene }: { scene: string }) {
   const ref = useRef<HTMLCanvasElement>(null)
+  const theme = useTheme()
 
   useEffect(() => {
+    setPalette(theme === 'light')
     const cv = ref.current
     const ctx = cv?.getContext('2d')
     const spec = scenes[scene]
@@ -79,7 +81,7 @@ export function PlayScene({ scene }: { scene: string }) {
       document.removeEventListener('visibilitychange', sync)
       clearInterval(id)
     }
-  }, [scene])
+  }, [scene, theme])
 
   return <canvas ref={ref} className="play-scene" width={W} height={H} aria-hidden="true" />
 }
