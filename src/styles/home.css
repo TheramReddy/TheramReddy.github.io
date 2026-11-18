@@ -48,11 +48,14 @@
 @media (hover: hover) and (pointer: fine) { button.key:not(:disabled):hover, a.key:hover { filter: brightness(1.2); } }
 
 /* ---------- top bar ---------- */
-.bar { position: fixed; inset: 0 0 auto; z-index: 40; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 24px 40px; color: var(--d-fg); transition: opacity .3s, visibility 0s; }
-/* over the home page the bar is see-through, so only its own controls take clicks: a button scrolled under its empty parts still works */
-.bar { pointer-events: none; }
+/* the bar sits on the page's own ground, so what scrolls up goes under it. Over the home page only its own controls
+   take input, so the wheel over its empty parts still scrolls the page */
+.bar { position: fixed; inset: 0 0 auto; z-index: 40; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 24px 40px; background: var(--d-bg); color: var(--d-fg); pointer-events: none; transition: opacity .3s, visibility 0s; }
 .bar > * { pointer-events: auto; }
-.bar.is-case { background: var(--d-bg); box-shadow: 0 1px 0 #45453f; pointer-events: auto; }
+/* what goes under the bar dissolves into it over a short fade below its edge */
+.bar::after { content: ""; position: absolute; inset: 100% 0 auto; height: 24px; background: linear-gradient(var(--d-bg), transparent); pointer-events: none; }
+.bar.is-case { box-shadow: 0 1px 0 #45453f; pointer-events: auto; }
+.bar.is-case::after { content: none; }
 .bar > :first-child { justify-self: start; }
 .bar > :last-child { justify-self: end; }
 .bar-mark { font: 400 17px/1 var(--f-px); letter-spacing: -.04em; }

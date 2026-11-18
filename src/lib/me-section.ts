@@ -42,9 +42,11 @@ export function scrollPageTo(target: HTMLElement | null, { gap = 0, smooth = tru
 }
 
 /**
- * Scrolls the page to a section: Me is the top, the others are the blocks marked [data-nav].
+ * Scrolls the page to a section: Me is the top, the others are the blocks marked [data-nav]. A section stops
+ * just under the fixed bar, not behind it.
  */
 export function scrollToSection(name: MeSection, smooth = true) {
   const target = name === 'me' ? null : document.querySelector<HTMLElement>(`.panel.me [data-nav="${name}"]`)
-  scrollPageTo(target, { smooth })
+  const bar = document.querySelector<HTMLElement>('.bar')
+  scrollPageTo(target, { smooth, gap: bar ? bar.offsetHeight + 16 : 0 })
 }
